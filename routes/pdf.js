@@ -1,5 +1,6 @@
 var pdfText = require('pdf-text')
-  , _ = require('lodash');
+  , _ = require('lodash')
+  , fs = require('fs');
 
 var pathToPdf = __dirname + "/../A.pdf"
 
@@ -13,15 +14,22 @@ exports.index = function(req, res) {
             }
         }
         chunks = _.map(chunks, function(x) { return x.trim(); });
+        
         var out = []
           , mode = null
-          , cur = {text: "", ans: []};
+          , cur = {question: "", tags: [], text: "", ans: []};
+
+          var data = "";
+
         for(var i=0;i<chunks.length;i++) {
+            data = data + chunks[i] + '\n';
             if(chunks[i] === "QUESTION") {
                 if(cur !== {}) {
                     out.push(cur);
-                    cur = {text: "", ans: []};
+                    cur = {question: "", tags: [], text: "", ans: []};
                 }
+                cur["question"] = chunks[i+1];
+                i = i+2;
                 mode = 'txt';
             } else if (chunks[i].match(/^[A-E]\.$/i) !== null) {
                 mode = null;
@@ -29,11 +37,21 @@ exports.index = function(req, res) {
             }
             switch(mode) {
                 case 'txt':
-                    cur['text'] += '\n' + chunks[i];
+                    cur['text'] += chunks[i] + '\n';
                     break;
             }
         }
-        console.log(chunks);
+
+        fs.writeFile(__dirname + '/../chunks.txt', data, function(err){
+            if(err){
+                console.log(err);
+            } else {
+                console.log('printed chunks');
+            }
+        });
+
+
+
         out.push(cur);
         res.send(out);
     });
