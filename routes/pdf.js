@@ -17,9 +17,10 @@ exports.index = function(req, res) {
         
         var out = []
           , mode = null
-          , cur = {question: "", tags: [], text: "", ans: []};
-
-          var data = "";
+          , cur = {question: "", tags: [], text: "", ans: []}
+          , key = {}
+          , test = ""
+          , data = ""; // to be printed to chunks.txt
 
         for(var i=0;i<chunks.length;i++) {
             data = data + chunks[i] + '\n';
@@ -33,11 +34,31 @@ exports.index = function(req, res) {
                 mode = 'txt';
             } else if (chunks[i].match(/^[A-E]\.$/i) !== null) {
                 mode = null;
-                cur['ans'].push(chunks[i+1]);
+                cur['ans'].push(chunks[i+1]); // does not allow for multiple line answers
+            } else if (chunks[i] === "Computer   Science   Answer   Key"){
+                mode = 'ans';
+                test = chunks[i+1];
+                i = i + 1;
             }
             switch(mode) {
                 case 'txt':
                     cur['text'] += chunks[i] + '\n';
+                    break;
+                case 'ans':
+                    if(chunks[i]==="Notes:"){
+                        i = chunks.length;
+                    } else {
+                        console.log("+"+chunks[i]+"+");
+                        if(chunks[i].length>3){
+                            var index = chunks[i].indexOf('.');
+                            key[chunks[i].substring(0,index)] = chunks[i][chunks[i].length-1];
+                            console.log("added to key");
+                        } else {
+                            key[chunks[i].substring(0,chunks[i].length-1)] = chunks[i+1];
+                            i = i + 1;
+                            console.log("added to key");
+                        }
+                    }
                     break;
             }
         }
@@ -50,9 +71,8 @@ exports.index = function(req, res) {
             }
         });
 
-
-
         out.push(cur);
-        res.send(out);
+        res.send([out,key]);
+        
     });
 }
