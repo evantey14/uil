@@ -9,6 +9,8 @@
     "express": "3.3.4",
     "jade": "*",
     "pdf-text": "~0.3.0",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "mongodb": "*",
+    "monk":"*"
   }
 }
