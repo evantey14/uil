@@ -2,7 +2,11 @@ extends layout
 
 block content
     h1= title
+    h5= prompt
     form#formAddUser(name="adduser",method="post",action="/adduser")
         input#inputUserName(type="text", placeholder="username", name="username")
         input#inputUserEmail(type="text", placeholder="useremail", name="useremail")
-        button#btnSubmit(type="submit") submit
+        input#inputUserGrade(type="text", placeholder="usergrade", name="usergrade")
+        input#inputPassword(type="text", placeholder="password", name="password")
+        input#checkpassword(type="text",placeholder="reenter password", name="secondpassword")
+        button#submit(type="submit") submit
