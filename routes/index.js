@@ -1,3 +1,5 @@
+var passwordHash = require('password-hash');
+
 exports.index = function(req, res){
   res.render('index', { title: 'LASA UIL Training'});
 };
@@ -21,15 +23,17 @@ exports.adduser = function(db){
         var userName = req.body.username;
         var email = req.body.useremail;
         var grade = req.body.usergrade;
-        var password = req.body.password;
-        var checkpassword = req.body.secondpassword;
+        var firstPassword = req.body.password;
+        var secondPassword = req.body.secondpassword;
         
-        if(password!==checkpassword){
+        
+        if(firstPassword!==secondPassword){
             res.send("Password fields did not match");
         }
         
+        var password = passwordHash.generate(firstPassword);
         
-        //console.log(userName+" "+email+" "+grade+" "+password+" "+checkpassword);
+       console.log(userName+" "+email+" "+grade+" "+firstPassword+" "+password);
         
         var collection = db.get("users");
         
@@ -41,7 +45,7 @@ exports.adduser = function(db){
                 res.send("That name is already taken...so unoriginal...");
             }
             else{
-                collection.insert({"username":userName, "email":email, "grade":grade},function(err,doc){
+                collection.insert({"username":userName, "email":email, "grade":grade, "password":password},function(err,doc){
                     if(err){
                         res.send("another issue");
                     }
