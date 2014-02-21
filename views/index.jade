@@ -1,9 +1,11 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  p
-    a(href="localhost:3000/newuser") Create a new user! 
-  p
-    a(href="localhost:3000/userlist") Look at existing users!
+    h1= title
+        p Welcome to #{title}
+        p
+            a(href="/newuser") Create a new user! 
+        p
+            a(href="/userlist") Look at existing users!
+        p
+            a(href="/login") Login to your page!
