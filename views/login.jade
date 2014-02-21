@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h1= title
+    h5= prompt
+    form#formSignIn(name="sign",method="post",action="/signin")
+        input#inputUserName(type="text", placeholder="username", name="username")
+        input#UserPassword(type="text", placeholder="password", name="password")
+        button#submit(type="submit") submit

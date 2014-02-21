@@ -58,4 +58,30 @@ exports.adduser = function(db){
             }
         });
     }
-}
+};
+
+exports.login = function(req,res)
+{
+    res.render('login', {title: 'Login', prompt:'Input your credentials below!' });
+};
+
+exports.signin = function(db){
+    return function(req,res){
+        var username = req.body.username;
+        var password = req.body.password;
+        var encrypted = passwordHash.generate(password);
+        console.log(encrypted);
+        var collection = db.get("users");
+        var count = collection.count({username:username,password:encrypted}, function(err,count){
+            if(err){
+                res.send("There is an issue. Call Beck!");
+            }
+            else if(count>0){
+                res.send("Login succesful!");
+            }
+            else{
+                res.send("We do not recognize that username/password combination");
+            }
+        });
+    }
+};
