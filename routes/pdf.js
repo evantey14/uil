@@ -23,16 +23,19 @@ exports.index = function(req, res) {
         var out = []
           , mode = null
           , cur = {test: "", ques: "", tags: [], text: "", ans: [], key: ""}
+          , key = []
           , test = "" // stores test id
           , data = ""; // to be printed to chunks.txt
 
         for(var i=0;i<chunks.length;i++) {
             data = data + chunks[i] + '\n';
-            if(chunks[i] === "QUESTION") {
-                if(cur !== {}) {
+            if(chunks[i] === "Computer Science Competition"){
+                test = chunks[i+1];
+            } else if(chunks[i] === "QUESTION") {
+                if(cur["test"] !== "") {
                     out.push(cur);
-                    cur = {test: "", ques: "", tags: [], text: "", ans: [], key: ""};
                 }
+                cur = {test: test, ques: "", tags: [], text: "", ans: [], key: ""};
                 cur["ques"] = chunks[i+1];
                 i = i+2;
                 mode = 'txt';
@@ -49,28 +52,27 @@ exports.index = function(req, res) {
                     cur['text'] += chunks[i] + '\n';
                     break;
                 case 'ans':
-                    /*for(var obj in out){
-                        console.log("+"+chunks[i]+"++"+i);
-                        if(chunks[i]==="Notes:"){
-                            break;
+                    console.log("+"+chunks[i]+"++"+i);
+                    if(chunks[i]==="Notes:"){
+                        i = chunks.length;
+                    } else {
+                        if(chunks[i].length>3){
+                            var index = chunks[i].indexOf('.');
+                            //key[chunks[i].substring(0,index)] = chunks[i][chunks[i].length-1];
+                            key[chunks[i].substring(0,index)] = chunks[i][chunks[i].length-1];
+                            console.log("added to key");
                         } else {
-                            if(chunks[i].length>3){
-                                //var index = chunks[i].indexOf('.');
-                                //key[chunks[i].substring(0,index)] = chunks[i][chunks[i].length-1];
-                                obj["key"] = chunks[i][chunks[i].length-1];
-                                console.log("added to key");
-                            } else {
-                                //key[chunks[i].substring(0,chunks[i].length-1)] = chunks[i+1];
-                                obj["key"] = chunks[i+1];
-                                i = i + 1;
-                                console.log("added to key");
-                            }
+                            //key[chunks[i].substring(0,chunks[i].length-1)] = chunks[i+1];
+                            key[chunks[i].substring(0,chunks[i].length-1)] = chunks[i+1];
+                            i = i + 1;
+                            console.log("added to key");
                         }
-                        i++;
                     }
-                    break;*/
+                    break;
             }
         }
+
+        out.push(cur);
 
         fs.writeFile(__dirname + '/../chunks.txt', data, function(err){
             if(err){
@@ -80,12 +82,15 @@ exports.index = function(req, res) {
             }
         });
 
-        out.push(cur);
+        out = _.map(out, function(obj){
+            console.log("NEW OBJ");
+            console.log(obj);
+            obj["key"]=key[parseInt(obj["ques"])];
+            console.log(obj);
+            return obj;
+        });
+        
         res.send([out,key]);
-        var obj = out;
-        for(var i in obj){
-            obj.answer
-        }
         collection.insert(out);
     });
 }
