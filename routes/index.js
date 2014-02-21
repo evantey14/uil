@@ -28,7 +28,7 @@ exports.adduser = function(db){
         
         
         if(firstPassword!==secondPassword){
-            res.send("Password fields did not match");
+            res.render('error', {title:'Error', prompt:"Password fields did not match"});
         }
         
         var password = passwordHash.generate(firstPassword);
@@ -42,16 +42,16 @@ exports.adduser = function(db){
                 res.send("Call Beck and get the problem fixed");
             }
             if(count>0){
-                res.send("That name is already taken...so unoriginal...");
+                res.render('error', {title:'Error', prompt:"That name is already taken...so unoriginal..."});
             }
             else{
                 collection.insert({"username":userName, "email":email, "grade":grade, "password":password},function(err,doc){
                     if(err){
-                        res.send("another issue");
+                        res.render('error', {title:'Error'});
                     }
                     else{
-                        res.location("userlist");
-                        res.redirect("userlist");
+                        res.location("login");
+                        res.redirect("login");
                     }
                     
                 });
@@ -69,18 +69,23 @@ exports.signin = function(db){
     return function(req,res){
         var username = req.body.username;
         var password = req.body.password;
-        var encrypted = passwordHash.generate(password);
-        console.log(encrypted);
         var collection = db.get("users");
-        var count = collection.count({username:username,password:encrypted}, function(err,count){
-            if(err){
-                res.send("There is an issue. Call Beck!");
+        
+        collection.count({"username":username}, function(err,count){
+            if(count===0){
+                res.render('error', {title:'Error', prompt:'We do not recognize that username'});
             }
-            else if(count>0){
-                res.send("Login succesful!");
+        });
+
+        collection.findOne({"username":username}, function(err, found){
+            console.log(found);  
+            var hashed = found["password"];
+            console.log(hashed);
+            if(passwordHash.verify(password,hashed)){
+                res.render('uniquelogin',{title: username+","});
             }
             else{
-                res.send("We do not recognize that username/password combination");
+                res.render('error', {title:'Error', prompt:"We do not recognize that username/password combination"});
             }
         });
     }
