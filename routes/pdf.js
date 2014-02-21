@@ -2,6 +2,11 @@ var pdfText = require('pdf-text')
   , _ = require('lodash')
   , fs = require('fs');
 
+var mongo = require('mongodb');
+var monk = require('monk');
+var db = monk('localhost:27017/nodetest1');
+var collection = db.get("questions");
+
 var pathToPdf = __dirname + "/../A.pdf"
 
 exports.index = function(req, res) {
@@ -17,9 +22,8 @@ exports.index = function(req, res) {
         
         var out = []
           , mode = null
-          , cur = {question: "", tags: [], text: "", ans: []}
-          , key = {}
-          , test = ""
+          , cur = {test: "", ques: "", tags: [], text: "", ans: [], key: ""}
+          , test = "" // stores test id
           , data = ""; // to be printed to chunks.txt
 
         for(var i=0;i<chunks.length;i++) {
@@ -27,9 +31,9 @@ exports.index = function(req, res) {
             if(chunks[i] === "QUESTION") {
                 if(cur !== {}) {
                     out.push(cur);
-                    cur = {question: "", tags: [], text: "", ans: []};
+                    cur = {test: "", ques: "", tags: [], text: "", ans: [], key: ""};
                 }
-                cur["question"] = chunks[i+1];
+                cur["ques"] = chunks[i+1];
                 i = i+2;
                 mode = 'txt';
             } else if (chunks[i].match(/^[A-E]\.$/i) !== null) {
@@ -45,21 +49,26 @@ exports.index = function(req, res) {
                     cur['text'] += chunks[i] + '\n';
                     break;
                 case 'ans':
-                    if(chunks[i]==="Notes:"){
-                        i = chunks.length;
-                    } else {
-                        console.log("+"+chunks[i]+"+");
-                        if(chunks[i].length>3){
-                            var index = chunks[i].indexOf('.');
-                            key[chunks[i].substring(0,index)] = chunks[i][chunks[i].length-1];
-                            console.log("added to key");
+                    /*for(var obj in out){
+                        console.log("+"+chunks[i]+"++"+i);
+                        if(chunks[i]==="Notes:"){
+                            break;
                         } else {
-                            key[chunks[i].substring(0,chunks[i].length-1)] = chunks[i+1];
-                            i = i + 1;
-                            console.log("added to key");
+                            if(chunks[i].length>3){
+                                //var index = chunks[i].indexOf('.');
+                                //key[chunks[i].substring(0,index)] = chunks[i][chunks[i].length-1];
+                                obj["key"] = chunks[i][chunks[i].length-1];
+                                console.log("added to key");
+                            } else {
+                                //key[chunks[i].substring(0,chunks[i].length-1)] = chunks[i+1];
+                                obj["key"] = chunks[i+1];
+                                i = i + 1;
+                                console.log("added to key");
+                            }
                         }
+                        i++;
                     }
-                    break;
+                    break;*/
             }
         }
 
@@ -73,6 +82,10 @@ exports.index = function(req, res) {
 
         out.push(cur);
         res.send([out,key]);
-        
+        var obj = out;
+        for(var i in obj){
+            obj.answer
+        }
+        collection.insert(out);
     });
 }
