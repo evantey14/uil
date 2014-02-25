@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h1= title
+    h5= prompt
+    h5= question
+    h5= answer
+    form#formAddUser(name="adduser",method="post",action="/adduser")
+        input#answer(type="text", placeholder="answer", name="answer")
+        button#submit(type="submit") submit

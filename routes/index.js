@@ -91,3 +91,26 @@ exports.signin = function(db){
         });
     }
 };
+
+exports.renderquestion = function(req,res){
+    res.render('renderquestion', {title: 'Random Question',prompt:'Please fill out the information below.' , question: 'question'});
+};
+
+
+exports.getquestion = function(db){
+    return function(req,res){
+        var collection=db.get('questions');
+        collection.findOne({"ques":"20"},function(err,found){
+            if(err){
+                res.render('error', {title:'Error', prompt:err});
+            }
+            console.log("&&&&&&&"+found);
+            if(!found){
+                res.render('error', {title:'Error', prompt:"null"});
+            }
+            var answers = found['ans'];
+            console.log(answers);
+            res.render('renderquestion', {title:'Random Question',prompt:'Select an answer', question:found['text'],answer:found['ans']});
+        });   
+    }
+}
