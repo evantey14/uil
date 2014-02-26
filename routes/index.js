@@ -104,13 +104,18 @@ exports.getquestion = function(db){
             if(err){
                 res.render('error', {title:'Error', prompt:err});
             }
-            console.log("&&&&&&&"+found);
             if(!found){
                 res.render('error', {title:'Error', prompt:"null"});
             }
             var answers = found['ans'];
-            console.log(answers);
-            res.render('renderquestion', {title:'Random Question',prompt:'Select an answer', question:found['text'],answer:found['ans']});
+            res.render('renderquestion', {title:'Random Question',prompt:'Select an answer', question:found['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found["_id"]});
         });   
+    }
+}
+
+exports.submit = function(){
+    return function(req,res){
+        console.log(req.body.choice);
+        console.log(req.body.id);
     }
 }
