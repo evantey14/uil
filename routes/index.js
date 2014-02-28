@@ -35,29 +35,28 @@ exports.adduser = function(db){
         if(email.indexOf("@")===-1){
             res.render('error', {title:'Error', prompt:"That is not a valid email."});
         }
-        
-        var collection = db.get("users");
-        
-        var count = collection.count({username:userName}, function(err, count){
-            if(err){
-                res.send("Call Beck and get the problem fixed");
-            }
-            if(count>0){
-                res.render('error', {title:'Error', prompt:"That name is already taken...so unoriginal..."});
-            }
-            else{
-                collection.insert({"username":userName, "email":email, "grade":grade, "password":password},function(err,doc){
-                    if(err){
-                        res.render('error', {title:'Error'});
-                    }
-                    else{
-                        res.location("login");
-                        res.redirect("login");
-                    }
-                    
-                });
-            }
-        });
+        else{
+            var collection = db.get("users");
+            var count = collection.count({username:userName}, function(err, count){
+                if(err){
+                    res.send("Call Beck and get the problem fixed");
+                }
+                if(count>0){
+                    res.render('error', {title:'Error', prompt:"That name is already taken...so unoriginal..."});
+                }
+                else{
+                    collection.insert({"username":userName, "email":email, "grade":grade, "password":password},function(err,doc){
+                        if(err){
+                            res.render('error', {title:'Error'});
+                        }
+                        else{
+                            res.location("login");
+                            res.redirect("login");
+                        }
+                    });
+                }
+            });
+        }
     }
 };
 
