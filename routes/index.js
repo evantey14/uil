@@ -98,6 +98,9 @@ exports.renderquestion = function(req,res){
 
 exports.getquestion = function(db){
     return function(req,res){
+        if(req.body.id!=null){
+            console.log(req.body.id);
+        }
         var collection=db.get('questions');
         collection.findOne({"ques":"20"},function(err,found){
             if(err){
@@ -109,12 +112,5 @@ exports.getquestion = function(db){
             var answers = found['ans'];
             res.render('renderquestion', {title:'Random Question',prompt:'Select an answer', question:found['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found["_id"]});
         });   
-    }
-}
-
-exports.submit = function(){
-    return function(req,res){
-        console.log(req.body.choice);
-        console.log(req.body.id);
     }
 }
