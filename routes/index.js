@@ -99,18 +99,36 @@ exports.renderquestion = function(req,res){
 exports.getquestion = function(db){
     return function(req,res){
         if(req.body.id!=null){
-            console.log(req.body.id);
+            var choice = req.body.choice;
+            var id = req.body.id;
+            var collection = db.get('questions');
+            collection.findOne({"_id":id},function(err,found){
+                if(err){
+                    throw err;
+                }
+                else{
+                    var answer = found['key'];
+                    if(choice==answer){
+                        res.send("CORRECT!");
+                    }
+                    else{
+                        res.send("INCORRECT");
+                    }
+                }
+            });
         }
-        var collection=db.get('questions');
-        collection.findOne({"ques":"20"},function(err,found){
-            if(err){
-                res.render('error', {title:'Error', prompt:err});
-            }
-            if(!found){
-                res.render('error', {title:'Error', prompt:"null"});
-            }
-            var answers = found['ans'];
-            res.render('renderquestion', {title:'Random Question',prompt:'Select an answer', question:found['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found["_id"]});
-        });   
+        else{
+            var collection=db.get('questions');
+            collection.findOne({"ques":"20"},function(err,found){
+                if(err){
+                    res.render('error', {title:'Error', prompt:err});
+                }
+                if(!found){
+                    res.render('error', {title:'Error', prompt:"null"});
+                }
+                var answers = found['ans'];
+                res.render('renderquestion', {title:'Random Question',prompt:'Select an answer', question:found['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found["_id"]});
+            });   
+        }
     }
 }

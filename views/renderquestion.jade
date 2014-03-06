@@ -4,7 +4,6 @@ block content
     h1= title
     h5= prompt
     h5= question
-    h5= id
     form#submit(name="getquestion",method="post",action="/getquestion")
         input#A(type="radio",name="choice",value="A")
         label= A
@@ -21,5 +20,5 @@ block content
         input#A(type="radio",name="choice",value="E")
         label= E
         br
-        button#submit(type="submit") submit
         input(type="hidden",name = "id", value= id)
+        button#submit(type="submit") submit
