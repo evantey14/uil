@@ -31,7 +31,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/pdf', pdf.index);
-app.get('/userlist',routes.userlist(db));
+//app.get('/userlist',routes.userlist(db));
 app.get('/newuser',routes.newuser);
 app.get('/renderquestion',routes.renderquestion);
 

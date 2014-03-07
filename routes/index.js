@@ -4,6 +4,7 @@ exports.index = function(req, res){
   res.render('index', { title: 'LASA UIL Training'});
 };
 
+/*
 exports.userlist = function(db) {
     return function(req, res) {
         var collection = db.get('users');
@@ -12,6 +13,7 @@ exports.userlist = function(db) {
         });
     };
 };
+*/
 
 exports.newuser = function(req,res)
 {
