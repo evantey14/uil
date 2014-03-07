@@ -119,16 +119,20 @@ exports.getquestion = function(db){
         }
         else{
             var collection=db.get('questions');
-            collection.findOne({"ques":"20"},function(err,found){
+            var thing = collection.find({},function(err,found){
                 if(err){
                     res.render('error', {title:'Error', prompt:err});
                 }
-                if(!found){
-                    res.render('error', {title:'Error', prompt:"null"});
+                else if(!found){
+                    res.render('error',{title:'Error',prompt:'null'});
                 }
-                var answers = found['ans'];
-                res.render('renderquestion', {title:'Random Question',prompt:'Select an answer', question:found['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found["_id"]});
-            });   
+                else{
+                    console.log(found);
+                    var rand=Math.ceil(found.length*Math.random());
+                    var answers = found[rand]['ans'];
+                    res.render('renderquestion', {title:'Random Question',prompt:'Select an answer',question:found[rand]['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found["_id"]});
+                }
+            });
         }
     }
 }
