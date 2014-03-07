@@ -27,15 +27,11 @@ exports.adduser = function(db){
         var grade = req.body.usergrade;
         var firstPassword = req.body.password;
         var secondPassword = req.body.secondpassword;
-        
-        if(firstPassword!==secondPassword){
-            res.render('error', {title:'Error', prompt:"Password fields did not match"});
-        }
-        
+   
         var password = passwordHash.generate(firstPassword);
         
-        if(email.indexOf("@")===-1){
-            res.render('error', {title:'Error', prompt:"That is not a valid email."});
+        if(email.indexOf("@")===-1||firstPassword!=secondPassword){
+            res.render('error', {title:'Error', prompt:"There is an error"});
         }
         else{
             var collection = db.get("users");
