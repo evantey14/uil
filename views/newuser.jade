@@ -1,6 +1,10 @@
 extends layout
 
 block content
+    p
+        a(href="/signin") Login to your page!    
+        br
+        a(href="/getquestion") Answer some random questions!   
     h1= title
     h5= prompt
     form#formAddUser(name="adduser",method="post",action="/adduser")
