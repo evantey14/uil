@@ -132,7 +132,7 @@ exports.getquestion = function(db){
                     console.log(found);
                     var rand=Math.ceil(found.length*Math.random());
                     var answers = found[rand]['ans'];
-                    res.render('renderquestion', {title:'Random Question',prompt:'Select an answer',question:found[rand]['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found["_id"]});
+                    res.render('renderquestion', {title:'Random Question',prompt:'Select an answer',question:found[rand]['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found[rand]["_id"]});
                 }
             });
         }
