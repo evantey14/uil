@@ -50,8 +50,8 @@ exports.adduser = function(db){
                             res.render('error', {title:'Error'});
                         }
                         else{
-                            res.location("login");
-                            res.redirect("login");
+                            res.location("signin");
+                            res.redirect("signin");
                         }
                     });
                 }
@@ -60,34 +60,34 @@ exports.adduser = function(db){
     }
 };
 
-exports.login = function(req,res)
-{
-    res.render('login', {title: 'Login', prompt:'Input your credentials below!' });
-};
-
 exports.signin = function(db){
     return function(req,res){
-        var username = req.body.username;
-        var password = req.body.password;
-        var collection = db.get("users");
+        if(req.body.username!=null){
+            var username = req.body.username;
+            var password = req.body.password;
+            var collection = db.get("users");
         
-        collection.count({"username":username}, function(err,count){
-            if(count===0){
-                res.render('error', {title:'Error', prompt:'We do not recognize that username'});
-            }
-        });
+            collection.count({"username":username}, function(err,count){
+                if(count===0){
+                    res.render('error', {title:'Error', prompt:'We do not recognize that username'});
+                }
+            });
 
-        collection.findOne({"username":username}, function(err, found){
-            console.log(found);  
-            var hashed = found["password"];
-            console.log(hashed);
-            if(passwordHash.verify(password,hashed)){
-                res.render('uniquelogin',{title: username+","});
-            }
-            else{
-                res.render('error', {title:'Error', prompt:"We do not recognize that username/password combination"});
-            }
-        });
+            collection.findOne({"username":username}, function(err, found){
+                console.log(found);  
+                var hashed = found["password"];
+                console.log(hashed);
+                if(passwordHash.verify(password,hashed)){
+                    res.render('uniquelogin',{title: username+","});
+                }
+                else{
+                    res.render('error', {title:'Error', prompt:"We do not recognize that username/password combination"});
+                }
+            });
+        }
+        else{
+            res.render('login', {title: 'Login', prompt:'Input your credentials below!' });
+        }
     }
 };
 
