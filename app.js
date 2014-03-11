@@ -5,8 +5,6 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
-console.log("testing");
-
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/nodetest1');
