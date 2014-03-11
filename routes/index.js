@@ -127,8 +127,11 @@ exports.getquestion = function(db){
                 else{
                     console.log(found);
                     var rand=Math.ceil(found.length*Math.random());
+                    var title = 'Random Question';
+                    var prompt = 'Test: '+found[rand]['test']+'\nQuestion: '+found[rand]['ques'];
                     var answers = found[rand]['ans'];
-                    res.render('renderquestion', {title:'Random Question',prompt:'Select an answer',question:found[rand]['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found[rand]["_id"]});
+                    
+                    res.render('renderquestion', {title:title,prompt:prompt,question:found[rand]['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found[rand]["_id"]});
                 }
             });
         }

@@ -5,9 +5,9 @@ block content
         a(href="/newuser") Create a new user!  
         br
         a(href="/signin") Login to your page!     
-    h1= title
-    h5= prompt
-    h5= question
+    h1(style='white-space:pre;')= title
+    h2(style='white-space:pre;')= prompt
+    h5(style='white-space:pre;')= question
     form#submit(name="getquestion",method="post",action="/getquestion")
         input#A(type="radio",name="choice",value="A")
         label= A
