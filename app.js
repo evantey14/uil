@@ -29,12 +29,13 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/pdf', pdf.index);
-app.get('/userlist',routes.userlist(db));
+//app.get('/userlist',routes.userlist(db));
 app.get('/newuser',routes.newuser);
-app.get('/login',routes.login);
+app.get('/renderquestion',routes.renderquestion);
 
 app.post('/adduser', routes.adduser(db));
-app.post('/signin', routes.signin(db));
+app.all('/signin', routes.signin(db));
+app.all('/getquestion', routes.getquestion(db));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

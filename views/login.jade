@@ -1,9 +1,13 @@
 extends layout
 
 block content
+    p
+        a(href="/newuser") Create a new user!  
+        br
+        a(href="/getquestion") Answer some random questions!    
     h1= title
     h5= prompt
     form#formSignIn(name="sign",method="post",action="/signin")
         input#inputUserName(type="text", placeholder="username", name="username")
-        input#UserPassword(type="text", placeholder="password", name="password")
+        input#UserPassword(type="password", placeholder="password", name="password")
         button#submit(type="submit") submit

@@ -1,0 +1,29 @@
+extends layout
+
+block content
+    p
+        a(href="/newuser") Create a new user!  
+        br
+        a(href="/signin") Login to your page!     
+    h1= title
+    h5= prompt
+    h5= question
+    form#submit(name="getquestion",method="post",action="/getquestion")
+        input#A(type="radio",name="choice",value="A")
+        label= A
+        br
+        input#A(type="radio",name="choice",value="B")
+        label= B
+        br
+        input#A(type="radio",name="choice",value="C")
+        label= C
+        br
+        input#A(type="radio",name="choice",value="D")
+        label= D
+        br
+        input#A(type="radio",name="choice",value="E")
+        label= E
+        br
+        input(type="hidden",name = "id", value= id)
+        br
+        button#submit(type="submit") submit
