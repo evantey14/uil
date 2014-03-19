@@ -27,6 +27,8 @@ exports.adduser = function(db){
         var grade = req.body.usergrade;
         var firstPassword = req.body.password;
         var secondPassword = req.body.secondpassword;
+        var firstName = req.body.firstname;
+        var lastName = req.body.lastname;
    
         var password = passwordHash.generate(firstPassword);
         
@@ -43,7 +45,7 @@ exports.adduser = function(db){
                     res.render('error', {title:'Error', prompt:"That name is already taken...so unoriginal..."});
                 }
                 else{
-                    collection.insert({"username":userName, "email":email, "grade":grade, "password":password},function(err,doc){
+                    collection.insert({"firstName":firstName,"lastName":lastName,"username":userName, "email":email, "grade":grade, "password":password},function(err,doc){
                         if(err){
                             res.render('error', {title:'Error'});
                         }
@@ -64,22 +66,31 @@ exports.signin = function(db){
             var username = req.body.username;
             var password = req.body.password;
             var collection = db.get("users");
-        
+        /*
             collection.count({"username":username}, function(err,count){
                 if(count===0){
-                    res.render('error', {title:'Error', prompt:'We do not recognize that username'});
+                    res.render('login', {title:'Login', prompt:'Input your credentials below!',error:"username"});
                 }
             });
-
+        */
             collection.findOne({"username":username}, function(err, found){
-                console.log(found);  
-                var hashed = found["password"];
-                console.log(hashed);
-                if(passwordHash.verify(password,hashed)){
-                    res.render('uniquelogin',{title: username+","});
+                //console.log(found);  
+                if(err){
+                    res.send(err);
+                }
+                if(!found){
+                    res.render('login', {title:'Login', prompt:'Input your credentials below!',error:"username"});
                 }
                 else{
-                    res.render('error', {title:'Error', prompt:"We do not recognize that username/password combination"});
+                    var hashed = found['password'];
+                    //console.log(hashed);
+                    if(passwordHash.verify(password,hashed)){
+                        res.location("home");
+                        res.redirect("home");
+                    }
+                    else{
+                        res.render('login', {title:'Login', prompt:"Input your credentials below!",error:"matching"});
+                    }
                 }
             });
         }
@@ -88,6 +99,10 @@ exports.signin = function(db){
         }
     }
 };
+
+exports.home = function(req,res){
+    res.render('uniquelogin',{title:"Welcome User!"});
+}
 
 exports.renderquestion = function(req,res){
     res.render('renderquestion', {title: 'Random Question',prompt:'Please fill out the information below.' , question: 'question'});

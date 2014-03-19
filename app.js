@@ -35,6 +35,7 @@ app.get('/renderquestion',routes.renderquestion);
 
 app.post('/adduser', routes.adduser(db));
 app.all('/signin', routes.signin(db));
+app.all('/home',routes.home);
 app.all('/getquestion', routes.getquestion(db));
 
 http.createServer(app).listen(app.get('port'), function(){
