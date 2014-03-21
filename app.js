@@ -37,6 +37,19 @@ app.post('/adduser', routes.adduser(db));
 app.all('/signin', routes.signin(db));
 app.all('/home',routes.home);
 app.all('/getquestion', routes.getquestion(db));
+/*
+app.get('/:id',function(req,res){
+    return db.get('questions').findOne({id:req.params.id},function(err,found){
+        if(err){
+            throw err
+        }
+        else{
+            var prompt = 'Test: '+found[rand]['test']+'\nQuestion: '+found[rand]['ques'];
+            return res.render('renderquestion', {title:"Requested Question",prompt:prompt,question:found[rand]['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found[rand]["_id"],url:found["_id"]});
+        }
+    });
+}
+*/
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

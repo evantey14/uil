@@ -122,10 +122,10 @@ exports.getquestion = function(db){
                 else{
                     var answer = found['key'];
                     if(choice==answer){
-                        res.send("CORRECT!");
+                        res.render('grading',{title:"CORRECT!", value:"correct"});
                     }
                     else{
-                        res.send("INCORRECT");
+                        res.render('grading',{title:"Incorrect...",value:"incorrect"});
                     }
                 }
             });
@@ -146,7 +146,7 @@ exports.getquestion = function(db){
                     var prompt = 'Test: '+found[rand]['test']+'\nQuestion: '+found[rand]['ques'];
                     var answers = found[rand]['ans'];
                     
-                    res.render('renderquestion', {title:title,prompt:prompt,question:found[rand]['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found[rand]["_id"]});
+                    res.render('renderquestion', {title:title,prompt:prompt,question:found[rand]['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found[rand]["_id"],url:found["_id"]});
                 }
             });
         }

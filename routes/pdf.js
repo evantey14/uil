@@ -11,7 +11,9 @@ var pathToPdf = __dirname + "/../A.pdf"
 
 exports.index = function(req, res) {
     pdfText(pathToPdf, function(err, chunks) {
-        if(err) throw err;
+        if(err){
+           // throw err;
+        }
         for(var i=0;i<chunks.length;i++) {
             if(chunks[i] === "Q" && ("" + chunks[i+1]).indexOf("UESTION") === 0) {
                 chunks[i+1] = "Q" + chunks[i+1];

@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    h1= title
+    br
+    if(value==="incorrect")
+        img(src="http://i.stack.imgur.com/jiFfM.jpg")
+    else if(value==="correct")
+        img(src="http://www.creatureentertainment.com/creature/wordpress/imageassets/2013/01/fuck-yeah.jpg")
+    
+    form#next(name="grading",method="post",action="/getquestion")
+        button#next(type="next") Next Question
+    
+    p
+        a(href="/newuser") Create a new user! 
+    p
+        a(href="/signin") Login to your page!
+    p
+        a(href="/getquestion") Answer some random questions!
