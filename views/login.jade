@@ -1,12 +1,8 @@
 extends layout
 
 block content
-    p
-        a(href="/newuser") Create a new user!  
-        br
-        a(href="/getquestion") Answer some random questions!    
     h1= title
-    h5= prompt 
+    h5= prompt
     if(error==="matching")
         h5= "Your username/password combination was invalid"
     if(error==="username")

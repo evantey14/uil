@@ -4,4 +4,15 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    block content
+    ul.navbar
+        li.nav.left
+            a(href="/getquestion")
+                img.random(src='./images/random.png')
+        a(href="/newuser")
+            li.nav.button.right
+                |Register
+        a(href="/signin")
+            li.nav.button.right
+                |Login
+    div.content
+        block content
