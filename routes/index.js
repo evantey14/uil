@@ -4,14 +4,14 @@ exports.index = function (req, res) {
     res.render('index', {
         title: 'LASA UIL Training'
     });
-}
+};
 
 exports.newuser = function (req, res) {
     res.render('newuser', {
         title: 'Add New User',
         prompt: 'Please fill out the information below.'
     });
-}
+};
 
 exports.adduser = function (db) {
     return function (req, res) {
@@ -65,7 +65,7 @@ exports.adduser = function (db) {
             });
         }
     }
-}
+};
 
 exports.signin = function (db) {
     return function (req, res) {
@@ -115,7 +115,7 @@ exports.signin = function (db) {
             });
         }
     }
-}
+};
 /*
 exports.home = function (req, res) {
     res.render('uniquelogin', {
@@ -153,7 +153,7 @@ exports.checkquestion = function(db){
             }
         });
     }
-}
+};
 
 
 exports.getquestion = function(db){
@@ -174,7 +174,7 @@ exports.getquestion = function(db){
             }
         });
     }
-}
+};
 
 exports.viewquestion = function(db){
     return function(req,res){
@@ -198,4 +198,4 @@ exports.viewquestion = function(db){
             }
         });
     }
-}
+};
