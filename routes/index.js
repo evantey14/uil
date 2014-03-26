@@ -1,7 +1,9 @@
 var passwordHash = require('password-hash');
 
-exports.index = function(req, res){
-  res.render('index', { title: 'LASA UIL Training'});
+exports.index = function (req, res) {
+    res.render('index', {
+        title: 'LASA UIL Training'
+    });
 };
 
 /*
@@ -15,13 +17,15 @@ exports.userlist = function(db) {
 };
 */
 
-exports.newuser = function(req,res)
-{
-    res.render('newuser', {title: 'Add New User',prompt:'Please fill out the information below.' });
+exports.newuser = function (req, res) {
+    res.render('newuser', {
+        title: 'Add New User',
+        prompt: 'Please fill out the information below.'
+    });
 };
 
-exports.adduser = function(db){
-    return function(req,res){
+exports.adduser = function (db) {
+    return function (req, res) {
         var userName = req.body.username;
         var email = req.body.useremail;
         var grade = req.body.usergrade;
@@ -29,27 +33,41 @@ exports.adduser = function(db){
         var secondPassword = req.body.secondpassword;
         var firstName = req.body.firstname;
         var lastName = req.body.lastname;
-   
+
         var password = passwordHash.generate(firstPassword);
-        
-        if(email.indexOf("@")===-1||firstPassword!=secondPassword){
-            res.render('error', {title:'Error', prompt:"There is an error"});
-        }
-        else{
+
+        if (email.indexOf("@") === -1 || firstPassword != secondPassword) {
+            res.render('error', {
+                title: 'Error',
+                prompt: "There is an error"
+            });
+        } else {
             var collection = db.get("users");
-            var count = collection.count({username:userName}, function(err, count){
-                if(err){
+            var count = collection.count({
+                username: userName
+            }, function (err, count) {
+                if (err) {
                     res.send("Call Beck and get the problem fixed");
                 }
-                if(count>0){
-                    res.render('error', {title:'Error', prompt:"That name is already taken...so unoriginal..."});
-                }
-                else{
-                    collection.insert({"firstName":firstName,"lastName":lastName,"username":userName, "email":email, "grade":grade, "password":password},function(err,doc){
-                        if(err){
-                            res.render('error', {title:'Error'});
-                        }
-                        else{
+                if (count > 0) {
+                    res.render('error', {
+                        title: 'Error',
+                        prompt: "That name is already taken...so unoriginal..."
+                    });
+                } else {
+                    collection.insert({
+                        "firstName": firstName,
+                        "lastName": lastName,
+                        "username": userName,
+                        "email": email,
+                        "grade": grade,
+                        "password": password
+                    }, function (err, doc) {
+                        if (err) {
+                            res.render('error', {
+                                title: 'Error'
+                            });
+                        } else {
                             res.location("signin");
                             res.redirect("signin");
                         }
@@ -60,54 +78,69 @@ exports.adduser = function(db){
     }
 };
 
-exports.signin = function(db){
-    return function(req,res){
-        if(req.body.username!=null){
+exports.signin = function (db) {
+    return function (req, res) {
+        if (req.body.username != null) {
             var username = req.body.username;
             var password = req.body.password;
             var collection = db.get("users");
-        /*
+            /*
             collection.count({"username":username}, function(err,count){
                 if(count===0){
                     res.render('login', {title:'Login', prompt:'Input your credentials below!',error:"username"});
                 }
             });
         */
-            collection.findOne({"username":username}, function(err, found){
-                //console.log(found);  
-                if(err){
+            collection.findOne({
+                "username": username
+            }, function (err, found) {
+                //console.log(found);
+                if (err) {
                     res.send(err);
                 }
-                if(!found){
-                    res.render('login', {title:'Login', prompt:'Input your credentials below!',error:"username"});
-                }
-                else{
+                if (!found) {
+                    res.render('login', {
+                        title: 'Login',
+                        prompt: 'Input your credentials below!',
+                        error: "username"
+                    });
+                } else {
                     var hashed = found['password'];
                     //console.log(hashed);
-                    if(passwordHash.verify(password,hashed)){
+                    if (passwordHash.verify(password, hashed)) {
                         res.location("home");
                         res.redirect("home");
-                    }
-                    else{
-                        res.render('login', {title:'Login', prompt:"Input your credentials below!",error:"matching"});
+                    } else {
+                        res.render('login', {
+                            title: 'Login',
+                            prompt: "Input your credentials below!",
+                            error: "matching"
+                        });
                     }
                 }
             });
-        }
-        else{
-            res.render('login', {title: 'Login', prompt:'Input your credentials below!' });
+        } else {
+            res.render('login', {
+                title: 'Login',
+                prompt: 'Input your credentials below!'
+            });
         }
     }
 };
 
-exports.home = function(req,res){
-    res.render('uniquelogin',{title:"Welcome User!"});
+exports.home = function (req, res) {
+    res.render('uniquelogin', {
+        title: "Welcome User!"
+    });
 }
 
-exports.renderquestion = function(req,res){
-    res.render('renderquestion', {title: 'Random Question',prompt:'Please fill out the information below.' , question: 'question'});
+exports.renderquestion = function (req, res) {
+    res.render('renderquestion', {
+        title: 'Random Question',
+        prompt: 'Please fill out the information below.',
+        question: 'question'
+    });
 };
-
 
 exports.checkquestion = function(db){
     return function(req,res){
@@ -125,11 +158,7 @@ exports.checkquestion = function(db){
                 }
                 else{
                     res.render('grading',{title:"Incorrect...",value:"incorrect"});
-                }
-            }
-        });
-    }
-}
+
 
 exports.getquestion = function(db){
     return function(req,res){

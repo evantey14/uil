@@ -4,7 +4,8 @@ html
     title= title
     link(href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css')
     link(href='http://fonts.googleapis.com/css?family=Codystar' rel='stylesheet' type='text/css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/navbar.css')
+    block head
   body
     ul.navbar
         a(href="/")
@@ -24,3 +25,4 @@ html
     div.footer
         if id
             div(style="font:14px times,serif")=id
+    script(src="scripts/keys.js")
