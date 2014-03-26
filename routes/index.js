@@ -22,7 +22,6 @@ exports.adduser = function (db) {
         var secondPassword = req.body.secondpassword;
         var firstName = req.body.firstname;
         var lastName = req.body.lastname;
-
         var password = passwordHash.generate(firstPassword);
 
         if (email.indexOf("@") === -1 || firstPassword != secondPassword) {
@@ -116,39 +115,45 @@ exports.signin = function (db) {
         }
     }
 };
-/*
+
 exports.home = function (req, res) {
     res.render('uniquelogin', {
         title: "Welcome User!"
     });
-}
-*/
-/*
+};
+
+
 exports.renderquestion = function (req, res) {
     res.render('renderquestion', {
         title: 'Random Question',
         prompt: 'Please fill out the information below.',
         question: 'question'
     });
-}
-*/
+};
 
-exports.checkquestion = function(db){
-    return function(req,res){
+
+exports.checkquestion = function (db) {
+    return function (req, res) {
         var choice = req.body.choice;
         var id = req.body.id;
         var collection = db.get('questions');
-        collection.findOne({"_id":id},function(err,found){
-            if(err){
+        collection.findOne({
+            "_id": id
+        }, function (err, found) {
+            if (err) {
                 throw err;
-            }
-            else{
+            } else {
                 var answer = found['key'];
-                if(choice==answer){
-                    res.render('grading',{title:"CORRECT!", value:"correct"});
-                }
-                else{
-                    res.render('grading',{title:"Incorrect...",value:"incorrect"});
+                if (choice == answer) {
+                    res.render('grading', {
+                        title: "CORRECT!",
+                        value: "correct"
+                    });
+                } else {
+                    res.render('grading', {
+                        title: "Incorrect...",
+                        value: "incorrect"
+                    });
                 }
             }
         });
@@ -156,45 +161,60 @@ exports.checkquestion = function(db){
 };
 
 
-exports.getquestion = function(db){
-    return function(req,res){
-        var collection=db.get('questions');
-        var thing = collection.find({},function(err,found){
-            if(err){
-                res.render('error', {title:'Error', prompt:err});
-            }
-            else if(!found){
-                res.render('error',{title:'Error',prompt:'null'});
-            }
-            else{
+exports.getquestion = function (db) {
+    return function (req, res) {
+        var collection = db.get('questions');
+        var thing = collection.find({}, function (err, found) {
+            if (err) {
+                res.render('error', {
+                    title: 'Error',
+                    prompt: err
+                });
+            } else if (!found) {
+                res.render('error', {
+                    title: 'Error',
+                    prompt: 'null'
+                });
+            } else {
                 console.log(found);
-                var rand=Math.ceil(found.length*Math.random());
+                var rand = Math.ceil(found.length * Math.random());
                 var id = found[rand]['_id'];
-                res.redirect('/random/' + id);  
+                res.redirect('/random/' + id);
             }
         });
     }
 };
 
-exports.viewquestion = function(db){
-    return function(req,res){
+exports.viewquestion = function (db) {
+    return function (req, res) {
         var id = req.params.id;
         console.log(id);
         var collection = db.get('questions');
-        var thing = collection.findOne({'_id':id}, function(err,found){
-            if(err){
+        var thing = collection.findOne({
+            '_id': id
+        }, function (err, found) {
+            if (err) {
                 throw err;
-            }
-            else if(!found){
+            } else if (!found) {
                 res.send("error");
-            }
-            else{
+            } else {
                 //console.log(found);
                 var title = 'Random Question';
-                var prompt = 'Test: '+found['test']+'\nQuestion: '+found['ques'];
+                var prompt = 'Test: ' + found['test'] + '\nQuestion: ' + found['ques'];
                 var answers = found['ans'];
                 console.log(answers);
-                res.render('renderquestion', {title:title,prompt:prompt,question:found['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found["_id"],url:found["_id"]});
+                res.render('renderquestion', {
+                    title: title,
+                    prompt: prompt,
+                    question: found['text'],
+                    A: answers[0],
+                    B: answers[1],
+                    C: answers[2],
+                    D: answers[3],
+                    E: answers[4],
+                    id: found["_id"],
+                    url: found["_id"]
+                });
             }
         });
     }
