@@ -10,7 +10,7 @@ html
         a(href="/")
             li.nav.left
                 |LASA UIL Training
-        a(href="/getquestion")
+        a(href="/random")
             li.nav.left
                 img.random(src='./images/random.png')
         a(href="/newuser")
@@ -21,3 +21,6 @@ html
                 |Login
     div.content
         block content
+    div.footer
+        if id
+            div(style="font:14px times,serif")=id

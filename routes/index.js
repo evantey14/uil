@@ -109,46 +109,68 @@ exports.renderquestion = function(req,res){
 };
 
 
+exports.checkquestion = function(db){
+    return function(req,res){
+        var choice = req.body.choice;
+        var id = req.body.id;
+        var collection = db.get('questions');
+        collection.findOne({"_id":id},function(err,found){
+            if(err){
+                throw err;
+            }
+            else{
+                var answer = found['key'];
+                if(choice==answer){
+                    res.render('grading',{title:"CORRECT!", value:"correct"});
+                }
+                else{
+                    res.render('grading',{title:"Incorrect...",value:"incorrect"});
+                }
+            }
+        });
+    }
+}
+
 exports.getquestion = function(db){
     return function(req,res){
-        if(req.body.id!=null){
-            var choice = req.body.choice;
-            var id = req.body.id;
-            var collection = db.get('questions');
-            collection.findOne({"_id":id},function(err,found){
-                if(err){
-                    throw err;
-                }
-                else{
-                    var answer = found['key'];
-                    if(choice==answer){
-                        res.render('grading',{title:"CORRECT!", value:"correct"});
-                    }
-                    else{
-                        res.render('grading',{title:"Incorrect...",value:"incorrect"});
-                    }
-                }
-            });
-        }
-        else{
-            var collection=db.get('questions');
-            var thing = collection.find({},function(err,found){
-                if(err){
-                    res.render('error', {title:'Error', prompt:err});
-                }
-                else if(!found){
-                    res.render('error',{title:'Error',prompt:'null'});
-                }
-                else{
-                    console.log(found);
-                    var rand=Math.ceil(found.length*Math.random());
-                    var title = 'Random Question';
-                    var prompt = 'Test: '+found[rand]['test']+'\nQuestion: '+found[rand]['ques'];
-                    var answers = found[rand]['ans'];
-                    
-                    res.render('renderquestion', {title:title,prompt:prompt,question:found[rand]['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found[rand]["_id"],url:found["_id"]});
-                }
-            });
-        }
+        var collection=db.get('questions');
+        var thing = collection.find({},function(err,found){
+            if(err){
+                res.render('error', {title:'Error', prompt:err});
+            }
+            else if(!found){
+                res.render('error',{title:'Error',prompt:'null'});
+            }
+            else{
+                console.log(found);
+                var rand=Math.ceil(found.length*Math.random());
+                var id = found[rand]['_id'];
+                res.redirect('/random/' + id);  
+            }
+        });
+    }
+}
+
+exports.viewquestion = function(db){
+    return function(req,res){
+        var id = req.params.id;
+        console.log(id);
+        var collection = db.get('questions');
+        var thing = collection.findOne({'_id':id}, function(err,found){
+            if(err){
+                throw err;
+            }
+            else if(!found){
+                res.send("error");
+            }
+            else{
+                //console.log(found);
+                var title = 'Random Question';
+                var prompt = 'Test: '+found['test']+'\nQuestion: '+found['ques'];
+                var answers = found['ans'];
+                console.log(answers);
+                res.render('renderquestion', {title:title,prompt:prompt,question:found['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found["_id"],url:found["_id"]});
+            }
+        });
     }
 }

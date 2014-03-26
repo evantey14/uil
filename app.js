@@ -31,25 +31,15 @@ app.get('/', routes.index);
 app.get('/pdf', pdf.index);
 //app.get('/userlist',routes.userlist(db));
 app.get('/newuser',routes.newuser);
-app.get('/renderquestion',routes.renderquestion);
+app.all('/renderquestion',routes.renderquestion);
 
 app.post('/adduser', routes.adduser(db));
 app.all('/signin', routes.signin(db));
 app.all('/home',routes.home);
 app.all('/getquestion', routes.getquestion(db));
-/*
-app.get('/:id',function(req,res){
-    return db.get('questions').findOne({id:req.params.id},function(err,found){
-        if(err){
-            throw err
-        }
-        else{
-            var prompt = 'Test: '+found[rand]['test']+'\nQuestion: '+found[rand]['ques'];
-            return res.render('renderquestion', {title:"Requested Question",prompt:prompt,question:found[rand]['text'],A:answers[0],B:answers[1],C:answers[2],D:answers[3],E:answers[4],id:found[rand]["_id"],url:found["_id"]});
-        }
-    });
-}
-*/
+
+app.all('/random', routes.getquestion(db));
+app.all('/random/:id', routes.viewquestion(db));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
