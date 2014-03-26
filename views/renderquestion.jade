@@ -2,11 +2,15 @@ extends layout
 block head
     link(rel='stylesheet', href='/stylesheets/question.css')
 block content
-    div.qnum= qnum +"."
-        label.id= id
-    div.details
-        div.title= title
-        div.test= "Test " + test
+    if qnum
+        div.qnum= qnum +"."
+            label.id= id
+        div.details
+            div.title= title
+            div.test= "Test " + test
+    else
+        div.qnum= "Random"
+            label.id= id
     div.question.code= question
     form.submit(name="getquestion",method="post",action="/getquestion")
         label(for='A')

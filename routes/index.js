@@ -206,6 +206,8 @@ exports.viewquestion = function (db) {
                 res.render('renderquestion', {
                     title: title,
                     prompt: prompt,
+                    qnum: found['ques'],
+                    test: found['test'],
                     question: found['text'],
                     A: answers[0],
                     B: answers[1],
