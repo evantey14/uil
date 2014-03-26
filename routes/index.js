@@ -4,25 +4,14 @@ exports.index = function (req, res) {
     res.render('index', {
         title: 'LASA UIL Training'
     });
-};
-
-/*
-exports.userlist = function(db) {
-    return function(req, res) {
-        var collection = db.get('users');
-        collection.find({},{},function(e,docs){
-            res.render('userlist', {"userlist" : docs});
-        });
-    };
-};
-*/
+}
 
 exports.newuser = function (req, res) {
     res.render('newuser', {
         title: 'Add New User',
         prompt: 'Please fill out the information below.'
     });
-};
+}
 
 exports.adduser = function (db) {
     return function (req, res) {
@@ -76,7 +65,7 @@ exports.adduser = function (db) {
             });
         }
     }
-};
+}
 
 exports.signin = function (db) {
     return function (req, res) {
@@ -126,21 +115,23 @@ exports.signin = function (db) {
             });
         }
     }
-};
-
+}
+/*
 exports.home = function (req, res) {
     res.render('uniquelogin', {
         title: "Welcome User!"
     });
 }
-
+*/
+/*
 exports.renderquestion = function (req, res) {
     res.render('renderquestion', {
         title: 'Random Question',
         prompt: 'Please fill out the information below.',
         question: 'question'
     });
-};
+}
+*/
 
 exports.checkquestion = function(db){
     return function(req,res){
@@ -158,6 +149,11 @@ exports.checkquestion = function(db){
                 }
                 else{
                     res.render('grading',{title:"Incorrect...",value:"incorrect"});
+                }
+            }
+        });
+    }
+}
 
 
 exports.getquestion = function(db){
