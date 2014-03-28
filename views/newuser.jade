@@ -3,6 +3,8 @@ extends layout
 block content
     h1= title
     h5= prompt
+    if error
+        h5= error
     form#formAddUser(name="adduser",method="post",action="/adduser")
         input#inputFirstName(type="text", placeholder="First Name",name = "firstname")
         br
