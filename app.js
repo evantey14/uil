@@ -21,6 +21,10 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.cookieParser());
+app.use(express.cookieSession({
+    secret: 'lasacs'
+}));
 
 // development only
 if ('development' == app.get('env')) {
@@ -41,7 +45,7 @@ app.all('/checkquestion', routes.checkquestion(db));
 
 app.all('/random', routes.getquestion(db));
 app.all('/random/:id', routes.viewquestion(db));
-app.all('/checkquestion',routes.checkquestion(db));
+app.all('/checkquestion', routes.checkquestion(db));
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
