@@ -26,19 +26,19 @@ exports.adduser = function (db) {
         var combination = userName + email + grade + firstPassword + secondPassword + firstName + lastName;
 
         if (!req.body.username || !req.body.useremail || !req.body.usergrade || !req.body.password || !req.body.secondpassword || !req.body.firstname || !req.body.lastname) {
-            boolean empty = true;
+            var empty = true;
             //error: "You left some of the boxes empty!"
         }
         if (email.indexOf("@") === -1) {
-            boolean email = true;
+            var email = true;
             //error: "Please use a valid email",
         }
         if (firstPassword != secondPassword) {
-            boolean password = true;
+            var password = true;
             //error: "Make sure the password fields match.",
         }
         if (combination.indexOf(['']) !== -1) {
-            boolean character = true;
+            var character = true;
             //error: "Do not use punctuation or other odd characters in any of the fields.",
         }
         if (grade > 12) {
@@ -358,15 +358,15 @@ exports.signin = function (db) {
                 } else {
                     var hashed = found['password'];
                     //console.log(hashed);
-                    if (passwordHash.verify(password, hashed)) { << << << < HEAD
+                    if (passwordHash.verify(password, hashed)) {
                         res.location("home");
-                        res.redirect("home"); === === =
-                            req.session = found["_id"];
+                        res.redirect("home");
+                        req.session = found["_id"];
                         console.log(req.session);
                         req.session.user = found["username"];
                         console.log(req.session.user);
                         res.location("/home");
-                        res.redirect("/home"); >>> >>> > 65c161486e4e9f7ecda82b3d5e7014914a5dd314
+                        res.redirect("/home");
                     } else {
                         res.render('login', {
                             title: 'Login',
@@ -491,4 +491,4 @@ exports.viewquestion = function (db) {
             }
         });
     }
-}; >>> >>> > 53b839c57d52f4da2958c8ed5c85963ec95928a5
+};
