@@ -22,7 +22,7 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.cookieParser());
-app.use(express.cookieSession({
+app.use(express.session({
     secret: 'lasacs'
 }));
 
@@ -33,7 +33,6 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/pdf', pdf.index);
-//app.get('/userlist',routes.userlist(db));
 app.get('/newuser', routes.newuser);
 app.all('/renderquestion', routes.renderquestion);
 

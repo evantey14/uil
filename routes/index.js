@@ -26,30 +26,22 @@ exports.adduser = function (db) {
         var combination = userName + email + grade + firstPassword + secondPassword + firstName + lastName;
 
         if (!req.body.username || !req.body.useremail || !req.body.usergrade || !req.body.password || !req.body.secondpassword || !req.body.firstname || !req.body.lastname) {
-            res.render('newuser', {
-                title: "Add New User",
-                prompt: "Please fill out the information below.",
-                error: "You left some of the boxes empty!"
-            });
-        } else if (email.indexOf("@") === -1) {
-            res.render('newuser', {
-                title: 'Add New User',
-                error: "Please use a valid email",
-                prompt: "Please fill out the information below."
-            });
-        } else if (firstPassword != secondPassword) {
-            res.render('newuser', {
-                title: "Add New User",
-                error: "Make sure the password fields match.",
-                prompt: "Please fill out the information below."
-            });
-        } else if (combination.indexOf(['!#$%^&*():;.,<>/?\|']) !== -1) {
-            res.render('newuser', {
-                title: 'Add New User',
-                error: "Do not use punctuation or other odd characters in any of the fields.",
-                prompt: "Please fill out the information below."
-            });
-        } else if (grade > 12) {
+            boolean empty = true;
+            //error: "You left some of the boxes empty!"
+        }
+        if (email.indexOf("@") === -1) {
+            boolean email = true;
+            //error: "Please use a valid email",
+        }
+        if (firstPassword != secondPassword) {
+            boolean password = true;
+            //error: "Make sure the password fields match.",
+        }
+        if (combination.indexOf(['']) !== -1) {
+            boolean character = true;
+            //error: "Do not use punctuation or other odd characters in any of the fields.",
+        }
+        if (grade > 12) {
             res.render('newuser', {
                 title: 'Add New User',
                 error: "Please input a valid grade.",
@@ -113,7 +105,6 @@ exports.signin = function (db) {
                     });
                 } else {
                     var hashed = found['password'];
-                    //console.log(hashed);
                     if (passwordHash.verify(password, hashed)) {
                         req.session = found["_id"];
                         console.log(req.session);
@@ -140,7 +131,7 @@ exports.signin = function (db) {
 };
 
 exports.home = function (req, res) {
-    var user = res.session.user;
+    var user = req.session.user;
     console.log(user);
     res.render('uniquelogin', {
         title: "Welcome User!"
