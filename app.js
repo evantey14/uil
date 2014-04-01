@@ -22,7 +22,7 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.cookieParser());
-app.use(express.session({
+app.use(express.cookieSession({
     secret: 'lasacs'
 }));
 

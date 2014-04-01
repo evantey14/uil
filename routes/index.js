@@ -23,28 +23,38 @@ exports.adduser = function (db) {
         var firstName = req.body.firstname;
         var lastName = req.body.lastname;
         var password = passwordHash.generate(firstPassword);
-        var combination = userName + email + grade + firstPassword + secondPassword + firstName + lastName;
+
+        var empty1 = false;
+        var email1 = false;
+        var password1 = false;
+        var grade1 = false;
+
+        if (!email) {
+            email = "";
+        }
 
         if (!req.body.username || !req.body.useremail || !req.body.usergrade || !req.body.password || !req.body.secondpassword || !req.body.firstname || !req.body.lastname) {
-            var empty = true;
+            empty1 = true;
             //error: "You left some of the boxes empty!"
         }
         if (email.indexOf("@") === -1) {
-            var email = true;
+            email1 = true;
             //error: "Please use a valid email",
         }
         if (firstPassword != secondPassword) {
-            var password = true;
+            password1 = true;
             //error: "Make sure the password fields match.",
         }
-        if (combination.indexOf(['']) !== -1) {
-            var character = true;
-            //error: "Do not use punctuation or other odd characters in any of the fields.",
-        }
         if (grade > 12) {
+            grade1 = true;
+        }
+        if (password1 || email1 || grade1 | empty1) {
             res.render('newuser', {
                 title: 'Add New User',
-                error: "Please input a valid grade.",
+                empty: empty1,
+                email: email1,
+                password: password1,
+                grade: grade1,
                 prompt: "Please fill out the information below."
             });
         } else {
@@ -250,90 +260,7 @@ exports.newuser = function (req, res) {
     res.render('newuser', {
         title: 'Add New User',
         prompt: 'Please fill out the information below.',
-        error: '',
-        fixlist: []
     });
-};
-
-exports.adduser = function (db) {
-    return function (req, res) {
-        var userName = req.body.username;
-        var email = req.body.useremail;
-        var grade = req.body.usergrade;
-        var firstPassword = req.body.password;
-        var secondPassword = req.body.secondpassword;
-        var firstName = req.body.firstname;
-        var lastName = req.body.lastname;
-        var password = passwordHash.generate(firstPassword);
-
-        var fixlist = [];
-        var title = "Add New User";
-        var prompt = "Enter information below.";
-        var error = "";
-        var problem = false;
-        console.log(userName, email, grade, firstPassword, secondPassword, firstName, lastName, password);
-        if (!req.body.username || !req.body.useremail || !req.body.usergrade || !req.body.password || !req.body.secondpassword || !req.body.firstname || !req.body.lastname) {
-            error = "You left some boxes empty.\n";
-        } else if (email.indexOf("@") === -1) {
-            error += "Please enter a valid email.\n";
-            fixlist['email'] += "Invalid email.";
-        } else if (firstPassword != secondPassword) {
-            error += "Please make sure your password fields match.\n";
-            fixlist['password'] += "Passwords dont match.";
-        } else if (userName.indexOf(["/^[a-z][\w\.]{0,24}$/i"] !== 1)) {
-            error += "Please enter a username with only letters and numbers.\n";
-            fixlist['user'] += "Username has invalid characters";
-        }
-        /*else if (combination.indexOf(["%#!^&*()_+=-[]{}\|';:<>/?"] !== -1)) {
-            error += "Do not user punctuation or other odd characters in any of the fields.\n";
-            fixlist
-        } */
-        else if (grade > 12) {
-            error += "Please enter a valid grade.\n";
-            fixlist['grade'] = "Grade is over 12";
-        }
-        if (problem) {
-            res.render('newuser', {
-                title: title,
-                prompt: prompt,
-                error: error,
-                fixlist: fixlist
-            });
-        } else {
-            var collection = db.get("users");
-            var count = collection.count({
-                username: userName
-            }, function (err, count) {
-                if (err) {
-                    throw err;
-                }
-                if (count > 0) {
-                    res.render('newuser', {
-                        title: 'Add New User',
-                        error: "That username is already taken.",
-                        prompt: "Please fill out the information below."
-                    });
-                } else {
-                    collection.insert({
-                        "firstName": firstName,
-                        "lastName": lastName,
-                        "username": userName,
-                        "email": email,
-                        "grade": grade,
-                        "password": password
-                    }, function (err, doc) {
-                        if (err) {
-                            throw err;
-                        } else {
-                            res.location("signin");
-                            res.redirect("signin");
-                        }
-                    });
-                }
-            });
-        }
-
-    }
 };
 
 exports.signin = function (db) {
@@ -359,11 +286,9 @@ exports.signin = function (db) {
                     var hashed = found['password'];
                     //console.log(hashed);
                     if (passwordHash.verify(password, hashed)) {
-                        res.location("home");
-                        res.redirect("home");
-                        req.session = found["_id"];
-                        console.log(req.session);
-                        req.session.user = found["username"];
+                        req.session = found['_id'];
+                        console.log(req.session.id);
+                        req.session.user = found['username'];
                         console.log(req.session.user);
                         res.location("/home");
                         res.redirect("/home");
@@ -386,7 +311,7 @@ exports.signin = function (db) {
 };
 
 exports.home = function (req, res) {
-    var user = res.session.user;
+    var user = req.session.user;
     console.log(user);
     res.render('uniquelogin', {
         title: "Welcome User!"
