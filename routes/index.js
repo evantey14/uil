@@ -25,6 +25,7 @@ exports.adduser = function (db) {
         var firstName = req.body.firstname;
         var lastName = req.body.lastname;
         var password = passwordHash.generate(firstPassword);
+
         var fixlist = [];
         var title = "Add New User";
         var prompt = "Enter information below.";
@@ -117,9 +118,15 @@ exports.signin = function (db) {
                 } else {
                     var hashed = found['password'];
                     //console.log(hashed);
-                    if (passwordHash.verify(password, hashed)) {
+                    if (passwordHash.verify(password, hashed)) { << << << < HEAD
                         res.location("home");
-                        res.redirect("home");
+                        res.redirect("home"); === === =
+                            req.session = found["_id"];
+                        console.log(req.session);
+                        req.session.user = found["username"];
+                        console.log(req.session.user);
+                        res.location("/home");
+                        res.redirect("/home"); >>> >>> > 65c161486e4e9f7ecda82b3d5e7014914a5dd314
                     } else {
                         res.render('login', {
                             title: 'Login',
@@ -139,6 +146,8 @@ exports.signin = function (db) {
 };
 
 exports.home = function (req, res) {
+    var user = res.session.user;
+    console.log(user);
     res.render('uniquelogin', {
         title: "Welcome User!"
     });
