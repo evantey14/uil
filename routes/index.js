@@ -110,9 +110,8 @@ exports.signin = function (db) {
                 } else {
                     var hashed = found['password'];
                     if (passwordHash.verify(password, hashed)) {
-                        req.session = found['username'];
                         req.session.id = found["_id"];
-                        console.log(req.session);
+                        console.log(req.session.id);
                         req.session.user = found["username"];
                         console.log(req.session.user);
                         res.redirect("/home");
@@ -132,6 +131,13 @@ exports.signin = function (db) {
             });
         }
     }
+};
+
+exports.home = function (req, res) {
+    res.send(req.session.user);
+    res.render('uniquelogin', {
+        title: "Welcome User!"
+    });
 };
 
 
@@ -212,18 +218,9 @@ exports.viewquestion = function (db) {
     }
 };
 
-var passwordHash = require('password-hash');
-
 exports.index = function (req, res) {
     res.render('index', {
         title: 'LASA UIL Training'
-    });
-};
-
-exports.home = function (req, res) {
-    res.send(req.session.id);
-    res.render('uniquelogin', {
-        title: "Welcome User!"
     });
 };
 
