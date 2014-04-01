@@ -111,9 +111,7 @@ exports.signin = function (db) {
                     var hashed = found['password'];
                     if (passwordHash.verify(password, hashed)) {
                         req.session.id = found["_id"];
-                        console.log(req.session.id);
                         req.session.user = found["username"];
-                        console.log(req.session.user);
                         res.redirect("/home");
                     } else {
                         res.render('login', {
@@ -134,9 +132,8 @@ exports.signin = function (db) {
 };
 
 exports.home = function (req, res) {
-    res.send(req.session.user);
     res.render('uniquelogin', {
-        title: "Welcome User!"
+        title: "Welcome " + req.session.user
     });
 };
 
