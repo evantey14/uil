@@ -2,22 +2,39 @@ extends layout
 
 block content
     h1= title
-    h5= prompt
-    if error
-        h5= error
+    h4= prompt
+    if grade
+        h5="Please input a valid grade."
+    if password
+        h5="Your password fields do not match."
+    if empty
+        h5= "You left some of the boxes empty."
+    if character
+        h5= "Please do not use punctation in fields."
+    if email
+        h5= "Please input a valid email."
+        
     form#formAddUser(name="adduser",method="post",action="/adduser")
         input#inputFirstName(type="text", placeholder="First Name",name = "firstname")
         br
         input#inputLastName(type="text",placeholder="Last Name",name="lastname")
         br
         input#inputUserName(type="text", placeholder="Username", name="username")
+        if fixlist&&fixlist['user']
+            span= fixlist['user']
         br
         input#inputUserEmail(type="text", placeholder="Email", name="useremail")
+        if fixlist&&fixlist['email']
+            span= fixlist['email']
         br
         input#inputUserGrade(type="text", placeholder="Grade", name="usergrade")
+        if fixlist&&fixlist['grade']
+            span= fixlist['grade']
         br
         input#inputPassword(type="password", placeholder="Password", name="password")
         br
         input#checkpassword(type="password",placeholder="Reenter Password", name="secondpassword")
+        if fixlist&&fixlist['password']
+            span= fixlist['password']
         br
         button#submit(type="submit") submit

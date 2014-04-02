@@ -19,13 +19,12 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.cookieParser());
-app.use(express.session({
-    secret: 'lasacs'
-}));
 
+app.use(express.cookieParser('lasacs'));
+app.use(express.cookieSession('lasacs'));
+
+app.use(app.router);
 // development only
 if ('development' == app.get('env')) {
     app.use(express.errorHandler());
@@ -33,7 +32,6 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/pdf', pdf.index);
-//app.get('/userlist',routes.userlist(db));
 app.get('/newuser', routes.newuser);
 app.all('/renderquestion', routes.renderquestion);
 

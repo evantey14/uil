@@ -1,11 +1,5 @@
 var passwordHash = require('password-hash');
 
-exports.index = function (req, res) {
-    res.render('index', {
-        title: 'LASA UIL Training'
-    });
-};
-
 exports.newuser = function (req, res) {
     res.render('newuser', {
         title: 'Add New User',
@@ -23,36 +17,38 @@ exports.adduser = function (db) {
         var firstName = req.body.firstname;
         var lastName = req.body.lastname;
         var password = passwordHash.generate(firstPassword);
-        var combination = userName + email + grade + firstPassword + secondPassword + firstName + lastName;
+
+        var empty1 = false;
+        var email1 = false;
+        var password1 = false;
+        var grade1 = false;
+
+        if (!email) {
+            email = "";
+        }
 
         if (!req.body.username || !req.body.useremail || !req.body.usergrade || !req.body.password || !req.body.secondpassword || !req.body.firstname || !req.body.lastname) {
-            res.render('newuser', {
-                title: "Add New User",
-                prompt: "Please fill out the information below.",
-                error: "You left some of the boxes empty!"
-            });
-        } else if (email.indexOf("@") === -1) {
-            res.render('newuser', {
-                title: 'Add New User',
-                error: "Please use a valid email",
-                prompt: "Please fill out the information below."
-            });
-        } else if (firstPassword != secondPassword) {
-            res.render('newuser', {
-                title: "Add New User",
-                error: "Make sure the password fields match.",
-                prompt: "Please fill out the information below."
-            });
-        } else if (combination.indexOf(['!#$%^&*():;.,<>/?\|']) !== -1) {
+            empty1 = true;
+            //error: "You left some of the boxes empty!"
+        }
+        if (email.indexOf("@") === -1) {
+            email1 = true;
+            //error: "Please use a valid email",
+        }
+        if (firstPassword != secondPassword) {
+            password1 = true;
+            //error: "Make sure the password fields match.",
+        }
+        if (grade > 12) {
+            grade1 = true;
+        }
+        if (password1 || email1 || grade1 | empty1) {
             res.render('newuser', {
                 title: 'Add New User',
-                error: "Do not use punctuation or other odd characters in any of the fields.",
-                prompt: "Please fill out the information below."
-            });
-        } else if (grade > 12) {
-            res.render('newuser', {
-                title: 'Add New User',
-                error: "Please input a valid grade.",
+                empty: empty1,
+                email: email1,
+                password: password1,
+                grade: grade1,
                 prompt: "Please fill out the information below."
             });
         } else {
@@ -113,13 +109,9 @@ exports.signin = function (db) {
                     });
                 } else {
                     var hashed = found['password'];
-                    //console.log(hashed);
                     if (passwordHash.verify(password, hashed)) {
-                        req.session = found["_id"];
-                        console.log(req.session);
+                        req.session.id = found["_id"];
                         req.session.user = found["username"];
-                        console.log(req.session.user);
-                        res.location("/home");
                         res.redirect("/home");
                     } else {
                         res.render('login', {
@@ -140,10 +132,8 @@ exports.signin = function (db) {
 };
 
 exports.home = function (req, res) {
-    var user = res.session.user;
-    console.log(user);
     res.render('uniquelogin', {
-        title: "Welcome User!"
+        title: "Welcome " + req.session.user
     });
 };
 
@@ -185,28 +175,6 @@ exports.checkquestion = function (db) {
     }
 };
 
-
-exports.getquestion = function (db) {
-    return function (req, res) {
-        var collection = db.get('questions');
-        var thing = collection.find({}, function (err, found) {
-            if (err) {
-                throw err;
-            } else if (!found) {
-                res.render('error', {
-                    title: 'Error',
-                    prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.'
-                });
-            } else {
-                console.log(found);
-                var rand = Math.ceil(found.length * Math.random());
-                var id = found[rand]['_id'];
-                res.redirect('/random/' + id);
-            }
-        });
-    }
-};
-
 exports.viewquestion = function (db) {
     return function (req, res) {
         var id = req.params.id;
@@ -242,6 +210,33 @@ exports.viewquestion = function (db) {
                     id: found["_id"],
                     url: found["_id"]
                 });
+            }
+        });
+    }
+};
+
+exports.index = function (req, res) {
+    res.render('index', {
+        title: 'LASA UIL Training'
+    });
+};
+
+exports.getquestion = function (db) {
+    return function (req, res) {
+        var collection = db.get('questions');
+        var thing = collection.find({}, function (err, found) {
+            if (err) {
+                throw err;
+            } else if (!found) {
+                res.render('error', {
+                    title: 'Error',
+                    prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.'
+                });
+            } else {
+                console.log(found);
+                var rand = Math.ceil(found.length * Math.random());
+                var id = found[rand]['_id'];
+                res.redirect('/random/' + id);
             }
         });
     }
