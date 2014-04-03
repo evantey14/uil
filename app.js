@@ -5,12 +5,15 @@ var express = require('express'),
     http = require('http'),
     path = require('path');
 
+var verification = require('./verification.js');
+
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/nodetest1');
 
 var app = express();
 
+app.use(verification());
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
