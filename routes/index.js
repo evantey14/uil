@@ -1,7 +1,9 @@
 var passwordHash = require('password-hash');
+var cookie = false;
 
 exports.newuser = function (req, res) {
     res.render('newuser', {
+        cookie:cookie,
         title: 'Add New User',
         prompt: 'Please fill out the information below.'
     });
@@ -44,6 +46,7 @@ exports.adduser = function (db) {
         }
         if (password1 || email1 || grade1 | empty1) {
             res.render('newuser', {
+                cookie:cookie,
                 title: 'Add New User',
                 empty: empty1,
                 email: email1,
@@ -61,6 +64,7 @@ exports.adduser = function (db) {
                 }
                 if (count > 0) {
                     res.render('newuser', {
+                        cookie:cookie,
                         title: 'Add New User',
                         error: "That username is already taken.",
                         prompt: "Please fill out the information below."
@@ -103,6 +107,7 @@ exports.signin = function (db) {
                 }
                 if (!found) {
                     res.render('login', {
+                        cookie:cookie,
                         title: 'Login',
                         prompt: 'Input your credentials below!',
                         error: "username"
@@ -112,9 +117,12 @@ exports.signin = function (db) {
                     if (passwordHash.verify(password, hashed)) {
                         req.session.id = found["_id"];
                         req.session.user = found["username"];
+                        req.session.loggedin = true;
+                        cookie=true;
                         res.redirect("/home");
                     } else {
                         res.render('login', {
+                            cookie:cookie,
                             title: 'Login',
                             prompt: "Input your credentials below!",
                             error: "matching"
@@ -124,6 +132,7 @@ exports.signin = function (db) {
             });
         } else {
             res.render('login', {
+                cookie:cookie,
                 title: 'Login',
                 prompt: 'Input your credentials below!'
             });
@@ -132,14 +141,34 @@ exports.signin = function (db) {
 };
 
 exports.home = function (req, res) {
-    res.render('uniquelogin', {
-        title: "Welcome " + req.session.user
-    });
+    if(req.session.user){
+        res.render('uniquelogin', {
+            cookie:cookie,
+            title: "Welcome " + req.session.user,
+            loggedin:req.session.loggedin
+        });
+    }
+    else{
+        res.redirect("/");
+    }
+};
+
+exports.logout = function(req,res){
+    if(req.session===undefined){
+        res.redirect("/");
+    }
+    else{
+        cookie = false;
+        req.session.destroy;
+        req.session=null;
+        res.redirect("/");
+    }
 };
 
 
 exports.renderquestion = function (req, res) {
     res.render('renderquestion', {
+        cookie:cookie,
         title: 'Random Question',
         prompt: 'Please fill out the information below.',
         question: 'question'
@@ -161,11 +190,13 @@ exports.checkquestion = function (db) {
                 var answer = found['key'];
                 if (choice == answer) {
                     res.render('grading', {
+                        cookie:cookie,
                         title: "CORRECT!",
                         value: "correct"
                     });
                 } else {
                     res.render('grading', {
+                        cookie:cookie,
                         title: "Incorrect...",
                         value: "incorrect"
                     });
@@ -178,7 +209,7 @@ exports.checkquestion = function (db) {
 exports.viewquestion = function (db) {
     return function (req, res) {
         var id = req.params.id;
-        console.log(id);
+        //console.log(id);
         var collection = db.get('questions');
         var thing = collection.findOne({
             '_id': id
@@ -187,6 +218,7 @@ exports.viewquestion = function (db) {
                 throw err;
             } else if (!found) {
                 res.render('error', {
+                    cookie:cookie,
                     title: 'Error',
                     prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.'
                 });
@@ -195,8 +227,9 @@ exports.viewquestion = function (db) {
                 var title = 'Random Question';
                 var prompt = 'Test: ' + found['test'] + '\nQuestion: ' + found['ques'];
                 var answers = found['ans'];
-                console.log(answers);
+                //console.log(answers);
                 res.render('renderquestion', {
+                    cookie:cookie,
                     title: title,
                     prompt: prompt,
                     qnum: found['ques'],
@@ -217,27 +250,34 @@ exports.viewquestion = function (db) {
 
 exports.index = function (req, res) {
     res.render('index', {
+        cookie:cookie,
         title: 'LASA UIL Training'
     });
 };
 
 exports.getquestion = function (db) {
     return function (req, res) {
-        var collection = db.get('questions');
-        var thing = collection.find({}, function (err, found) {
-            if (err) {
-                throw err;
-            } else if (!found) {
-                res.render('error', {
-                    title: 'Error',
-                    prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.'
-                });
-            } else {
-                console.log(found);
-                var rand = Math.ceil(found.length * Math.random());
-                var id = found[rand]['_id'];
-                res.redirect('/random/' + id);
-            }
-        });
+        if(!cookie){
+            res.redirect("/signin");
+        }
+        else{
+            var collection = db.get('questions');
+            var thing = collection.find({}, function (err, found) {
+                if (err) {
+                    throw err;
+                } else if (!found) {
+                    res.render('error', {
+                        cookie:cookie,
+                        title: 'Error',
+                        prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.'
+                    });
+                } else {
+                    //console.log(found);
+                    var rand = Math.ceil(found.length * Math.random());
+                    var id = found[rand]['_id'];
+                    res.redirect('/random/' + id);
+                }
+            });
+        }
     }
 };

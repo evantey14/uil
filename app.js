@@ -44,6 +44,7 @@ app.all('/checkquestion', routes.checkquestion(db));
 app.all('/random', routes.getquestion(db));
 app.all('/random/:id', routes.viewquestion(db));
 app.all('/checkquestion', routes.checkquestion(db));
+app.all('/logout', routes.logout);
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
