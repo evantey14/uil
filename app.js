@@ -13,7 +13,7 @@ var db = monk('localhost:27017/nodetest1');
 
 var app = express();
 
-app.use(verification());
+
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
@@ -23,6 +23,8 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(verification());
 
 app.use(express.cookieParser('lasacs'));
 app.use(express.cookieSession('lasacs'));

@@ -257,27 +257,22 @@ exports.index = function (req, res) {
 
 exports.getquestion = function (db) {
     return function (req, res) {
-        if(!cookie){
-            res.redirect("/signin");
-        }
-        else{
-            var collection = db.get('questions');
-            var thing = collection.find({}, function (err, found) {
-                if (err) {
-                    throw err;
-                } else if (!found) {
-                    res.render('error', {
-                        cookie:cookie,
-                        title: 'Error',
-                        prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.'
-                    });
-                } else {
-                    //console.log(found);
-                    var rand = Math.ceil(found.length * Math.random());
-                    var id = found[rand]['_id'];
-                    res.redirect('/random/' + id);
-                }
-            });
-        }
+        var collection = db.get('questions');
+        var thing = collection.find({}, function (err, found) {
+            if (err) {
+                throw err;
+            } else if (!found) {
+                res.render('error', {
+                    cookie:cookie,
+                    title: 'Error',
+                    prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.'
+                });
+            } else {
+                //console.log(found);
+                var rand = Math.ceil(found.length * Math.random());
+                var id = found[rand]['_id'];
+                res.redirect('/random/' + id);
+            }
+        });
     }
 };

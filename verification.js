@@ -4,12 +4,16 @@ module.exports = function(){
             "/signin",
             "/",
             "/newuser",
+            "/adduser"
         ];
+        console.log(req.session.user);
+        if(accessible.indexOf(req.url)>-1){
+            next();
+        }
         else if(req.session!==undefined){
             next();
         }
         else{
-            console.log(req.url);
             res.redirect("/signin");
         }
     }
