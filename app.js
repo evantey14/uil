@@ -24,10 +24,10 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(verification());
-
 app.use(express.cookieParser('lasacs'));
 app.use(express.cookieSession('lasacs'));
+
+app.use(verification());
 
 app.use(app.router);
 // development only
