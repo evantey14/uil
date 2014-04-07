@@ -1,6 +1,20 @@
 var passwordHash = require('password-hash');
 var cookie = false;
 
+var shuffle = function(array){
+    var currentIndex = array.length;
+    var temp;
+    var randomIndex;
+    while(0!==currentIndex){
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temp = array[currentIndex];
+        array[currentIndex]=array[randomIndex];
+        array[randomIndex]=temp;
+    }
+    return array;
+}
+
 exports.newuser = function (req, res) {
     res.render('newuser', {
         cookie:cookie,
@@ -19,75 +33,92 @@ exports.adduser = function (db) {
         var firstName = req.body.firstname;
         var lastName = req.body.lastname;
         var password = passwordHash.generate(firstPassword);
-
-        var empty1 = false;
-        var email1 = false;
-        var password1 = false;
-        var grade1 = false;
-
-        if (!email) {
-            email = "";
-        }
-
-        if (!req.body.username || !req.body.useremail || !req.body.usergrade || !req.body.password || !req.body.secondpassword || !req.body.firstname || !req.body.lastname) {
-            empty1 = true;
-            //error: "You left some of the boxes empty!"
-        }
-        if (email.indexOf("@") === -1) {
-            email1 = true;
-            //error: "Please use a valid email",
-        }
-        if (firstPassword != secondPassword) {
-            password1 = true;
-            //error: "Make sure the password fields match.",
-        }
-        if (grade > 12) {
-            grade1 = true;
-        }
-        if (password1 || email1 || grade1 | empty1) {
-            res.render('newuser', {
-                cookie:cookie,
-                title: 'Add New User',
-                empty: empty1,
-                email: email1,
-                password: password1,
-                grade: grade1,
-                prompt: "Please fill out the information below."
-            });
-        } else {
-            var collection = db.get("users");
-            var count = collection.count({
-                username: userName
-            }, function (err, count) {
-                if (err) {
-                    throw err;
+        
+        var ids = [];
+        var collections = db.get('questions')
+        collections.find({},function(err,found){
+            if(err){
+                throw err;
+            }
+            else{
+                for(var i = 0;i<found.length;i++){
+                    ids.push(found[i]['_id']);
                 }
-                if (count > 0) {
+                shuffle(ids);
+        
+                var empty1 = false;
+                var email1 = false;
+                var password1 = false;
+                var grade1 = false;
+
+                if (!email) {
+                    email = "";
+                }
+
+                if (!req.body.username || !req.body.useremail || !req.body.usergrade || !req.body.password || !req.body.secondpassword || !req.body.firstname || !req.body.lastname) {
+                    empty1 = true;
+                    //error: "You left some of the boxes empty!"
+                }
+                if (email.indexOf("@") === -1) {
+                    email1 = true;
+                    //error: "Please use a valid email",
+                }
+                if (firstPassword != secondPassword) {
+                    password1 = true;
+                    //error: "Make sure the password fields match.",
+                }
+                if (grade > 12) {
+                    grade1 = true;
+                }
+                if (password1 || email1 || grade1 | empty1) {
                     res.render('newuser', {
                         cookie:cookie,
                         title: 'Add New User',
-                        error: "That username is already taken.",
+                        empty: empty1,
+                        email: email1,
+                        password: password1,
+                        grade: grade1,
                         prompt: "Please fill out the information below."
                     });
                 } else {
-                    collection.insert({
-                        "firstName": firstName,
-                        "lastName": lastName,
-                        "username": userName,
-                        "email": email,
-                        "grade": grade,
-                        "password": password
-                    }, function (err, doc) {
+                    var collection = db.get("users");
+                    var count = collection.count({
+                        username: userName
+                    }, function (err, count) {
                         if (err) {
                             throw err;
+                        }
+                        if (count > 0) {
+                            res.render('newuser', {
+                                cookie:cookie,
+                                title: 'Add New User',
+                                error: "That username is already taken.",
+                                prompt: "Please fill out the information below."
+                            });
                         } else {
-                            res.location("signin");
-                            res.redirect("signin");
+                            collection.insert({
+                                "firstName": firstName,
+                                "lastName": lastName,
+                                "username": userName,
+                                "email": email,
+                                "grade": grade,
+                                "password": password,
+                                "questions":ids,
+                                "correct":[],
+                                "incorrect":[]
+                            }, function (err, doc) {
+                                if (err) {
+                                    throw err;
+                                } else {
+                                    res.location("signin");
+                                    res.redirect("signin");
+                                }
+                            });
                         }
                     });
                 }
-            });
-        }
+            }
+        });
 
     }
 };
@@ -181,6 +212,7 @@ exports.checkquestion = function (db) {
         var choice = req.body.choice;
         var id = req.body.id;
         var collection = db.get('questions');
+        var users = db.get('users');
         collection.findOne({
             "_id": id
         }, function (err, found) {
@@ -189,12 +221,29 @@ exports.checkquestion = function (db) {
             } else {
                 var answer = found['key'];
                 if (choice == answer) {
+                    users.findOne({'_id':req.session.id},function(err,found){
+                        if(err){
+                            throw err;
+                        }
+                        else{
+                            found['correct'].push(req.url.id);
+                        }
+                    });
                     res.render('grading', {
                         cookie:cookie,
                         title: "CORRECT!",
                         value: "correct"
                     });
-                } else {
+                }
+                else {
+                    users.findOne({'_id':req.session.id},function(err,found){
+                        if(err){
+                            throw err;
+                        }
+                        else{
+                            found['incorrect'].push(req.url.id);
+                        }
+                    });
                     res.render('grading', {
                         cookie:cookie,
                         title: "Incorrect...",
@@ -254,7 +303,7 @@ exports.index = function (req, res) {
         title: 'LASA UIL Training'
     });
 };
-
+/*
 exports.getquestion = function (db) {
     return function (req, res) {
         var collection = db.get('questions');
@@ -276,3 +325,20 @@ exports.getquestion = function (db) {
         });
     }
 };
+*/
+exports.getquestion = function(db){
+    return function(req,res){
+        var questions = db.get('questions');
+        var users = db.get('users');
+        users.findOne({'_id':req.session.id},function(err,found){
+            if(err){
+                throw err;
+            }
+            else{
+                var id = found['questions'][0];
+                found['questions'].shift();
+                res.redirect('/random/' + id);
+            }
+        });
+    }
+}
