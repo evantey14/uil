@@ -42,7 +42,7 @@ app.all('/renderquestion', routes.renderquestion);
 
 app.post('/adduser', routes.adduser(db));
 app.all('/signin', routes.signin(db));
-app.all('/home', routes.home);
+app.all('/home', routes.home(db));
 app.all('/getquestion', routes.getquestion(db));
 app.all('/checkquestion', routes.checkquestion(db));
 

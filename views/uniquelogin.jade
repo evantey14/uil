@@ -1,4 +1,14 @@
 extends layout
 
+block head
+    script(src="/scripts/home.js")
 block content
         h1= title
+        h5= correct
+        h5= incorrect
+block footer
+    script.
+        var correct = !{correct};
+        var incorrect = !{incorrect};
+        init(correct,incorrect);
+        
