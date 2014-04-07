@@ -226,7 +226,9 @@ exports.checkquestion = function (db) {
                             throw err;
                         }
                         else{
-                            found['correct'].push(req.url.id);
+                            var array = found['correct'];
+                            array.push(id);
+                            users.update({'_id':req.session.id},{$set:{'correct':array}});
                         }
                     });
                     res.render('grading', {
@@ -241,7 +243,9 @@ exports.checkquestion = function (db) {
                             throw err;
                         }
                         else{
-                            found['incorrect'].push(req.url.id);
+                            var array = found['incorrect'];
+                            array.push(id);
+                            users.update({'_id':req.session.id},{$set:{'incorrect':array}});
                         }
                     });
                     res.render('grading', {
@@ -335,8 +339,12 @@ exports.getquestion = function(db){
                 throw err;
             }
             else{
+                console.log(found);
                 var id = found['questions'][0];
-                found['questions'].shift();
+                var array = found['questions'];
+                array.shift();
+                console.log(array);
+                users.update({'_id':req.session.id},{$set:{'questions':array}});
                 res.redirect('/random/' + id);
             }
         });
