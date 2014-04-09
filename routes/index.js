@@ -232,76 +232,80 @@ exports.checkquestion = function (db) {
                 throw err;
             } else {
                 var answer = found['key'];
-                if (choice == answer) {
-                    users.findOne({
-                        '_id': req.session.id
-                    }, function (err, found) {
-                        if (err) {
-                            throw err;
-                        } else {
-                            var array = found['correct'];
-                            var otherarray = found['questions'];
-                            otherarray.shift();
-                            users.update({
-                                '_id': req.session.id
-                            }, {
-                                $set: {
-                                    'questions': otherarray
-                                }
-                            });
-                            array.push({
-                                id: id,
-                                time: Date.now()
-                            });
-                            users.update({
-                                '_id': req.session.id
-                            }, {
-                                $set: {
-                                    'correct': array
-                                }
-                            });
-                        }
-                    });
-                    res.render('grading', {
-                        cookie: cookie,
-                        title: "CORRECT!",
-                        value: "correct"
-                    });
+                if (!choice) {
+                    res.redirect("/random");
                 } else {
-                    users.findOne({
-                        '_id': req.session.id
-                    }, function (err, found) {
-                        if (err) {
-                            throw err;
-                        } else {
-                            var otherarray = found['questions'];
-                            otherarray.shift();
-                            users.update({
-                                '_id': req.session.id
-                            }, {
-                                $set: {
-                                    'questions': otherarray
-                                }
-                            });
-                            var array = found['incorrect'];
-                            array.push({
-                                id: id,
-                                time: Date.now()
-                            });
-                            users.update({
-                                '_id': req.session.id
-                            }, {
-                                $set: {
-                                    'incorrect': array
-                                }
-                            });
-                        }
-                    });
-                    res.render('grading', {
-                        cookie: cookie,
-                        title: "Incorrect...",
-                        value: "incorrect"
-                    });
+                    if (choice == answer) {
+                        users.findOne({
+                            '_id': req.session.id
+                        }, function (err, found) {
+                            if (err) {
+                                throw err;
+                            } else {
+                                var array = found['correct'];
+                                var otherarray = found['questions'];
+                                otherarray.shift();
+                                users.update({
+                                    '_id': req.session.id
+                                }, {
+                                    $set: {
+                                        'questions': otherarray
+                                    }
+                                });
+                                array.push({
+                                    id: id,
+                                    time: Date.now()
+                                });
+                                users.update({
+                                    '_id': req.session.id
+                                }, {
+                                    $set: {
+                                        'correct': array
+                                    }
+                                });
+                            }
+                        });
+                        res.render('grading', {
+                            cookie: cookie,
+                            title: "CORRECT!",
+                            value: "correct"
+                        });
+                    } else {
+                        users.findOne({
+                            '_id': req.session.id
+                        }, function (err, found) {
+                            if (err) {
+                                throw err;
+                            } else {
+                                var otherarray = found['questions'];
+                                otherarray.shift();
+                                users.update({
+                                    '_id': req.session.id
+                                }, {
+                                    $set: {
+                                        'questions': otherarray
+                                    }
+                                });
+                                var array = found['incorrect'];
+                                array.push({
+                                    id: id,
+                                    time: Date.now()
+                                });
+                                users.update({
+                                    '_id': req.session.id
+                                }, {
+                                    $set: {
+                                        'incorrect': array
+                                    }
+                                });
+                            }
+                        });
+                        res.render('grading', {
+                            cookie: cookie,
+                            title: "Incorrect...",
+                            value: "incorrect"
+                        });
+                    }
                 }
             }
         });
@@ -311,7 +315,6 @@ exports.checkquestion = function (db) {
 exports.viewquestion = function (db) {
     return function (req, res) {
         var id = req.params.id;
-        //console.log(id);
         var collection = db.get('questions');
         var thing = collection.findOne({
             '_id': id
@@ -325,11 +328,9 @@ exports.viewquestion = function (db) {
                     prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.'
                 });
             } else {
-                //console.log(found);
                 var title = 'Random Question';
                 var prompt = 'Test: ' + found['test'] + '\nQuestion: ' + found['ques'];
                 var answers = found['ans'];
-                //console.log(answers);
                 res.render('renderquestion', {
                     cookie: cookie,
                     title: title,
@@ -389,7 +390,7 @@ exports.getquestion = function (db) {
             if (err) {
                 throw err;
             } else {
-                console.log(found);
+                //console.log(found);
                 var id = found['questions'][0];
                 res.redirect('/random/' + id);
             }
