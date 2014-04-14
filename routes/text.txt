@@ -1,0 +1,1685 @@
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+1 
+University Interscholastic League 
+Computer Science Competition 
+Number 112 (State - 2008) 
+General Directions. Please read carefully!: 
+1) 
+DO NOT OPEN EXAM UNTIL TOLD TO DO SO. 
+2) 
+NO CALCULATORS OF ANY KIND MAY BE USED.
+3) 
+There are 40 questions on this contest exam. You have 
+45 minutes to complete this contest.  If you are in the 
+process of actually writing an answer when the signal to
+ stop is given%2C you may finish writing that answer. 
+4) 
+Papers may not be turned in until 45 minutes have elapsed.  If you finish the test before the end of the allotted time%2C 
+remain at your seat and retain your paper until told to
+ do otherwise.  Use this time to check your answers. 
+5) 
+All answers must be written on the answer sheet%2FScantr
+on card provided. Indicate your answers in the appropriate 
+blanks provided on the answer sheet or on the Scantron 
+card. Clean erasures are necessary for accurate Scantron 
+grading. 
+6) 
+You may place as many notations as you desire anywhere on the test paper%2C but not on the answer sheet or 
+Scantron card which are reserved for answers only. 
+7) 
+You may use additional scratch paper provided by the contest director. 
+8) 
+All questions have ONE and only ONE correct (BEST) 
+answer.  There is a penalty for all incorrect answers. 
+All 
+provided code segments are intende
+d to be syntactically correct%2C unl
+ess otherwise stated. Ignore any 
+typographical errors and assume any un
+defined variables are defined as used.
+9) 
+A reference to commonly used Java classes is provided at
+ the end of the test%2C and you 
+may use this reference sheet 
+during the contest. You may detach the reference sheets from the test booklet%2C but DO NOT DO SO UNTIL THE 
+CONTEST BEGINS. 
+10) 
+Assume that any necessary import statements 
+for standard Java pack
+ages and classes (e.g. 
+.util
+%2C 
+ArrayList
+%2C 
+etc.) are included in any programs or code segments 
+that refer to methods from these classes and packages. 
+Scoring: 
+1) 
+All questions will receive 
+6 points
+ if answered correctly%3B no points will be given or subtracted if unanswered%3B 
+2 
+points
+ will be deducted for an incorrect answer. 
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+2 
+Q
+UESTION  
+1 
+What is the sum of 
+745
+8
+ and 
+1101101
+2
+%3F 
+ A. 
+900
+16 
+B. 
+11111111
+2 
+C. 
+252
+16 
+D. 
+900
+10 
+E. 
+B22
+16 
+Q
+UESTION  
+2 
+What is output by the code to the right%3F 
+ A. 
+30 
+B. 
+15 
+C. 
+12 
+ D. 
+312 
+E. 
+18 
+int s %3D 3%3B 
+int t %3D s %2B 2 * s%3B 
+System.out.println( s %2B t )%3B 
+Q
+UESTION  
+3 
+What is output by the code to the right%3F 
+ A. 
+10 
+B. 
+9 
+C. 
+22 
+ D. 
+18 
+E. 
+20 
+int accum %3D 0%3B 
+for(int i %3D 1%3B i %3C%3D 10%3B i%2B%2B)%7B 
+  accum%2B%2B%3B 
+  accum%2B%2B%3B 
+%7D 
+System.out.println( accum )%3B 
+Q
+UESTION  
+4 
+What is output by the code to the right%3F 
+ A. 
+4 
+B. 
+10 
+C. 
+9 
+ D. 
+3 
+E. 
+5 
+String first %3D %22Doug%22%3B 
+String second %3D %22Burger%22%3B 
+first %2B%3D second%3B 
+System.out.println( first.length() )%3B 
+Q
+UESTION  
+5 
+What is output by the code to the right%3F 
+ A. 
+13 
+B. 
+15 
+C. 
+17 
+ D. 
+16 
+E. 
+10 
+int%5B%5D ps %3D %7B2%2C 3%2C 5%2C 7%2C 11%7D%3B 
+ps%5B1%5D %2B%3D ps%5B0%5D %2B 3 %2B ps.length%3B 
+System.out.println( ps%5B1%5D )%3B 
+Q
+UESTION  
+6 
+What is output by the code to the right%3F 
+ A. 
+14 
+B. 
+6 
+C. 
+2 
+ D. 
+6.0 
+E. 
+2.33333333 
+int x %3D 14%3B 
+int y %3D 2%3B 
+x %2F%3D 3 * y%3B 
+System.out.println( x )%3B 
+Q
+UESTION  
+7 
+How many combinations of values for the
+ boolean 
+variables
+ a
+%2C
+ b
+%2C
+and
+ c 
+will result in
+ d 
+being set to
+false
+%3F 
+ A. 
+7 
+B. 
+8 
+C. 
+2 
+ D. 
+4 
+E. 
+1 
+boolean a%2C b%2C c%3B 
+%2F%2F code to initialize a%2C b%2C and c 
+boolean d %3D ( b %7C%7C !c %7C%7C !a )%3B 
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+3 
+Q
+UESTION  
+8 
+What is output by the code to the right%3F 
+ A. 
+12 
+B. 
+13 
+C. 
+1 
+ D. 
+2 
+E. 
+3 
+String ans %3D %22ABBAACDC%22%3B 
+if( ans.equals( %22ABBA%22 ) ) 
+  System.out.println( 1 )%3B 
+if( ans.length() %3E 4 ) 
+  System.out.println( 2 )%3B 
+else 
+  System.out.println( 3 )%3B 
+Q
+UESTION  
+9 
+Which class is
+ Rectangle
+'s super class%3F 
+ A. 
+Shape 
+ B. 
+Object 
+ C. 
+Square 
+ D. 
+String 
+ E. 
+Rectangle 
+does not have a super class. 
+Q
+UESTION  
+10 
+What is output by the client code to the right%3F 
+ A. 
+r1 
+ B. 
+this 
+ C. 
+6 
+ D. 
+0 
+E. 
+The output cannot be determined  
+until the program is run. 
+public class Rectangle%7B 
+  private int width%3B 
+  private int height%3B 
+  public Rectangle(int w%2C int h)%7B 
+    width %3D w%3B 
+    height %3D h%3B 
+  %7D 
+  public int area()%7B 
+    return width * height%3B 
+  %7D 
+  public String toString()%7B 
+    return %22%22 %2B this.area()%3B 
+  %7D 
+%7D 
+%2F%2F client code 
+Rectangle r1 %3D new Rectangle( 2%2C 3 )%3B 
+System.out.println( r1 )%3B 
+Q
+UESTION  
+11 
+What is output by the code to the right%3F 
+ A. 
+13 
+B. 
+63 
+C. 
+21 
+ D. 
+-31 
+E. 
+26 
+int m %3D 63%3B 
+int n %3D 42%3B 
+int o %3D n %5E m%3B 
+System.out.print( o )%3B 
+Q
+UESTION  
+12 
+What is output by the code to the right%3F 
+ A. 
+4.0 
+B. 
+1 
+C. 
+4.4 
+ D. 
+5.0 
+E. 
+5 
+double p %3D 1.1%3B 
+System.out.print( Math.ceil( p * 4 ) )%3B 
+Q
+UESTION  
+13 
+What is output by the code to the right%3F 
+ A. 
+linelineline 
+B. 
+lineline 
+line 
+ C. 
+line 
+lineline 
+D. 
+line%2Fnlineline 
+ E. 
+line 
+line 
+line 
+System.out.print( %22line%5Cn%22 )%3B 
+System.out.println( %22line%22 )%3B 
+System.out.print( %22line%22 )%3B 
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+4 
+Q
+UESTION  
+14 
+What is output by the code to the right%3F 
+ A. 
+(012) 
+B. 
+00010 
+C. 
+00012 
+ D. 
+(((12 
+E. 
+(00012) 
+String format %3D %22%250(5d%22%3B 
+int val %3D 12%3B 
+System.out.printf( format%2C val )%3B 
+Q
+UESTION  
+15 
+What is returned by the method call 
+change( change(8) ) 
+%3F 
+ A. 
+10 
+B. 
+6 
+C. 
+13 
+ D. 
+4 
+E. 
+8 
+public static int change(int x)%7B 
+  int y %3D x%3B 
+  y %3D y - 2%3B 
+  x %2F%3D 2%3B 
+  return x %2B y%3B 
+%7D 
+Q
+UESTION  
+16 
+What is output by the code to the right%3F 
+ A. 
+_gr 
+B. 
+_gray 
+C. 
+m_ 
+ D. 
+_gra 
+E. 
+_g 
+String name %3D %22jim_gray%22%3B 
+String st%3B 
+st %3D name.substring(1%2C 5).substring(2)%3B 
+System.out.print( st )%3B 
+Q
+UESTION  
+17 
+What is output by the code to the right%3F 
+ A. 
+: 
+B. 
+71 
+C. 
+7 
+ D. 
+14 
+E. 
+*%26%5E 
+String messy%3B 
+messy %3D %226...56fg%4071*%26%5E14:%22%3B 
+String%5B%5D res %3D messy.split( %22%5C%5CD%2B%22 )%3B 
+System.out.print( res%5B3%5D )%3B 
+Q
+UESTION  
+18 
+What is output by the code to the right%3F 
+ A. 
+7 
+ B. 
+13 
+ C. 
+6 
+ D. 
+5 
+ E. 
+9 
+String data %3D %22MAURICEWILKES%22%3B 
+int count %3D 0%3B 
+for(int i %3D 0%3B i %3C data.length()%3B i%2B%2B)%7B 
+  if( data.charAt( i ) %3C 'J' ) 
+    continue%3B 
+  count%2B%2B%3B 
+  i%2B%2B%3B 
+%7D 
+System.out.print( count )%3B 
+Q
+UESTION  
+19 
+What is output by method
+ over 
+if
+ input 
+initially 
+contains the following
+ String
+s%3F 
+%5B%22Perl%22%2C %22Cobol%22%2C %22Fortran%22%2C %22Ruby%22%5D
+ A. 
+Cobol 
+ B. 
+Fortran 
+C. 
+There is no output due to a syntax error in  
+method
+ over
+. 
+D. 
+There is no output due to a
+NoSuchElementException
+.
+E. 
+There is no output due to an infinite loop caused by a 
+logic error in method
+ over
+. 
+public static void over 
+(ArrayList%3CString%3E input)%7B
+  Iterator%3CString%3E it %3D input.iterator()%3B 
+  boolean found %3D false%3B 
+  while( it.hasNext() )%7B 
+    found %3D found  
+        %7C%7C it.next().length() %3E 4%3B 
+  %7D 
+  System.out.println( it.next() )%3B 
+%7D 
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+5 
+Q
+UESTION  
+20 
+What replaces
+%3C*1%3E 
+in the code to the right to indicate
+numRight
+ is not defined in the
+ TestScore 
+class and 
+that subclasses are responsible for defining it%3F 
+ A. 
+static 
+ B. 
+interface 
+ C. 
+abstract 
+ D. 
+abstract extends 
+ E. 
+extends 
+Assume
+ %3C*1%3E 
+is filled in correctly. 
+Q
+UESTION  
+21 
+What is output by the following client code%3F 
+ACTScore sc %3D new ACTScore( 50%2C 100 )%3B 
+System.out.print( sc.score() )%3B 
+ A. 
+0.5 
+B. 
+100 
+C. 
+50 
+ D. 
+1.0 
+E. 
+0.0 
+Q
+UESTION  
+22 
+What is output by the following client code%3F 
+ACTScore as %3D new ACTScore( 145%2C 200 )%3B 
+TestScore ts %3D as%3B 
+as.adjustScore( 5 )%3B 
+System.out.print( ts.score() )%3B  
+ A. 
+75 
+ B. 
+150 
+ C. 
+145 
+ D. 
+72 
+E. 
+There is no output due to a syntax error in  
+the client code. 
+public abstract class TestScore%7B 
+  public 
+%3C*1%3E
+ int numRight()%3B 
+  public int numQuestions()%7B 
+    return 100%3B 
+  %7D 
+  public int score()%7B 
+    double raw %3D numRight()%3B 
+    raw %3D raw %2F numQuestions() * 100%3B 
+    return (int)raw%3B 
+  %7D 
+%7D 
+public class ACTScore extends TestScore%7B 
+  private int correct%3B 
+  private int questions%3B 
+  public ACTScore(int c%2C int q)%7B 
+    correct %3D c%3B 
+    questions %3D q%3B 
+  %7D 
+  public int numRight()%7B 
+    return correct%3B 
+  %7D 
+  public int numQuestions()%7B 
+    return questions%3B 
+  %7D 
+  public void adjustScore(int adj)%7B 
+    correct %2B%3D adj%3B 
+  %7D 
+%7D 
+Q
+UESTION  
+23 
+What is output by the code to the right%3F 
+ A. 
+2 
+B. 
+6 
+C. 
+4 
+ D. 
+5 
+E. 
+3 
+int j %3D 5%3B 
+int k %3D (j%2B%2B %3E 5) %3F 4 : ((j %3E 4) %3F 3 : 2)%3B 
+System.out.println( k )%3B 
+Q
+UESTION  
+24 
+What is output by the code to the right%3F 
+ A. 
+%5BAAA%2C AB%5D 
+B. 
+%5BAA%2C A%2C B%2C A%5D 
+ C. 
+%5BAA%2C A%2C B%5D 
+D. 
+%5BAA%2C B%5D 
+ E. 
+%5BAA%2C B%2C A%5D 
+ArrayList%3CString%3E letters %3D new  
+ArrayList%3CString%3E()%3B
+letters.add( %22A%22 )%3B 
+letters.add( %22A%22 )%3B 
+letters.add( 1%2C %22B%22 )%3B 
+letters.set( 0%2C %22AA%22 )%3B 
+System.out.println( letters )%3B 
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+6 
+Q
+UESTION  
+25 
+What is output by the statement marked 
+line 1 
+when 
+method
+ demo 
+is called%3F 
+ A. 
+0 
+B. 
+5 
+ C. 
+3 
+D. 
+1 
+ E. 
+12208 
+Q
+UESTION  
+26 
+What is output by the statement marked 
+line 2 
+when 
+method
+ demo 
+is called%3F 
+ A. 
+24 
+B. 
+9 
+ C. 
+5 
+D. 
+7 
+ E. 
+15 
+public static int sum(int%5B%5D%5B%5D mat%2C  
+int row%2C int col)%7B
+  if( row %3D%3D -1 %7C%7C col %3D%3D mat%5B0%5D.length ) 
+    return 0%3B 
+  int tot1 %3D sum(mat%2C row - 1%2C col)%3B 
+  int tot2 %3D sum(mat%2C row - 1%2C col %2B 1)%3B 
+  return tot1 %2B tot2 %2B mat%5Brow%5D%5Bcol%5D%3B 
+%7D 
+public static void demo()%7B 
+  int%5B%5D%5B%5D t %3D %7B %7B1%2C 2%2C 2%2C 0%2C 8%7D%2C 
+                %7B5%2C 1%2C 0%2C 1%2C 2%7D%2C 
+                %7B4%2C 2%2C 3%2C 2%2C 1%7D%7D%3B 
+  System.out.println( t.length )%3B %2F%2F line 1
+  int x %3D sum( t%2C 2%2C 1 )%3B 
+  System.out.println( x )%3B %2F%2F line 2 
+%7D 
+Q
+UESTION  
+27 
+Which searching algorithm does method
+ search 
+implement%3F 
+ A. 
+Greedy 
+B. 
+Sequential 
+C. 
+Heap 
+ D. 
+Binary 
+E. 
+Interpolation 
+Q
+UESTION  
+28 
+Which of the following best describes method
+ search
+'s 
+post condition %3F 
+ A. 
+Returns the index of the first occurrence of
+ tgt  
+in 
+nums
+. 
+ B. 
+Returns the index of the first occurrence of
+ tgt 
+in 
+nums 
+or
+ -1 
+if
+ tgt 
+is not present. 
+ C. 
+Returns the number of times
+ tgt 
+appears in
+ nums
+. 
+ D. 
+Returns the number of elements in
+ nums 
+that are 
+less than
+ tgt
+. 
+ E. 
+Returns the index of the last occurrence of
+ tgt 
+in 
+nums 
+or
+ -1 
+if
+ tgt 
+is not present. 
+%2F%2F pre: nums !%3D null 
+%2F%2F post: see question 28 
+public static int search(int%5B%5D nums%2C  
+int tgt)%7B
+  int result %3D -1%3B 
+  for(int i %3D 0%3B i %3C nums.length%3B i%2B%2B)%7B 
+    if( nums%5Bi%5D %3D%3D tgt )%7B 
+      result %3D i%3B 
+    %7D 
+  %7D 
+  return result%3B 
+%7D 
+Q
+UESTION  
+29 
+What is output by the code to the right%3F 
+ A. 
+aan_emer 
+B. 
+lb_emer 
+C. 
+n_emer 
+ D. 
+bn_emer 
+E. 
+alan_emer 
+%2F* explanation of method replaceFirst: 
+   String replaceFirst(String regex%2C 
+                        String replacement)
+   Creates and returns a new String by   
+   replacing the first substring that  
+   matches regex with replacement. 
+*%2F 
+String nm %3D %22alan_emer%22%3B 
+String regex %3D %22a..%22%3B 
+String rs %3D nm.replaceFirst( regex%2C %22b%22 )%3B 
+System.out.print( rs )%3B 
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+7 
+Q
+UESTION  
+30 
+Consider method
+ build 
+to the right. When the parameter
+n 
+equals 500%2C000 the method takes 1.5 seconds to 
+complete. What is the expected time for method
+ build 
+to 
+complete when
+ n 
+equals 1%2C000%2C000%3F 
+A. 
+6.0 sec. 
+B. 
+2.25 sec. 
+C. 
+3.15 sec. 
+D. 
+1.5 sec. 
+E. 
+3.0 sec. 
+public TreeSet%3CInteger%3E build(int n)%7B 
+  TreeSet%3CInteger%3E tree  
+%3D new TreeSet%3CInteger%3E()%3B
+  for(int i %3D 0%3B i %3C n%3B i%2B%2B) 
+    tree.add( i )%3B 
+  return tree%3B 
+%7D  
+Q
+UESTION  
+31 
+What is output by the code to the right when method
+initiate 
+is called%3F 
+ A. 
+6 
+ B. 
+9 
+ C. 
+3 
+D. 
+There is no output due 
+to a syntax error in method
+alter
+.
+E. 
+There is not output due to an
+ArrayIndexOutOfBoundsException
+. 
+public static int alter(int%5B%5D data)%7B 
+  int i %3D 0%3B 
+  try%7B 
+    while( i %3C data.length ) 
+      data%5Bi%2B%2B%5D *%3D 2%3B 
+    if( i %3E 2 ) 
+      return i%3B 
+    return 0%3B 
+  %7D 
+  finally%7B 
+    data%5B1%5D %2B%3D 3%3B 
+  %7D 
+%7D 
+public static void initiate()%7B 
+  int%5B%5D data %3D %7B5%2C 3%2C 5%2C 2%2C 1%2C 7%2C 8%7D%3B 
+  alter( data )%3B 
+  System.out.println( data%5B1%5D )%3B 
+%7D 
+Q
+UESTION  
+32 
+If N equals
+ values.length 
+what is the Big O of 
+method
+ fill 
+when
+ res 
+is an
+ ArrayList 
+and when
+res 
+is a
+ LinkedList
+%3F Pick the most restrictive correct 
+set of answers. 
+ArrayList LinkedList 
+ A. 
+O(N) 
+O(N) 
+ B. 
+O(N
+3
+) O(N
+2
+) 
+ C. 
+O(N
+2
+) O(N
+2
+) 
+ D. 
+O(N
+2
+) O(N) 
+ E. 
+O(N) 
+O(N
+2
+) 
+%2F%2F pre: res.size() %3D%3D 0 
+public static void fill(List%3CInteger%3E res%2C 
+int%5B%5D values)%7B
+    for(int element : values) 
+      res.add( 0%2C element )%3B 
+%7D 
+Q
+UESTION  
+33 
+What is returned by the method call
+ beta(20)
+%3F 
+ A. 
+-4 
+B. 
+-10 
+C. 
+0 
+ D. 
+-9 
+E. 
+-7 
+public static int alpha(int x)%7B 
+  return (x %3C 0) %3F x * 2 : beta( x %2B 10 )%3B 
+%7D 
+public static int beta(int y)%7B 
+  return alpha( y - 15 ) %2B 1%3B 
+%7D 
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+8 
+Q
+UESTION  
+34 
+What replaces
+%3C*1%3E 
+in the code to the right so that the 
+body of the
+ if 
+statement executes when the element at 
+position
+ i 
+in the array
+ d 
+is less that or equal to the 
+variable
+ guide 
+according to the natura
+l ordering of the 
+elements of
+ d
+%3F 
+ A. 
+d%5Bi%5D.compareTo( guide ) %3E%3D 0  
+ B. 
+guide.compareTo( d%5Bi%5D ) %3C%3D 0 
+ C. 
+!guide.equals( d%5Bi%5D ) 
+ D. 
+d%5Bi%5D %3C%3D guide 
+ E. 
+d%5Bi%5D.compareTo( guide ) %3C%3D 0  
+Assume
+ %3C*1%3E 
+is filled in correctly.
+Q
+UESTION  
+35 
+Which sorting algorithm do methods
+ sort 
+and
+ swap 
+implement%3F 
+ A. 
+Merge sort 
+ B. 
+Insertion sort 
+ C. 
+Quicksort 
+ D. 
+Selection sort 
+ E. 
+Stack sort 
+public static void sort(Comparable%5B%5D d)%7B 
+  int start%2C end%3B 
+  Stack%3CInteger%3E sp %3D new Stack%3CInteger%3E()%3B
+  sp.push( 0 )%3B 
+  sp.push( d.length - 1 )%3B 
+  while( !sp.isEmpty() )%7B 
+    end %3D sp.pop()%3B 
+    start %3D sp.pop()%3B 
+    if(start %3C end)%7B 
+      int p %3D ( start %2B end ) %2F 2%3B 
+      swap( d%2C p%2C start )%3B 
+      Comparable guide %3D d%5Bstart%5D%3B 
+      int i%2C j %3D start%3B 
+      for(i %3D start %2B 1%3B i %3C%3D end%3B i%2B%2B )%7B 
+        if( 
+%3C*1%3E 
+)%7B 
+          j%2B%2B%3B 
+          swap( d%2C i%2C j )%3B 
+        %7D 
+      %7D 
+      swap( d%2C start%2C j )%3B 
+      sp.push( start )%3B 
+      sp.push( j - 1 )%3B 
+      sp.push( j %2B 1 )%3B 
+      sp.push( end )%3B 
+    %7D 
+  %7D 
+%7D 
+public static void swap(Comparable%5B%5D d%2C 
+int i%2C int j)%7B
+  Comparable t %3D d%5Bi%5D%3B 
+  d%5Bi%5D %3D d%5Bj%5D%3B 
+  d%5Bj%5D %3D t%3B 
+%7D 
+Q
+UESTION  
+36 
+The depth of a node in a tree is defined as the number of links from the root node of the tree to that node.  
+The depth of the root node is 0.  
+The following values are inserted 
+one at a time in the order shown%2C from left to right%2C into a binary search tree using the 
+traditional insertion algorithm.  
+25  1  13  -5  100  12  50  10  -7  200  8
+What is the depth of the node that contains
+ 12 
+in the resulting tree%3F  
+ A. 
+0 
+B. 
+11 
+C. 
+3 
+D. 
+5 
+E. 
+2 
+Q
+UESTION  
+37 
+What is output by the code to the right%3F 
+ A. 
+-1 
+B. 
+255 
+C. 
+0 
+ D. 
+128 
+E. 
+-16777216 
+int num %3D -1%3B 
+System.out.println( num %3E%3E%3E 24 )%3B 
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+9 
+Q
+UESTION  
+38 
+What is output by the following client code%3F 
+int result %3D Structure.value( %22cab%22 )%3B
+System.out.print( result )%3B 
+ A. 
+2 
+ B. 
+3 
+ C. 
+6 
+ D. 
+0 
+ E. 
+294 
+Q
+UESTION  
+39 
+What is output by the following client code%3F 
+Structure ds %3D new Structure()%3B 
+ds.add( %22cab%22 )%3B  
+ds.add( %22aaa%22 )%3B 
+ds.add( %22dead_e%22 )%3B 
+ds.add( %22bac%22 )%3B 
+ds.add( %22ACM%22 )%3B 
+ds.showAll()%3B  
+ A. 
+aaa_cab_bac_dead_e_ACM_ 
+ B. 
+ACM_aaa_bac_cab_dead_e_ 
+ C. 
+ACM_aaa_bac_cab_deade_ 
+ D. 
+ACM_aaa_cab_bac_dead_e_ 
+ E. 
+cab_aaa_ACM_bac_dead_e_ 
+Q
+UESTION  
+40 
+What type of data structure does the
+ Structure 
+class implement%3F 
+A. 
+An array based list 
+ B. 
+A stack 
+ C. 
+A set 
+ D. 
+A hash table 
+E. 
+A min heap 
+public class Structure%7B 
+  private static final int LIM %3D 125%3B   
+  private Object%5B%5D con%3B 
+  public Structure()%7B 
+    con %3D new Object%5BLIM%5D%3B 
+    for(int i %3D 0%3B i %3C LIM%3B i%2B%2B) 
+      con%5Bi%5D %3D new ArrayList%3CString%3E()%3B 
+  %7D 
+  public void add(String str)%7B 
+    int spot %3D value( str )%3B 
+    get( spot %25 LIM ).add( str )%3B 
+  %7D 
+  public void showAll()%7B 
+    for( Object temp : con )%7B 
+      ArrayList%3CString%3E list %3D  
+(ArrayList%3CString%3E)temp%3B 
+      for( String str : list ) 
+        System.out.print( str %2B %22_%22 )%3B 
+    %7D 
+  %7D 
+  public boolean contains(String str)%7B 
+    int spot %3D value( str ) %25 LIM%3B 
+    return get( spot ).contains( str )%3B 
+  %7D 
+  public boolean remove(String str)%7B 
+    int spot %3D value( str ) %25 LIM%3B 
+    return get( spot ).remove( str )%3B 
+  %7D 
+  private ArrayList%3CString%3E get(int p)%7B 
+    return (ArrayList%3CString%3E)con%5Bp%5D%3B 
+  %7D 
+  public static int value(String str)%7B 
+    int t %3D 0%3B 
+    char c%3B 
+    for(int i %3D 0%3B i %3C str.length()%3B i%2B%2B)%7B 
+      c %3D str.charAt( i )%3B 
+      if( Character.isLetter(c) ) 
+        t %2B%3D Character.toLowerCase(c) - 'a'%3B 
+    %7D 
+    return t%3B 
+  %7D 
+%7D 
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+10 
+No material on this page.
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+11 
+Standard Classes and Interfac
+es %E2%80%94 Supplemental Reference
+class java.lang.Object
+o
+boolean equals(Object other)  
+o
+String toString()  
+o
+int hashCode() 
+interface java.lang.Comparable%3CT%3E
+o
+int compareTo(T other)
+Return value %3C 0 if 
+this
+ is less than 
+other
+. 
+Return value %3D 0 if 
+this
+ is equal to 
+other
+. 
+Return value %3E 0 if 
+this
+ is greater than 
+other
+.  
+class java.lang.Integer implements 
+Comparable%3CInteger%3E
+o
+Integer(int value) 
+o
+int intValue()  
+o
+boolean equals(Object obj)  
+o
+String toString()  
+o
+int compareTo(Integer anotherInteger)
+o
+static int parseInt(String s)
+class java.lang.Double implements 
+Comparable%3CDouble%3E
+o
+Double(double value) 
+o
+double doubleValue()  
+o
+boolean equals(Object obj)  
+o
+String toString()  
+o
+int compareTo(Double anotherDouble) 
+o
+static double parseDouble(String s) 
+class java.lang.String implements  
+Comparable%3CString%3E
+o
+int compareTo(String anotherString) 
+o
+boolean equals(Object obj)  
+o
+int length()  
+o
+String substring(int begin%2C int end)
+Returns the substring starting at index
+ begin
+and ending at index
+ (end - 1)
+.
+o
+String substring(int begin)
+Returns 
+substring(from%2C length())
+.
+o
+int indexOf(String str)
+Returns the index within this string of the first occurrence of 
+str
+. Returns 
+-1
+ if
+ str 
+is not found. 
+o
+int indexOf(String str%2C int fromIndex)
+Returns the index within this string of the first occurrence of 
+str
+%2C starting the search at the specified index.. Returns 
+-1
+ if
+str 
+is not found. 
+o
+charAt(int index)
+o
+int indexOf(int ch)
+o
+int indexOf(int ch%2C int fromIndex)
+o
+String toLowerCase()
+o
+String toUpperCase()
+o
+String%5B%5D split(String regex)
+o
+boolean matches(String regex)
+class java.lang.Character
+o
+static boolean isDigit(char ch)  
+o
+static boolean isLetter(char ch) 
+o
+static boolean isLetterOrDigit(char ch) 
+o
+static boolean isLowerCase(char ch) 
+o
+static boolean isUpperCase(char ch) 
+o
+static char toUpperCase(char ch) 
+o
+static char toLowerCase(char ch) 
+class java.lang.Math
+o
+static int abs(int a)  
+o
+static double abs(double a)  
+o
+static double pow(double base%2C  
+                  double exponent)  
+o
+static double sqrt(double a) 
+o
+static double ceil(double a)  
+o
+static double floor(double a)  
+o
+static double min(double a%2C double b)  
+o
+static double max(double a%2C double b)  
+o
+static int min(int a%2C in b)  
+o
+static int max(int a%2C int b)  
+o
+static long round(double a)  
+o
+static double random() 
+Returns a
+ double 
+value with a  positive sign%2C greater than 
+or equal to
+ 0.0 
+and less than
+ 1.0
+.
+interface java.util.List%3CE%3E
+o
+boolean add(E e)  
+o
+int size()  
+o
+Iterator%3CE%3E iterator()  
+o
+ListIterator%3CE%3E listIterator() 
+class java.util.ArrayList%3CE%3E implements List%3CE%3E
+Methods in addition to the 
+List
+ methods:  
+o
+E get(int index)  
+o
+E set(int index%2C E e)
+Replaces the element at 
+index
+ with the object 
+e
+.
+o
+void add(int index%2C E e)
+Inserts the object 
+e
+ at position 
+index
+%2C sliding elements at 
+position 
+index
+ and higher to the right (adds 1 to their 
+indices) and adjusts 
+size
+.
+o
+E remove(int index)
+Removes element from position 
+index
+%2C sliding elements 
+at position 
+(index %2B 1)
+ and higher to the left 
+(subtracts 1 from their indices) and adjusts 
+size
+.
+class java.util.LinkedList%3CE%3E implements  
+List%3CE%3E%2C Queue%3CE%3E
+Methods in addition to the 
+List 
+methods:
+o
+void addFirst(E e)  
+o
+void addLast(E e)  
+o
+E getFirst()  
+o
+E getLast()  
+o
+E removeFirst()  
+o
+E removeLast() 
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+12 
+class java.util.Stack%3CE%3E
+o
+boolean isEmpty() 
+o
+E peek() 
+o
+E pop() 
+o
+E push(E item) 
+interface java.util.Queue%3CE%3E
+o
+boolean add(E e)
+o
+boolean isEmpty()
+o
+E peek()
+o
+E remove()
+class java.util.PriorityQueue%3CE%3E
+o
+boolean add(E e) 
+o
+boolean isEmpty() 
+o
+E peek() 
+o
+E remove() 
+interface java.util.Set%3CE%3E
+o
+boolean add(E e)  
+o
+boolean contains(Object obj)  
+o
+boolean remove(Object obj)  
+o
+int size()  
+o
+Iterator%3CE%3E iterator() 
+o
+boolean addAll(Collection%3C%3F%3E extends E%3E c) 
+o
+boolean removeAll(Collection%3C%3F%3E c) 
+o
+boolean retainAll(Collection%3C%3F%3E c) 
+class java.util.HashSet%3CE%3E implements Set%3CE%3E 
+class java.util.TreeSet%3CE%3E implements Set%3CE%3E 
+interface java.util.Map%3CK%2CV%3E
+o
+Object put(K key%2C V value)  
+o
+V get(Object key)  
+o
+boolean containsKey(Object key)  
+o
+int size()  
+o
+Set%3CK%3E keySet() 
+o
+Set%3CMap.Entry%3CK%2C V%3E%3E entrySet() 
+class java.util.HashMap%3CK%2CV%3E implements Map%3CK%2CV%3E 
+class java.util.TreeMap%3CK%2CV%3E implements Map%3CK%2CV%3E 
+interface java.util.Map.Entry%3CK%2CV%3E 
+o
+K getKey() 
+o
+V getValue() 
+o
+V setValue(V value)  
+interface java.util.Iterator%3CE%3E
+o
+boolean hasNext()  
+o
+E next()  
+o
+void remove() 
+interface java.util.ListIterator%3CE%3E extends 
+java.util.Iterator%3CE%3E
+Methods in addition to the 
+Iterator
+ methods: 
+o
+void add(E e)  
+o
+void set(E e) 
+class java.lang.Exception
+o
+Exception() 
+o
+Exception(String message) 
+class java.util.Scanner
+o
+Scanner(InputStream source) 
+o
+boolean hasNext() 
+o
+boolean hasNextInt() 
+o
+boolean hasNextDouble() 
+o
+String next() 
+o
+int nextInt() 
+o
+double nextDouble() 
+o
+String nextLine() 
+o
+Scanner useDelimiter(String pattern) 
+UIL
+ C 
+OMPUTER 
+S
+CIENCE 
+S
+TATE 
+2008
+%E2%80%A2
+ PAGE 
+13 
+Computer Science Answer Key 
+UIL State 2008 
+1.
+ C 11. C 21.
+C 31. B 
+2.
+ C 
+12. D 
+22.
+A 
+32. D 
+3.
+ E 13. E 23.
+E 33. E 
+4.
+ B 
+14. C 
+24.
+E 
+34. E 
+5.
+ A 
+15. C 
+25.
+C 
+35. C 
+6.
+ C 
+16. E 
+26.
+B 
+36. C 
+7.
+ E 
+17. D 
+27.
+B 
+37. B 
+8.
+ D 
+18. D 
+28.
+E 
+38. B 
+9.
+ B 
+19. E 
+29.
+D 
+39. A 
+10.
+ C 20. C 30.
+C 40. D 
+Notes: 
+The clause %22Choose the most rest
+rictive correct answer.%22 is necessary because pe
+r the formal definition of Big O%2C an algorithm 
+that 
+is O(N
+2
+) is also O(N
+3
+) %2C O(N
+4
+) %2C and so forth. 
+14. The
+ 0 
+flag causes the result to be padded with
+ 0
+s. The
+ ( 
+flag causes negative
+ numbers to be enclosed in parenthesis. It 
+does not affect positive numbers. 
+26. The algorithm causes the 2 at row 
+0%2C column 2 to be counted twice. 
+30. 
+TreeSet 
+uses a balanced binary search tree. Adding N elements
+ in order is still O(NlogN). Thus when the number of 
+elements is doubled%2C the time should increase by a little more than a factor of two. 
+31. The
+ finally 
+block is executed before the
+ return
+ in method
+ alter 
+is carried out 
+37. Negative numbers are stored in 2's complement format. 
+-1 
+results in all bits being set to 1. 
+%3E%3E%3E 
+is the logical right shift 
+operator which causes the sign bit to be shifted. At the bit level -1 is 
+11111111 11111111 11111111 1111111. 
+Shifting 
+in 24 0's results in 
+00000000 00000000 00000000 11111111 
+which is the representation of
+ 255
+. 
+40. The data structure is not strictly a set because the data structure may contain multiple copies of the same
+ String
+. 
