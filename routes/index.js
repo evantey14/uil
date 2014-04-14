@@ -1,7 +1,7 @@
 var time = require('time');
 var passwordHash = require('password-hash');
 var cookie = false;
-
+/*
 var shuffle = function (array) {
     var currentIndex = array.length;
     var temp;
@@ -15,6 +15,7 @@ var shuffle = function (array) {
     }
     return array;
 }
+*/
 
 exports.signin = function (db) {
     return function (req, res) {
@@ -34,7 +35,8 @@ exports.signin = function (db) {
                         cookie: cookie,
                         title: 'Login',
                         prompt: 'Input your credentials below!',
-                        error: "username"
+                        error: "username",
+                        session: req.session
                     });
                 } else {
                     var hashed = found['password'];
@@ -49,7 +51,8 @@ exports.signin = function (db) {
                             cookie: cookie,
                             title: 'Login',
                             prompt: "Input your credentials below!",
-                            error: "matching"
+                            error: "matching",
+                            session: req.session
                         });
                     }
                 }
@@ -58,7 +61,8 @@ exports.signin = function (db) {
             res.render('login', {
                 cookie: cookie,
                 title: 'Login',
-                prompt: 'Input your credentials below!'
+                prompt: 'Input your credentials below!',
+                session: req.session
             });
         }
     }
@@ -77,10 +81,10 @@ exports.home = function (db) {
                 } else {
                     res.render('uniquelogin', {
                         cookie: cookie,
-                        title: "Welcome " + req.session.user,
                         loggedin: req.session.loggedin,
                         correct: JSON.stringify(found.correct),
-                        incorrect: JSON.stringify(found.incorrect)
+                        incorrect: JSON.stringify(found.incorrect),
+                        session: req.session
                     });
                 }
             });
@@ -107,7 +111,8 @@ exports.renderquestion = function (req, res) {
         cookie: cookie,
         title: 'Random Question',
         prompt: 'Please fill out the information below.',
-        question: 'question'
+        question: 'question',
+        session: req.session
     });
 };
 
@@ -158,7 +163,8 @@ exports.checkquestion = function (db) {
                     res.render('grading', {
                         cookie: cookie,
                         title: "CORRECT!",
-                        value: "correct"
+                        value: "correct",
+                        session: req.session
                     });
                 } else {
                     users.findOne({
@@ -193,7 +199,8 @@ exports.checkquestion = function (db) {
                     res.render('grading', {
                         cookie: cookie,
                         title: "Incorrect...",
-                        value: "incorrect"
+                        value: "incorrect",
+                        session: req.session
                     });
                 }
             }
@@ -204,7 +211,7 @@ exports.checkquestion = function (db) {
 exports.viewquestion = function (db) {
     return function (req, res) {
         var id = req.params.id;
-        //console.log(id);
+        console.log("id", id);
         var collection = db.get('questions');
         var thing = collection.findOne({
             '_id': id
@@ -215,7 +222,8 @@ exports.viewquestion = function (db) {
                 res.render('error', {
                     cookie: cookie,
                     title: 'Error',
-                    prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.'
+                    prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.',
+                    session: req.session
                 });
             } else {
                 //console.log(found);
@@ -236,7 +244,8 @@ exports.viewquestion = function (db) {
                     D: answers[3],
                     E: answers[4],
                     id: found["_id"],
-                    url: found["_id"]
+                    url: found["_id"],
+                    session: req.session
                 });
             }
         });
@@ -246,7 +255,8 @@ exports.viewquestion = function (db) {
 exports.index = function (req, res) {
     res.render('index', {
         cookie: cookie,
-        title: 'LASA UIL Training'
+        title: 'LASA UIL Training',
+        session: req.session
     });
 };
 /*
@@ -282,10 +292,50 @@ exports.getquestion = function (db) {
             if (err) {
                 throw err;
             } else {
-                console.log(found);
+                console.log("Found", found);
                 var id = found['questions'][0];
                 res.redirect('/random/' + id);
             }
         });
     }
 }
+
+exports.about = function (req, res) {
+    res.render('about', {
+        cookie: cookie,
+        title: 'LASA UIL Training',
+        session: req.session,
+        desc: "Lorem ipsum dolor sit amet, ne per solum timeam. Vim ne doctus timeam dolorem, in adhuc delicata maluisset per. Qui essent laoreet et. No eam tota scaevola, choro mollis vituperata te per, ut ius nibh omnium. Ea vel dico duis ridens. Ex sit tempor mandamus ocurreret, populo delectus consectetuer eu vim.",
+        profiles: [{
+            name: "Evan Tey",
+            img: "/images/about/evan.jpg",
+            desc: "It was our first week\n At Myrtle Beach\n Where it all began\n\nIt was 102°\nNothin\' to do\nMan it was hot\nSo we jumped in",
+            src: "https://github.com/evantey14"
+        }, {
+            name: "Jonas Wechsler",
+            img: "/images/about/jonas.jpg",
+            desc: "We were summertime sippin\', sippin\'\nSweet tea kissin\' off of your lips\nT-shirt drippin\', drippin\' wet\nHow could I forget?",
+            src: "https://github.com/JonasWechsler"
+        }, {
+            name: "Beck Goodloe",
+            img: "/images/about/beck.jpg",
+            desc: "Watchin\' that blonde hair swing\nTo every song I\'d sing\nYou were California beautiful\nI was playin\' everything but cool\nI can still hear that sound\nOf every wave crashin' down",
+            src: "https://github.com/beckgoodloe"
+        }, {
+            name: "Ryan Rice",
+            img: "/images/about/ryan.jpg",
+            desc: "Like the tears we cried\nThat day we had to leave\nIt was everything we wanted it to be\nThe summer of\n19 you and me",
+            src: "https://github.com/ryanr1230"
+        }, {
+            name: "Clayton Petty",
+            img: "/images/about/clayton.jpg",
+            desc: "We had our first dance in the sand\nIt was one hell of a a souvenir\nTangled up, so in love\nSo, let\'s just stay right here",
+            src: "https://github.com/notyalc"
+        }, {
+            name: "Alec Baldwin",
+            img: "/images/about/alec.jpg",
+            desc: "We had our first dance in the sand\nIt was one hell of a a souvenir\nTangled up, so in love\nSo, let\'s just stay right here",
+            src: "https://github.com/notyalc"
+        }]
+    });
+};
