@@ -211,7 +211,6 @@ exports.checkquestion = function (db) {
 exports.viewquestion = function (db) {
     return function (req, res) {
         var id = req.params.id;
-        console.log("id", id);
         var collection = db.get('questions');
         var thing = collection.findOne({
             '_id': id
@@ -226,11 +225,9 @@ exports.viewquestion = function (db) {
                     session: req.session
                 });
             } else {
-                //console.log(found);
                 var title = 'Random Question';
                 var prompt = 'Test: ' + found['test'] + '\nQuestion: ' + found['ques'];
                 var answers = found['ans'];
-                //console.log(answers);
                 res.render('renderquestion', {
                     cookie: cookie,
                     title: title,
