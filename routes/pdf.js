@@ -1,4 +1,4 @@
-var p2jcmd = require('../node_modules/pdf2json/lib/p2jcmd'),
+/*var p2jcmd = require('../node_modules/pdf2json/lib/p2jcmd'),
     path = require('path'),
     _ = require('underscore'),
     fs = require('fs'),
@@ -11,163 +11,163 @@ var json = {
     formImage: {
         Pages: []
     }
-};
+};*/
 
-var PDF2JSONUtil = (function () {
+// var PDF2JSONUtil = (function () {
 
-    var _continue = function(callback, err) {
-        if (err)
-            nodeUtil.p2jwarn(err);
-        if (_.isFunction(callback))
-            callback(err);
-    };
+//     var _continue = function(callback, err) {
+//         if (err)
+//             nodeUtil.p2jwarn(err);
+//         if (_.isFunction(callback))
+//             callback(err);
+//     };
 
-    var _generateFieldsTypesFile = function(data, callback) {
-        var pJSON = require("./pdffield").getAllFieldsTypes(data);
-        var fieldsTypesPath = this.outputPath.replace(".json", ".fields.json");
-        var fieldTypesFile = this.outputFile.replace(".json", ".fields.json");
+//     var _generateFieldsTypesFile = function(data, callback) {
+//         var pJSON = require("./pdffield").getAllFieldsTypes(data);
+//         var fieldsTypesPath = this.outputPath.replace(".json", ".fields.json");
+//         var fieldTypesFile = this.outputFile.replace(".json", ".fields.json");
 
-        fs.writeFile(fieldsTypesPath, JSON.stringify(pJSON), function(err) {
-            if (err) {
-                nodeUtil.p2jwarn(this.inputFile + " => " + fieldTypesFile + " Exception: " + err);
-            } else {
-                nodeUtil.p2jinfo(this.inputFile + " => " + fieldTypesFile + " [" + this.outputDir + "] OK");
-            }
-            _continue.call(this, callback, err);
-        }.bind(this));
-    };
+//         fs.writeFile(fieldsTypesPath, JSON.stringify(pJSON), function(err) {
+//             if (err) {
+//                 nodeUtil.p2jwarn(this.inputFile + " => " + fieldTypesFile + " Exception: " + err);
+//             } else {
+//                 nodeUtil.p2jinfo(this.inputFile + " => " + fieldTypesFile + " [" + this.outputDir + "] OK");
+//             }
+//             _continue.call(this, callback, err);
+//         }.bind(this));
+//     };
 
-    var _writeOneJSON = function(data, callback) {
+//     var _writeOneJSON = function(data, callback) {
         
-        json = {"formImage":data};
-        this.curProcessor.successCount++;
-        _continue.call(this,callback);
-        /*fs.writeFile(this.outputPath, pJSON, function(err) {
-            if(err) {
-                nodeUtil.p2jwarn(this.inputFile + " => " + this.outputFile + " Exception: " + err);
-                this.curProcessor.failedCount++;
-                _continue.call(this, callback, err);
-            } else {
-                nodeUtil.p2jinfo(this.inputFile + " => " + this.outputFile + " [" + this.outputDir + "] OK");
-                this.curProcessor.successCount++;
+//         json = {"formImage":data};
+//         this.curProcessor.successCount++;
+//         _continue.call(this,callback);
+//         /*fs.writeFile(this.outputPath, pJSON, function(err) {
+//             if(err) {
+//                 nodeUtil.p2jwarn(this.inputFile + " => " + this.outputFile + " Exception: " + err);
+//                 this.curProcessor.failedCount++;
+//                 _continue.call(this, callback, err);
+//             } else {
+//                 nodeUtil.p2jinfo(this.inputFile + " => " + this.outputFile + " [" + this.outputDir + "] OK");
+//                 this.curProcessor.successCount++;
 
-                if (_.has(argv, 't')) {//needs to generate fields.json file
-                    _generateFieldsTypesFile.call(this, data, callback);
-                }
-                else {
-                    _continue.call(this, callback);
-                }
-            }
-        }.bind(this));
-        */
-    };
+//                 if (_.has(argv, 't')) {//needs to generate fields.json file
+//                     _generateFieldsTypesFile.call(this, data, callback);
+//                 }
+//                 else {
+//                     _continue.call(this, callback);
+//                 }
+//             }
+//         }.bind(this));
+//         */
+//     };
 
-    var _parseOnePDF = function(callback) {
-        this.pdfParser = new PFParser();
+//     var _parseOnePDF = function(callback) {
+//         this.pdfParser = new PFParser();
 
-        this.pdfParser.on("pdfParser_dataReady", function (evtData) {
+//         this.pdfParser.on("pdfParser_dataReady", function (evtData) {
             
-            if ((!!evtData) && (!!evtData.data)) {
-                _writeOneJSON.call(this, evtData.data, callback);
-            }
-            else {
-                this.curProcessor.failedCount++;
-                _continue.call(this, callback, "Exception: empty parsing result - " + this.inputPath);
-            }
-        }.bind(this));
+//             if ((!!evtData) && (!!evtData.data)) {
+//                 _writeOneJSON.call(this, evtData.data, callback);
+//             }
+//             else {
+//                 this.curProcessor.failedCount++;
+//                 _continue.call(this, callback, "Exception: empty parsing result - " + this.inputPath);
+//             }
+//         }.bind(this));
 
-        this.pdfParser.on("pdfParser_dataError", function (evtData) {
-            this.curProcessor.failedCount++;
-            var errMsg = "Exception: " + evtData.data;
-            _continue.call(this, callback, errMsg);
-        }.bind(this));
+//         this.pdfParser.on("pdfParser_dataError", function (evtData) {
+//             this.curProcessor.failedCount++;
+//             var errMsg = "Exception: " + evtData.data;
+//             _continue.call(this, callback, errMsg);
+//         }.bind(this));
 
-        nodeUtil.p2jinfo("Transcoding " + this.inputFile + " to - " + this.outputPath);
-        this.pdfParser.loadPDF(this.inputPath, 5);//(_.has(argv, 's') ? 0 : 5));
+//         nodeUtil.p2jinfo("Transcoding " + this.inputFile + " to - " + this.outputPath);
+//         this.pdfParser.loadPDF(this.inputPath, 5);//(_.has(argv, 's') ? 0 : 5));
         
-    };
+//     };
 
-    // constructor
-    var cls = function (inputDir, inputFile, curProcessor) {
-        // public, this instance copies
-        this.inputDir = path.normalize(inputDir);
-        this.inputFile = inputFile;
-        this.inputPath = this.inputDir + path.sep + this.inputFile;
+//     // constructor
+//     var cls = function (inputDir, inputFile, curProcessor) {
+//         // public, this instance copies
+//         this.inputDir = path.normalize(inputDir);
+//         this.inputFile = inputFile;
+//         this.inputPath = this.inputDir + path.sep + this.inputFile;
 
-        this.outputDir = path.normalize(inputDir);
-        this.outputFile = null;
-        this.outputPath = null;
+//         this.outputDir = path.normalize(inputDir);
+//         this.outputFile = null;
+//         this.outputPath = null;
         
-        this.pdfParser = null;
-        this.curProcessor = curProcessor;
-    };
+//         this.pdfParser = null;
+//         this.curProcessor = curProcessor;
+//     };
 
-    /*cls.prototype.validateParams = function() {
-        var retVal = null;
+//     /*cls.prototype.validateParams = function() {
+//         var retVal = null;
 
-        if (!fs.existsSync(this.inputDir))
-            retVal = "Input error: input directory doesn't exist - " + this.inputDir + ".";
-        else if (!fs.existsSync(this.inputPath))
-            retVal = "Input error: input file doesn't exist - " + this.inputPath + ".";
-        else if (!fs.existsSync(this.outputDir))
-            retVal = "Input error: output directory doesn't exist - " + this.outputDir + ".";
+//         if (!fs.existsSync(this.inputDir))
+//             retVal = "Input error: input directory doesn't exist - " + this.inputDir + ".";
+//         else if (!fs.existsSync(this.inputPath))
+//             retVal = "Input error: input file doesn't exist - " + this.inputPath + ".";
+//         else if (!fs.existsSync(this.outputDir))
+//             retVal = "Input error: output directory doesn't exist - " + this.outputDir + ".";
 
-        if (retVal != null) {
-            this.curProcessor.failedCount += 1;
-            return retVal;
-        }
+//         if (retVal != null) {
+//             this.curProcessor.failedCount += 1;
+//             return retVal;
+//         }
 
-        var inExtName = path.extname(this.inputFile).toLowerCase();
-        if (inExtName !== '.pdf')
-            retVal = "Input error: input file name doesn't have pdf extention  - " + this.inputFile + ".";
-        else {
-            this.outputFile = path.basename(this.inputPath, inExtName) + ".json";
-            this.outputPath = this.outputDir + path.sep + this.outputFile;
-            if (fs.existsSync(this.outputPath))
-                nodeUtil.p2jinfo("Output file will be replaced - " + this.outputPath);
-            else {
-                var fod = fs.openSync(this.outputPath, "wx");
-                if (!fod)
-                    retVal = "Input error: can not write to " + this.outputPath;
-                else {
-                    fs.closeSync(fod);
-                    fs.unlinkSync(this.outputPath);
-                }
-            }
-        }
+//         var inExtName = path.extname(this.inputFile).toLowerCase();
+//         if (inExtName !== '.pdf')
+//             retVal = "Input error: input file name doesn't have pdf extention  - " + this.inputFile + ".";
+//         else {
+//             this.outputFile = path.basename(this.inputPath, inExtName) + ".json";
+//             this.outputPath = this.outputDir + path.sep + this.outputFile;
+//             if (fs.existsSync(this.outputPath))
+//                 nodeUtil.p2jinfo("Output file will be replaced - " + this.outputPath);
+//             else {
+//                 var fod = fs.openSync(this.outputPath, "wx");
+//                 if (!fod)
+//                     retVal = "Input error: can not write to " + this.outputPath;
+//                 else {
+//                     fs.closeSync(fod);
+//                     fs.unlinkSync(this.outputPath);
+//                 }
+//             }
+//         }
 
-        return retVal;
-    };*/
+//         return retVal;
+//     };*/
 
-    cls.prototype.destroy = function() {
-        this.inputDir = null;
-        this.inputFile = null;
-        this.inputPath = null;
-        this.outputDir = null;
-        this.outputPath = null;
+//     cls.prototype.destroy = function() {
+//         this.inputDir = null;
+//         this.inputFile = null;
+//         this.inputPath = null;
+//         this.outputDir = null;
+//         this.outputPath = null;
 
-        if (this.pdfParser) {
-            this.pdfParser.destroy();
-        }
-        this.pdfParser = null;
-        this.curProcessor = null;
-    };
+//         if (this.pdfParser) {
+//             this.pdfParser.destroy();
+//         }
+//         this.pdfParser = null;
+//         this.curProcessor = null;
+//     };
 
-    cls.prototype.processFile = function(callback) {
-        /*var validateMsg = this.validateParams();
-        if (!!validateMsg) {
-            _continue.call(this, callback, validateMsg);
-        }
-        else {
-            _parseOnePDF.call(this, callback);
-        }*/
-        _parseOnePDF.call(this,callback);
-    };
+//     cls.prototype.processFile = function(callback) {
+//         /*var validateMsg = this.validateParams();
+//         if (!!validateMsg) {
+//             _continue.call(this, callback, validateMsg);
+//         }
+//         else {
+//             _parseOnePDF.call(this, callback);
+//         }*/
+//         _parseOnePDF.call(this,callback);
+//     };
 
-    return cls;
-})();
+//     return cls;
+// })();
 
-var error = .5;
+/*var error = .5;
 var equals = function (one, two) {
     if (Math.abs(two - one) < error) {
         return true;
@@ -400,7 +400,7 @@ p2j.inputCount = 1;
 p2j.p2j = new PDF2JSONUtil(inputDir, inputFile, p2j);
 //p2j.p2j.processFile(_.bind(p2j.complete, p2j));
 p2j.p2j.processFile(parseJSON);
-
+*/
 
 
 
