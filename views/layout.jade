@@ -12,15 +12,25 @@ html
         a(href="/")
             li.nav.left
                 |LASA UIL Training
-        a(href="/random")
-            li.nav.left
-                img.random(src='/images/random.png')
-        a(href="/newuser")
-            li.nav.button.right
-                |Register
-        a(href="/signin")
-            li.nav.button.right
-                |Login
+        if cookie
+            a(href="/random")
+                li.nav.left
+                    img.random(src='/images/random.png')
+            a(href="/logout")
+                li.nav.button.right
+                    |Logout
+            a(href="/home")
+                li.nav.button.right
+                    |Home
+        else
+            a(href="/newuser")
+                li.nav.button.right
+                    |Register
+            a(href="/signin")
+                li.nav.button.right
+                    |Login
+            
     div.content
         block content
-    script(src="scripts/keys.js")
+    div.footer
+        block footer

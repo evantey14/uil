@@ -2,9 +2,20 @@ extends layout
 
 block content
     h1= title
-    h5= prompt
+    h4= prompt
+    if grade
+        h5="Please input a valid grade."
+    if password
+        h5="Your password fields do not match."
+    if empty
+        h5= "You left some of the boxes empty."
+    if character
+        h5= "Please do not use punctation in fields."
+    if email
+        h5= "Please input a valid email."
     if error
         h5= error
+        
     form#formAddUser(name="adduser",method="post",action="/adduser")
         input#inputFirstName(type="text", placeholder="First Name",name = "firstname")
         br

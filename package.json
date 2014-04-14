@@ -12,6 +12,7 @@
     "lodash": "~2.4.1",
     "mongodb": "*",
     "monk": "*",
-    "password-hash": "~1.2.1"
+    "password-hash": "~1.2.1",
+    "time": "~0.10.0"
   }
 }
