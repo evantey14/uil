@@ -3,7 +3,7 @@ extends layout
 block head
     script(src="/scripts/home.js")
 block content
-        h1= title
+        h1= "Welcome " + session.user
         h5= correct
         h5= incorrect
 block footer
@@ -11,4 +11,3 @@ block footer
         var correct = !{correct};
         var incorrect = !{incorrect};
         init(correct,incorrect);
-        

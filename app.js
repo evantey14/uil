@@ -1,6 +1,7 @@
 //testing2.blah blah blah
 var express = require('express'),
-    routes = require('./routes'),
+    routes = require('./routes/index'),
+    newuser = require('./routes/newuser')
     pdf = require('./routes/pdf'),
     http = require('http'),
     path = require('path');
@@ -36,11 +37,12 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
+app.all('/about', routes.about);
 app.get('/pdf', pdf.index);
-app.get('/newuser', routes.newuser);
+app.get('/newuser', newuser.newuser);
 app.all('/renderquestion', routes.renderquestion);
 
-app.post('/adduser', routes.adduser(db));
+app.post('/adduser', newuser.adduser(db));
 app.all('/signin', routes.signin(db));
 app.all('/home', routes.home(db));
 app.all('/getquestion', routes.getquestion(db));

@@ -1,0 +1,16 @@
+.err {
+    color: red;
+}
+.center {
+    text-align: center;
+}
+input[type="text"] {
+    padding: 5px;
+    margin: 5px;
+    width: 250px;
+}
+input[type="password"] {
+    padding: 5px;
+    margin: 5px;
+    width: 250px;
+}
