@@ -1,4 +1,3 @@
-//testing2.blah blah blah
 var express = require('express'),
     routes = require('./routes'),
     pdf = require('./routes/pdf'),
