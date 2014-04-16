@@ -1,21 +1,6 @@
 var time = require('time');
 var passwordHash = require('password-hash');
 var cookie = false;
-/*
-var shuffle = function (array) {
-    var currentIndex = array.length;
-    var temp;
-    var randomIndex;
-    while (0 !== currentIndex) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temp = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temp;
-    }
-    return array;
-}
-*/
 
 exports.signin = function (db) {
     return function (req, res) {
@@ -79,11 +64,18 @@ exports.home = function (db) {
                 if (err) {
                     throw err;
                 } else {
+                    var score = found.correct.length * 3 - found.incorrect.length;
+                    req.session.score = score;
                     res.render('uniquelogin', {
                         cookie: cookie,
                         loggedin: req.session.loggedin,
                         correct: JSON.stringify(found.correct),
                         incorrect: JSON.stringify(found.incorrect),
+                        passed: JSON.stringify(found.passed),
+                        correctlength: found.correct.length,
+                        incorrectlength: found.incorrect.length,
+                        passedlength: found.passed.length,
+                        score: req.session.score,
                         session: req.session
                     });
                 }
@@ -139,12 +131,15 @@ exports.checkquestion = function (db) {
                         } else {
                             var array = found['correct'];
                             var otherarray = found['questions'];
+                            var score = found.score;
+                            score += 3;
                             otherarray.shift();
                             users.update({
                                 '_id': req.session.id
                             }, {
                                 $set: {
-                                    'questions': otherarray
+                                    'questions': otherarray,
+                                    'score': score
                                 }
                             });
                             array.push({
@@ -166,7 +161,7 @@ exports.checkquestion = function (db) {
                         value: "correct",
                         session: req.session
                     });
-                } else {
+                } else if (!choice) {
                     users.findOne({
                         '_id': req.session.id
                     }, function (err, found) {
@@ -180,6 +175,46 @@ exports.checkquestion = function (db) {
                             }, {
                                 $set: {
                                     'questions': otherarray
+                                }
+                            });
+
+                            var array = found['passed'];
+                            array.push({
+                                id: id,
+                                time: Date.now()
+                            });
+                            users.update({
+                                '_id': req.session.id
+                            }, {
+                                $set: {
+                                    'passed': array
+                                }
+                            });
+                        }
+                    });
+                    res.render('grading', {
+                        cookie: cookie,
+                        title: "Question Passed",
+                        value: "passed",
+                        session: req.session
+                    });
+                } else {
+                    users.findOne({
+                        '_id': req.session.id
+                    }, function (err, found) {
+                        if (err) {
+                            throw err;
+                        } else {
+                            var otherarray = found['questions'];
+                            otherarray.shift();
+                            var score = found.score;
+                            score--;
+                            users.update({
+                                '_id': req.session.id
+                            }, {
+                                $set: {
+                                    'questions': otherarray,
+                                    'score': score
                                 }
                             });
                             var array = found['incorrect'];
@@ -256,29 +291,7 @@ exports.index = function (req, res) {
         session: req.session
     });
 };
-/*
-exports.getquestion = function (db) {
-    return function (req, res) {
-        var collection = db.get('questions');
-        var thing = collection.find({}, function (err, found) {
-            if (err) {
-                throw err;
-            } else if (!found) {
-                res.render('error', {
-                    cookie:cookie,
-                    title: 'Error',
-                    prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.'
-                });
-            } else {
-                //console.log(found);
-                var rand = Math.ceil(found.length * Math.random());
-                var id = found[rand]['_id'];
-                res.redirect('/random/' + id);
-            }
-        });
-    }
-};
-*/
+
 exports.getquestion = function (db) {
     return function (req, res) {
         var questions = db.get('questions');
@@ -289,7 +302,6 @@ exports.getquestion = function (db) {
             if (err) {
                 throw err;
             } else {
-                console.log("Found", found);
                 var id = found['questions'][0];
                 res.redirect('/random/' + id);
             }
@@ -329,10 +341,45 @@ exports.about = function (req, res) {
             desc: "We had our first dance in the sand\nIt was one hell of a a souvenir\nTangled up, so in love\nSo, let\'s just stay right here",
             src: "https://github.com/notyalc"
         }, {
-            name: "Alec Baldwin",
+            name: "Keivaun Waugh",
             img: "/images/about/alec.jpg",
             desc: "We had our first dance in the sand\nIt was one hell of a a souvenir\nTangled up, so in love\nSo, let\'s just stay right here",
             src: "https://github.com/notyalc"
         }]
     });
 };
+
+var comparable = function (first, second) {
+    return second.score - first.score;
+}
+
+exports.scoreboard = function (db) {
+    return function (req, res) {
+        var users = db.get('users');
+        var ranking = [];
+        users.find({}, function (err, found) {
+            if (err) {
+                throw err;
+            } else {
+                for (var i = 0; i < found.length; i++) {
+                    var username = found[i]['username'];
+                    var score = found[i]['score'];
+                    ranking.push({
+                        username: username,
+                        score: score
+                    });
+                    //SORTING ALGORITHM BY SCORE
+                    ranking.sort(function (first, second) {
+                        return second.score - first.score;
+                    });
+                }
+            }
+            res.render('scoreboard', {
+                ranking: ranking,
+                cookie: cookie,
+                session: req.session
+            });
+            console.log(ranking);
+        });
+    }
+}

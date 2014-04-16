@@ -100,7 +100,9 @@ exports.adduser = function (db) {
                                 "password": password,
                                 "questions": ids,
                                 "correct": [],
-                                "incorrect": []
+                                "incorrect": [],
+                                "passed": [],
+                                "score": 0
                             }, function (err, doc) {
                                 if (err) {
                                     throw err;

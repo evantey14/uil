@@ -4,10 +4,16 @@ block head
     script(src="/scripts/home.js")
 block content
         h1= "Welcome " + session.user
+        h2= "Your score is: " + score
+        h3= "Correct: " + correctlength
         h5= correct
+        h3="Incorrect: " + incorrectlength
         h5= incorrect
+        h3="Passed: " + passedlength
+        h5= passed
 block footer
     script.
         var correct = !{correct};
         var incorrect = !{incorrect};
+        var passed = !{passed};
         init(correct,incorrect);
