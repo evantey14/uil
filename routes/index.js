@@ -1,7 +1,7 @@
 var time = require('time');
 var passwordHash = require('password-hash');
 var cookie = false;
-
+/*
 var shuffle = function (array) {
     var currentIndex = array.length;
     var temp;
@@ -15,113 +15,7 @@ var shuffle = function (array) {
     }
     return array;
 }
-
-exports.newuser = function (req, res) {
-    res.render('newuser', {
-        cookie: cookie,
-        title: 'Add New User',
-        prompt: 'Please fill out the information below.'
-    });
-};
-
-exports.adduser = function (db) {
-    return function (req, res) {
-        var userName = req.body.username;
-        var email = req.body.useremail;
-        var grade = req.body.usergrade;
-        var firstPassword = req.body.password;
-        var secondPassword = req.body.secondpassword;
-        var firstName = req.body.firstname;
-        var lastName = req.body.lastname;
-        var password = passwordHash.generate(firstPassword);
-
-        var ids = [];
-        var collections = db.get('questions')
-        collections.find({}, function (err, found) {
-            if (err) {
-                throw err;
-            } else {
-                for (var i = 0; i < found.length; i++) {
-                    ids.push(found[i]['_id']);
-                }
-                shuffle(ids);
-
-                var empty1 = false;
-                var email1 = false;
-                var password1 = false;
-                var grade1 = false;
-
-                if (!email) {
-                    email = "";
-                }
-
-                if (!req.body.username || !req.body.useremail || !req.body.usergrade || !req.body.password || !req.body.secondpassword || !req.body.firstname || !req.body.lastname) {
-                    empty1 = true;
-                    //error: "You left some of the boxes empty!"
-                }
-                if (email.indexOf("@") === -1) {
-                    email1 = true;
-                    //error: "Please use a valid email",
-                }
-                if (firstPassword != secondPassword) {
-                    password1 = true;
-                    //error: "Make sure the password fields match.",
-                }
-                if (grade > 12) {
-                    grade1 = true;
-                }
-                if (password1 || email1 || grade1 | empty1) {
-                    res.render('newuser', {
-                        cookie: cookie,
-                        title: 'Add New User',
-                        empty: empty1,
-                        email: email1,
-                        password: password1,
-                        grade: grade1,
-                        prompt: "Please fill out the information below."
-                    });
-                } else {
-                    var collection = db.get("users");
-                    var count = collection.count({
-                        username: userName
-                    }, function (err, count) {
-                        if (err) {
-                            throw err;
-                        }
-                        if (count > 0) {
-                            res.render('newuser', {
-                                cookie: cookie,
-                                title: 'Add New User',
-                                error: "That username is already taken.",
-                                prompt: "Please fill out the information below."
-                            });
-                        } else {
-                            collection.insert({
-                                "firstName": firstName,
-                                "lastName": lastName,
-                                "username": userName,
-                                "email": email,
-                                "grade": grade,
-                                "password": password,
-                                "questions": ids,
-                                "correct": [],
-                                "incorrect": []
-                            }, function (err, doc) {
-                                if (err) {
-                                    throw err;
-                                } else {
-                                    res.location("signin");
-                                    res.redirect("signin");
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-        });
-
-    }
-};
+*/
 
 exports.signin = function (db) {
     return function (req, res) {
@@ -141,7 +35,8 @@ exports.signin = function (db) {
                         cookie: cookie,
                         title: 'Login',
                         prompt: 'Input your credentials below!',
-                        error: "username"
+                        error: "username",
+                        session: req.session
                     });
                 } else {
                     var hashed = found['password'];
@@ -156,7 +51,8 @@ exports.signin = function (db) {
                             cookie: cookie,
                             title: 'Login',
                             prompt: "Input your credentials below!",
-                            error: "matching"
+                            error: "matching",
+                            session: req.session
                         });
                     }
                 }
@@ -165,7 +61,8 @@ exports.signin = function (db) {
             res.render('login', {
                 cookie: cookie,
                 title: 'Login',
-                prompt: 'Input your credentials below!'
+                prompt: 'Input your credentials below!',
+                session: req.session
             });
         }
     }
@@ -184,10 +81,10 @@ exports.home = function (db) {
                 } else {
                     res.render('uniquelogin', {
                         cookie: cookie,
-                        title: "Welcome " + req.session.user,
                         loggedin: req.session.loggedin,
                         correct: JSON.stringify(found.correct),
-                        incorrect: JSON.stringify(found.incorrect)
+                        incorrect: JSON.stringify(found.incorrect),
+                        session: req.session
                     });
                 }
             });
@@ -214,7 +111,8 @@ exports.renderquestion = function (req, res) {
         cookie: cookie,
         title: 'Random Question',
         prompt: 'Please fill out the information below.',
-        question: 'question'
+        question: 'question',
+        session: req.session
     });
 };
 
@@ -232,80 +130,78 @@ exports.checkquestion = function (db) {
                 throw err;
             } else {
                 var answer = found['key'];
-                if (!choice) {
-                    res.redirect("/random");
+                if (choice == answer) {
+                    users.findOne({
+                        '_id': req.session.id
+                    }, function (err, found) {
+                        if (err) {
+                            throw err;
+                        } else {
+                            var array = found['correct'];
+                            var otherarray = found['questions'];
+                            otherarray.shift();
+                            users.update({
+                                '_id': req.session.id
+                            }, {
+                                $set: {
+                                    'questions': otherarray
+                                }
+                            });
+                            array.push({
+                                id: id,
+                                time: Date.now()
+                            });
+                            users.update({
+                                '_id': req.session.id
+                            }, {
+                                $set: {
+                                    'correct': array
+                                }
+                            });
+                        }
+                    });
+                    res.render('grading', {
+                        cookie: cookie,
+                        title: "CORRECT!",
+                        value: "correct",
+                        session: req.session
+                    });
                 } else {
-                    if (choice == answer) {
-                        users.findOne({
-                            '_id': req.session.id
-                        }, function (err, found) {
-                            if (err) {
-                                throw err;
-                            } else {
-                                var array = found['correct'];
-                                var otherarray = found['questions'];
-                                otherarray.shift();
-                                users.update({
-                                    '_id': req.session.id
-                                }, {
-                                    $set: {
-                                        'questions': otherarray
-                                    }
-                                });
-                                array.push({
-                                    id: id,
-                                    time: Date.now()
-                                });
-                                users.update({
-                                    '_id': req.session.id
-                                }, {
-                                    $set: {
-                                        'correct': array
-                                    }
-                                });
-                            }
-                        });
-                        res.render('grading', {
-                            cookie: cookie,
-                            title: "CORRECT!",
-                            value: "correct"
-                        });
-                    } else {
-                        users.findOne({
-                            '_id': req.session.id
-                        }, function (err, found) {
-                            if (err) {
-                                throw err;
-                            } else {
-                                var otherarray = found['questions'];
-                                otherarray.shift();
-                                users.update({
-                                    '_id': req.session.id
-                                }, {
-                                    $set: {
-                                        'questions': otherarray
-                                    }
-                                });
-                                var array = found['incorrect'];
-                                array.push({
-                                    id: id,
-                                    time: Date.now()
-                                });
-                                users.update({
-                                    '_id': req.session.id
-                                }, {
-                                    $set: {
-                                        'incorrect': array
-                                    }
-                                });
-                            }
-                        });
-                        res.render('grading', {
-                            cookie: cookie,
-                            title: "Incorrect...",
-                            value: "incorrect"
-                        });
-                    }
+                    users.findOne({
+                        '_id': req.session.id
+                    }, function (err, found) {
+                        if (err) {
+                            throw err;
+                        } else {
+                            var otherarray = found['questions'];
+                            otherarray.shift();
+                            users.update({
+                                '_id': req.session.id
+                            }, {
+                                $set: {
+                                    'questions': otherarray
+                                }
+                            });
+                            var array = found['incorrect'];
+                            array.push({
+                                id: id,
+                                time: Date.now()
+                            });
+                            users.update({
+                                '_id': req.session.id
+                            }, {
+                                $set: {
+                                    'incorrect': array
+                                }
+                            });
+                        }
+                    });
+                    res.render('grading', {
+                        cookie: cookie,
+                        title: "Incorrect...",
+                        value: "incorrect",
+                        session: req.session
+                    });
                 }
             }
         });
@@ -325,7 +221,8 @@ exports.viewquestion = function (db) {
                 res.render('error', {
                     cookie: cookie,
                     title: 'Error',
-                    prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.'
+                    prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.',
+                    session: req.session
                 });
             } else {
                 var title = 'Random Question';
@@ -344,7 +241,8 @@ exports.viewquestion = function (db) {
                     D: answers[3],
                     E: answers[4],
                     id: found["_id"],
-                    url: found["_id"]
+                    url: found["_id"],
+                    session: req.session
                 });
             }
         });
@@ -354,7 +252,8 @@ exports.viewquestion = function (db) {
 exports.index = function (req, res) {
     res.render('index', {
         cookie: cookie,
-        title: 'LASA UIL Training'
+        title: 'LASA UIL Training',
+        session: req.session
     });
 };
 /*
@@ -390,10 +289,50 @@ exports.getquestion = function (db) {
             if (err) {
                 throw err;
             } else {
-                //console.log(found);
+                console.log("Found", found);
                 var id = found['questions'][0];
                 res.redirect('/random/' + id);
             }
         });
     }
 }
+
+exports.about = function (req, res) {
+    res.render('about', {
+        cookie: cookie,
+        title: 'LASA UIL Training',
+        session: req.session,
+        desc: "Lorem ipsum dolor sit amet, ne per solum timeam. Vim ne doctus timeam dolorem, in adhuc delicata maluisset per. Qui essent laoreet et. No eam tota scaevola, choro mollis vituperata te per, ut ius nibh omnium. Ea vel dico duis ridens. Ex sit tempor mandamus ocurreret, populo delectus consectetuer eu vim.",
+        profiles: [{
+            name: "Evan Tey",
+            img: "/images/about/evan.jpg",
+            desc: "It was our first week\n At Myrtle Beach\n Where it all began\n\nIt was 102°\nNothin\' to do\nMan it was hot\nSo we jumped in",
+            src: "https://github.com/evantey14"
+        }, {
+            name: "Jonas Wechsler",
+            img: "/images/about/jonas.jpg",
+            desc: "We were summertime sippin\', sippin\'\nSweet tea kissin\' off of your lips\nT-shirt drippin\', drippin\' wet\nHow could I forget?",
+            src: "https://github.com/JonasWechsler"
+        }, {
+            name: "Beck Goodloe",
+            img: "/images/about/beck.jpg",
+            desc: "Watchin\' that blonde hair swing\nTo every song I\'d sing\nYou were California beautiful\nI was playin\' everything but cool\nI can still hear that sound\nOf every wave crashin' down",
+            src: "https://github.com/beckgoodloe"
+        }, {
+            name: "Ryan Rice",
+            img: "/images/about/ryan.jpg",
+            desc: "Like the tears we cried\nThat day we had to leave\nIt was everything we wanted it to be\nThe summer of\n19 you and me",
+            src: "https://github.com/ryanr1230"
+        }, {
+            name: "Clayton Petty",
+            img: "/images/about/clayton.jpg",
+            desc: "We had our first dance in the sand\nIt was one hell of a a souvenir\nTangled up, so in love\nSo, let\'s just stay right here",
+            src: "https://github.com/notyalc"
+        }, {
+            name: "Alec Baldwin",
+            img: "/images/about/alec.jpg",
+            desc: "We had our first dance in the sand\nIt was one hell of a a souvenir\nTangled up, so in love\nSo, let\'s just stay right here",
+            src: "https://github.com/notyalc"
+        }]
+    });
+};
