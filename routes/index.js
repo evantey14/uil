@@ -1,4 +1,3 @@
-var time = require('time');
 var passwordHash = require('password-hash');
 var cookie = false;
 
@@ -349,10 +348,6 @@ exports.about = function (req, res) {
     });
 };
 
-var comparable = function (first, second) {
-    return second.score - first.score;
-}
-
 exports.scoreboard = function (db) {
     return function (req, res) {
         var users = db.get('users');
@@ -369,9 +364,11 @@ exports.scoreboard = function (db) {
                         score: score
                     });
                     //SORTING ALGORITHM BY SCORE
-                    ranking.sort(function (first, second) {
-                        return second.score - first.score;
-                    });
+                    if(ranking.size>1){
+                        ranking.sort(function (first, second) {
+                            return second.score - first.score;
+                        });
+                    }
                 }
             }
             res.render('scoreboard', {
@@ -379,7 +376,6 @@ exports.scoreboard = function (db) {
                 cookie: cookie,
                 session: req.session
             });
-            console.log(ranking);
         });
     }
 }
