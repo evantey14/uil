@@ -102,7 +102,8 @@ exports.adduser = function (db) {
                                 "correct": [],
                                 "incorrect": [],
                                 "passed": [],
-                                "score": 0
+                                "score": 0,
+                                "streak": 0
                             }, function (err, doc) {
                                 if (err) {
                                     throw err;

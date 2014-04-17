@@ -63,7 +63,7 @@ exports.home = function (db) {
                 if (err) {
                     throw err;
                 } else {
-                    var score = found.correct.length * 3 - found.incorrect.length;
+                    var score = found.correct.length * 60 - found.incorrect.length * 20;
                     req.session.score = score;
                     res.render('uniquelogin', {
                         cookie: cookie,
@@ -75,7 +75,7 @@ exports.home = function (db) {
                         incorrectlength: found.incorrect.length,
                         passedlength: found.passed.length,
                         score: req.session.score,
-                        session: req.session
+                        session: req.session,
                     });
                 }
             });
@@ -131,14 +131,18 @@ exports.checkquestion = function (db) {
                             var array = found['correct'];
                             var otherarray = found['questions'];
                             var score = found.score;
-                            score += 3;
+                            var streak = found.streak;
+                            score += 60;
+                            streak++;
+                            req.session.streak = streak;
                             otherarray.shift();
                             users.update({
                                 '_id': req.session.id
                             }, {
                                 $set: {
                                     'questions': otherarray,
-                                    'score': score
+                                    'score': score,
+                                    'streak': streak
                                 }
                             });
                             array.push({
@@ -178,6 +182,9 @@ exports.checkquestion = function (db) {
                             });
 
                             var array = found['passed'];
+                            var streak = found.streak;
+                            streak = 0;
+                            req.sessions.strak = streak;
                             array.push({
                                 id: id,
                                 time: Date.now()
@@ -186,7 +193,8 @@ exports.checkquestion = function (db) {
                                 '_id': req.session.id
                             }, {
                                 $set: {
-                                    'passed': array
+                                    'passed': array,
+                                    'streak': streak
                                 }
                             });
                         }
@@ -207,7 +215,7 @@ exports.checkquestion = function (db) {
                             var otherarray = found['questions'];
                             otherarray.shift();
                             var score = found.score;
-                            score--;
+                            score -= 20;
                             users.update({
                                 '_id': req.session.id
                             }, {
