@@ -363,12 +363,12 @@ exports.scoreboard = function (db) {
                         username: username,
                         score: score
                     });
-                    //SORTING ALGORITHM BY SCORE
-                    if(ranking.size>1){
-                        ranking.sort(function (first, second) {
-                            return second.score - first.score;
-                        });
-                    }
+                }
+                //SORTING ALGORITHM BY SCORE
+                if (ranking.length > 1) {
+                    ranking.sort(function (first, second) {
+                        return second.score - first.score;
+                    });
                 }
             }
             res.render('scoreboard', {
