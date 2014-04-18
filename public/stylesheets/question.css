@@ -35,6 +35,13 @@
     font-family: Consolas, Monaco, Lucidia Console, Liberation Mono, DejaVu, Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
     white-space: pre;
 }
+.side {
+    padding: 10px;
+    vertical-align: right;
+    background-color: #EEEEEE;
+    font-family: Consolas, Monaco, Lucidia Console, Liberation Mono, DejaVu, Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+    white-space: pre;   
+}
 .id {
     display: none;
     font-size: 10px;
