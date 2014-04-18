@@ -1,6 +1,7 @@
 extends layout
-
+block head
+    link(rel='stylesheet', href='/stylesheets/error.css')
 block content
-    h1= title
-    h3= prompt
-    img(src= "http://world.edu/wp-content/uploads/2012/02/sorry_2.jpg")
+    div.title= title
+    div.details= prompt
+        //div.test= "Test " + test
