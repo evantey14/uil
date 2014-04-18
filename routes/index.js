@@ -65,6 +65,7 @@ exports.home = function (db) {
                 } else {
                     var score = found.correct.length * 60 - found.incorrect.length * 20;
                     req.session.score = score;
+                    console.log(req.session);
                     res.render('uniquelogin', {
                         cookie: cookie,
                         loggedin: req.session.loggedin,
@@ -74,8 +75,10 @@ exports.home = function (db) {
                         correctlength: found.correct.length,
                         incorrectlength: found.incorrect.length,
                         passedlength: found.passed.length,
-                        score: req.session.score,
+                        score: found.score,
                         session: req.session,
+                        streak: found.streak,
+                        longeststreak:found.longeststreak
                     });
                 }
             });
@@ -132,9 +135,12 @@ exports.checkquestion = function (db) {
                             var otherarray = found['questions'];
                             var score = found.score;
                             var streak = found.streak;
+                            var longeststreak = found.longeststreak;
                             score += 60;
                             streak++;
-                            req.session.streak = streak;
+                            if(streak>longeststreak){
+                                users.update({'_id':req.session.id},{$set:{'longeststreak':streak}});
+                            }
                             otherarray.shift();
                             users.update({
                                 '_id': req.session.id
@@ -182,9 +188,6 @@ exports.checkquestion = function (db) {
                             });
 
                             var array = found['passed'];
-                            var streak = found.streak;
-                            streak = 0;
-                            req.sessions.strak = streak;
                             array.push({
                                 id: id,
                                 time: Date.now()
@@ -194,7 +197,6 @@ exports.checkquestion = function (db) {
                             }, {
                                 $set: {
                                     'passed': array,
-                                    'streak': streak
                                 }
                             });
                         }
@@ -216,12 +218,15 @@ exports.checkquestion = function (db) {
                             otherarray.shift();
                             var score = found.score;
                             score -= 20;
+                            var streak = found.streak;
+                            streak = 0;
                             users.update({
                                 '_id': req.session.id
                             }, {
                                 $set: {
                                     'questions': otherarray,
-                                    'score': score
+                                    'score': score,
+                                    'streak':streak
                                 }
                             });
                             var array = found['incorrect'];
@@ -308,7 +313,11 @@ exports.getquestion = function (db) {
         }, function (err, found) {
             if (err) {
                 throw err;
-            } else {
+            }
+            else if (found.questions.length===0){
+                res.send("You answered all of the questions...all bajillion of them...go read a book or something...or answer some of the questions you missed or passed!");
+            }
+            else {
                 var id = found['questions'][0];
                 res.redirect('/random/' + id);
             }
