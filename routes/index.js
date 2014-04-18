@@ -262,6 +262,7 @@ exports.viewquestion = function (db) {
                 var title = 'Random Question';
                 var prompt = 'Test: ' + found['test'] + '\nQuestion: ' + found['ques'];
                 var answers = found['ans'];
+                //console.log("thing" + JSON.stringify(found));
                 res.render('renderquestion', {
                     cookie: cookie,
                     title: title,
@@ -269,6 +270,7 @@ exports.viewquestion = function (db) {
                     qnum: found['ques'],
                     test: found['test'],
                     question: found['text'],
+                    side: found['code'],
                     A: answers[0],
                     B: answers[1],
                     C: answers[2],

@@ -1,6 +1,6 @@
 var express = require('express'),
     routes = require('./routes/index'),
-    newuser = require('./routes/newuser')
+    newuser = require('./routes/newuser'),
     pdf = require('./routes/pdf'),
     http = require('http'),
     path = require('path');
