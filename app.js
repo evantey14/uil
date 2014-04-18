@@ -13,7 +13,6 @@ var db = monk('localhost:27017/nodetest1');
 
 var app = express();
 
-
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
@@ -28,6 +27,8 @@ app.use(express.cookieParser('lasacs'));
 app.use(express.cookieSession('lasacs'));
 
 app.use(verification());
+
+
 
 app.use(app.router);
 // development only
@@ -52,7 +53,8 @@ app.all('/random/:id', routes.viewquestion(db));
 app.all('/checkquestion', routes.checkquestion(db));
 app.all('/logout', routes.logout);
 app.all('/scoreboard', routes.scoreboard(db));
-//app.all('/:username', routes.profile(db));
+app.all('/getfeedback',routes.getfeedback());
+app.all('/sendfeedback',routes.sendfeedback());
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));

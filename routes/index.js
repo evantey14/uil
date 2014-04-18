@@ -1,16 +1,16 @@
 var passwordHash = require('password-hash');
 var cookie = false;
+var nodemailer = require('nodemailer');
 
 exports.signin = function (db) {
     return function (req, res) {
         if (req.body.username != null) {
             var username = req.body.username;
-            var password = req.body.password;
+            var npassword = req.body.password;
             var collection = db.get("users");
             collection.findOne({
                 "username": username
             }, function (err, found) {
-                //console.log(found);
                 if (err) {
                     throw err.$animate
                 }
@@ -65,7 +65,6 @@ exports.home = function (db) {
                 } else {
                     var score = found.correct.length * 60 - found.incorrect.length * 20;
                     req.session.score = score;
-                    console.log(req.session);
                     res.render('uniquelogin', {
                         cookie: cookie,
                         loggedin: req.session.loggedin,
@@ -395,4 +394,40 @@ exports.scoreboard = function (db) {
             });
         });
     }
-}
+};
+
+exports.getfeedback = function(){
+    return function(req,res){
+        res.render('feedback');
+    }
+};
+
+exports.sendfeedback = function(){
+    return function(req,res){
+        var name = req.body.name;
+        var subject = req.body.subject;
+        var text = req.body.text;
+        var email = req.body.email;
+        var smtpTransport = nodemailer.createTransport("SMTP", {
+            service: "Gmail",
+            auth: {
+                user: "lasauiltraining@gmail.com",
+                pass: "jacobstephens"
+            }
+        });
+        var mailOptions = {
+            to: "lasauiltraining@gmail.com",
+            from: name,
+            subject: subject,
+            text: text + "\n\nRespond to this person at: " + email
+        }
+        smtpTransport.sendMail(mailOptions,function(err, response){
+            if(err){
+                throw err;
+            }
+            else{
+                res.redirect("/");
+            }
+        });
+    }
+};
