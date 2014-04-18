@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1= "Most Recent Rankings"
+    table(border= 1)
+        tr
+            td= "Username"
+            td= "Score"
+        each person in ranking
+            tr
+                td= person.username
+                td= person.score

@@ -1,4 +1,3 @@
-//testing2.blah blah blah
 var express = require('express'),
     routes = require('./routes/index'),
     newuser = require('./routes/newuser')
@@ -52,6 +51,8 @@ app.all('/random', routes.getquestion(db));
 app.all('/random/:id', routes.viewquestion(db));
 app.all('/checkquestion', routes.checkquestion(db));
 app.all('/logout', routes.logout);
+app.all('/scoreboard', routes.scoreboard(db));
+//app.all('/:username', routes.profile(db));
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
