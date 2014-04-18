@@ -2,17 +2,34 @@ body {
     margin: 0;
     height: 100%;
 }
+.details {
+    display: inline-block;
+    vertical-align: top;
+    -webkit-font-smoothing: antialiased;
+    box-sizing: border-box;
+    color: rgb(100, 100, 100);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /* Fix for IE7 and below */
+    zoom: 1;
+    *display: inline;
+    font-size: 20px;
+    margin-right: 40px;
+}
+.title {
+    display: inline-block;
+    vertical-align: middle;
+    /* Fix for IE7 and below */
+    zoom: 1;
+    *display: inline;
+    font-size: 50px;
+    margin-bottom: 15px;
+    color: rgb(100, 53, 100);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
 .content {
     margin: 0;
     padding: 3%;
     height: 100%;
-}
-.title {
-    font-size: 50px;
-    margin-bottom: 15px;
-}
-.sitedesc {
-    margin-right: 40px;
 }
 .name {
     font-size: 30px;
