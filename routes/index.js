@@ -6,7 +6,7 @@ exports.signin = function (db) {
     return function (req, res) {
         if (req.body.username != null) {
             var username = req.body.username;
-            var npassword = req.body.password;
+            var password = req.body.password;
             var collection = db.get("users");
             collection.findOne({
                 "username": username
