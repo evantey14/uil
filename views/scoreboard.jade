@@ -8,5 +8,6 @@ block content
             td= "Score"
         each person in ranking
             tr
-                td= person.username
+                td
+                    a(href= "/user/"+person.username)= person.username
                 td= person.score

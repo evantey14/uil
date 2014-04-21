@@ -146,7 +146,13 @@ exports.checkquestion = function (db) {
                                     }
                                 });
                             }
-                            otherarray.shift();
+                            var index = otherarray.map(function (obj, index) {
+                                if (obj.id == id) {
+                                    return index;
+                                }
+                            }).filter(isFinite)
+                            otherarray.splice(index, 1);
+                            console.log(index);
                             users.update({
                                 '_id': req.session.id
                             }, {
@@ -183,7 +189,12 @@ exports.checkquestion = function (db) {
                             throw err;
                         } else {
                             var otherarray = found['questions'];
-                            otherarray.shift();
+                            var index = otherarray.map(function (obj, index) {
+                                if (obj.id == id) {
+                                    return index;
+                                }
+                            }).filter(isFinite)
+                            otherarray.splice(index, 1);
                             users.update({
                                 '_id': req.session.id
                             }, {
@@ -193,9 +204,6 @@ exports.checkquestion = function (db) {
                             });
 
                             var array = found['passed'];
-                            var streak = found.streak;
-                            streak = 0;
-                            req.sessions.streak = streak;
                             array.push({
                                 id: id,
                                 time: Date.now()
@@ -223,7 +231,12 @@ exports.checkquestion = function (db) {
                             throw err;
                         } else {
                             var otherarray = found['questions'];
-                            otherarray.shift();
+                            var index = otherarray.map(function (obj, index) {
+                                if (obj.id == id) {
+                                    return index;
+                                }
+                            }).filter(isFinite)
+                            otherarray.splice(index, 1);
                             var score = found.score;
                             score -= 20;
                             var streak = found.streak;
@@ -429,17 +442,21 @@ exports.sendfeedback = function () {
                 pass: "jacobstephens"
             }
         });
+        console.log("smtp made");
         var mailOptions = {
             to: "lasauiltraining@gmail.com",
             from: name,
             subject: subject,
             text: text + "\n\nRespond to this person at: " + email
         }
+        console.log("mail options set");
         smtpTransport.sendMail(mailOptions, function (err, response) {
             if (err) {
                 throw err;
             } else {
+                console.log("message sending");
                 res.redirect("/");
+                console.log("message sent");
             }
         });
     }
@@ -448,6 +465,7 @@ exports.sendfeedback = function () {
 exports.user = function (db) {
     return function (req, res) {
         username = req.url;
+        console.log(req.url.username);
         username = username.substring(6);
         var users = db.get('users');
         users.findOne({
@@ -465,3 +483,69 @@ exports.user = function (db) {
         });
     }
 };
+
+exports.listofcorrects = function (db) {
+    return function (req, res) {
+        var username = req.url.substring(1, 5);
+        console.log(username);
+        var users = db.get('users');
+        users.findOne({
+            'username': username
+        }, function (err, found) {
+            if (err) {
+                throw err;
+            } else {
+                console.log(found);
+                res.render('listofcorrects', {
+                    found: found,
+                    session: req.session,
+                    cookie: cookie
+                });
+            }
+        });
+    }
+};
+
+exports.listofincorrects = function (db) {
+    return function (req, res) {
+        var username = req.url.substring(1, 5);
+        console.log(username);
+        var users = db.get('users');
+        users.findOne({
+            'username': username
+        }, function (err, found) {
+            if (err) {
+                throw err;
+            } else {
+                console.log(found);
+                res.render('listofincorrects', {
+                    found: found,
+                    session: req.session,
+                    cookie: cookie
+                });
+            }
+        });
+    }
+};
+
+exports.listofpassed = function (db) {
+    return function (req, res) {
+        var username = req.url.substring(1, 5);
+        console.log(username);
+        var users = db.get('users');
+        users.findOne({
+            'username': username
+        }, function (err, found) {
+            if (err) {
+                throw err;
+            } else {
+                console.log(found);
+                res.render('listofpassed', {
+                    found: found,
+                    session: req.session,
+                    cookie: cookie
+                });
+            }
+        });
+    }
+}

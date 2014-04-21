@@ -1,0 +1,7 @@
+extends layout
+
+block content
+    h1= "Questions that " + found.username+ " got correct: " + found.correct.length
+    each question in found.correct
+        a(href = "/random/"+question.id)
+            li=question.id

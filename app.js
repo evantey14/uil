@@ -51,13 +51,17 @@ app.all('/checkquestion', routes.checkquestion(db));
 app.all('/random', routes.getquestion(db));
 app.all('/random/:id', routes.viewquestion(db));
 
-app.all('/user/:username',routes.user(db));
+app.all('/user/:username', routes.user(db));
+app.all('/:username/correct', routes.listofcorrects(db));
+app.all('/:username/incorrect', routes.listofincorrects(db));
+app.all('/:username/passed', routes.listofpassed(db));
+
 
 app.all('/checkquestion', routes.checkquestion(db));
 app.all('/logout', routes.logout);
 app.all('/scoreboard', routes.scoreboard(db));
-app.all('/getfeedback',routes.getfeedback());
-app.all('/sendfeedback',routes.sendfeedback());
+app.all('/getfeedback', routes.getfeedback());
+app.all('/sendfeedback', routes.sendfeedback());
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
