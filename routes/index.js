@@ -184,7 +184,7 @@ exports.checkquestion = function (db) {
                             var array = found['passed'];
                             var streak = found.streak;
                             streak = 0;
-                            req.sessions.strak = streak;
+                            req.sessions.streak = streak;
                             array.push({
                                 id: id,
                                 time: Date.now()
