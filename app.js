@@ -50,6 +50,9 @@ app.all('/checkquestion', routes.checkquestion(db));
 
 app.all('/random', routes.getquestion(db));
 app.all('/random/:id', routes.viewquestion(db));
+
+app.all('/user/:username',routes.user(db));
+
 app.all('/checkquestion', routes.checkquestion(db));
 app.all('/logout', routes.logout);
 app.all('/scoreboard', routes.scoreboard(db));

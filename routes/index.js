@@ -315,6 +315,9 @@ exports.getquestion = function (db) {
             if (err) {
                 throw err;
             }
+            else if(!found){
+                res.redirect("/signin");
+            }
             else if (found.questions.length===0){
                 res.send("You answered all of the questions...all bajillion of them...go read a book or something...or answer some of the questions you missed or passed!");
             }
@@ -400,7 +403,7 @@ exports.scoreboard = function (db) {
 
 exports.getfeedback = function(){
     return function(req,res){
-        res.render('feedback');
+        res.render('feedback',{cookie:cookie,session:req.session});
     }
 };
 
@@ -429,6 +432,22 @@ exports.sendfeedback = function(){
             }
             else{
                 res.redirect("/");
+            }
+        });
+    }
+};
+
+exports.user = function(db){
+    return function(req,res){
+        username = req.url;
+        username = username.substring(6);
+        var users = db.get('users');
+        users.findOne({'username':username}, function(err,found){
+            if(err){
+                throw err;
+            }
+            else{
+                res.render('profile', {found:found,cookie:cookie,session:req.session});
             }
         });
     }
