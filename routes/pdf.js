@@ -403,13 +403,18 @@ var parseJSON = function (res) {
     for (var i = 0; i < json.formImage.Pages.length; i++) {
         for (var q = 0; q < finalrects[i].length; q++) {
             var box = finalrects[i][q];
+            var last = json.formImage.Pages[i].Texts[0].y;
             for (var j = 0; j < json.formImage.Pages[i].Texts.length; j++) {
+                var last = json.formImage.Pages[i].Texts[0].y;
                 var obj = json.formImage.Pages[i].Texts[j];
                 if (obj.x > box.x && obj.x < box.x + box.w && obj.y + .5 > box.y && obj.y + .3 < box.y + box.h) {
                     if (obj.R[0].T || !(obj.R[0].T === "undefined")) {
                         //console.log(unescape(obj.R[0].T)); //does "undefined" === undefined
                         finalrects[i][q].text += obj.R[0].T;
                     }
+                    if (obj.y != last)
+                        finalrects[i][q].text += "\n";
+
                 }
             }
         }
@@ -478,19 +483,28 @@ var parseJSON = function (res) {
                     }
                 }
                 var itext = unescape(finalrects[z][j].text);
-                var qloc = itext.indexOf("QUESTION");
-                var qno = itext.substring(qloc + 10, qloc + 13);
+                console.log(itext);
+                var qloc = itext.indexOf("Q\nUESTION");
+                console.log(qloc);
+                var qno = itext.substring(qloc + 12, qloc + 16);
+                console.log(qno);
                 question.ques = qno.substring(0, qno.indexOf(" "));
-                question.text = unescape(next) + " " + itext.substring(qloc + 11 + question.ques.length, itext.lastIndexOf("A. "));
-                question.ans.push(itext.substring(itext.lastIndexOf("A. ") + 3, itext.lastIndexOf("B. ")));
-                question.ans.push(itext.substring(itext.lastIndexOf("B. ") + 3, itext.lastIndexOf("C. ")));
-                question.ans.push(itext.substring(itext.lastIndexOf("C. ") + 3, itext.lastIndexOf("D. ")));
+                question.text = unescape(next) + " " + itext.substring(qloc + 14+ question.ques.length, itext.lastIndexOf("A. "));
+                question.ans.push(itext.substring(itext.lastIndexOf("A. ")+4, itext.lastIndexOf("B. ")));
+                question.ans.push(itext.substring(itext.lastIndexOf("B. ")+4, itext.lastIndexOf("C. ")));
+                question.ans.push(itext.substring(itext.lastIndexOf("C. ")+4 , itext.lastIndexOf("D. ")));
                 if (itext.indexOf('E') === -1)
-                    question.ans.push(itext.substring(itext.lastIndexOf("D. ") + 3));
+                    question.ans.push(itext.substring(itext.lastIndexOf("D. ")+4));
                 else {
-                    question.ans.push(itext.substring(itext.lastIndexOf("D. ") + 3, itext.lastIndexOf("E. ")));
-                    question.ans.push(itext.substring(itext.lastIndexOf("E. ") + 3));
+                    question.ans.push(itext.substring(itext.lastIndexOf("D. ") + 4, itext.lastIndexOf("E. ")));
+                    question.ans.push(itext.substring(itext.lastIndexOf("E. ") + 4));
 
+                }
+                for(var v = 0; v<question.ans.length; v++){
+                    var temp = question.ans[v];
+                    while (temp.indexOf('\n') > 0)
+                        temp = temp.replace('\n', '');
+                    question.ans[v]=temp;
                 }
                 question.key = answers[question.ques + '.'];
                 //console.log(JSON.stringify(question));
@@ -503,9 +517,9 @@ var parseJSON = function (res) {
     }
 
     output = questions;
-    console.log(output);
+    //console.log(output);
     console.log("bef");
-    for(var r = 0; r<output.length; r++){
+    for (var r = 0; r < output.length; r++) {
         collection.insert(output[r]);
     }
     console.log("what");
