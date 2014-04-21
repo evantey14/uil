@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    h1= found.username
+        h2= "This user's score is: " + found.score
+        h3= "This user's current streak is: " + found.streak
+        h3= "This user's longest streak is: " + found.longeststreak
+        h3= "Questions this user answered correctly: " + found.correct.length
+        each question in found.correct
+            a(href="/random/"+question.id)
+                li=question.id
+        h3="Questions this user answered incorrectly: " + found.incorrect.length
+        each question in found.incorrect
+            a(href="/random/"+question.id)
+                li=question.id
+        h3="Questions this user passed: " + found.passed.length
+        each question in found.passed
+            a(href="/random/"+question.id)
+                li=question.id

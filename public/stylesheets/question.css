@@ -18,6 +18,7 @@
     font-size: 10px;
 }
 .qnum {
+    float: left;
     height: 150px;
     display: inline-block;
     vertical-align: middle;
@@ -30,12 +31,10 @@
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 .code {
-    padding: 10px;
-    background-color: #EEEEEE;
-    font-family: Consolas, Monaco, Lucidia Console, Liberation Mono, DejaVu, Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-    white-space: pre;
+    clear: left;
 }
-.id {
+.side {} .id {
+    clear: left;
     display: none;
     font-size: 10px;
     font-family: courier, monospace;
@@ -47,6 +46,7 @@ input[type="radio"]:checked+label {
     /**/
 }
 .submit > label {
+    clear: left;
     display: block;
     width: 300px;
     font-size: 20px;
@@ -56,6 +56,7 @@ input[type="radio"]:checked+label {
     border-color: #EEEEEE;
     background-color: #EEEEEE;
     padding: 5px;
+    margin-left: 5px;
     margin-top: 5px;
 }
 hr {
@@ -65,4 +66,16 @@ hr {
 .submit > label:hover {
     background-color: lightgrey;
 }
-.question {}
+.next {
+    margin-left: 5px;
+}
+.question {
+    margin: 5px;
+    width: 45%;
+    word-wrap: break-word;
+    padding: 10px;
+    background-color: #EEEEEE;
+    font-family: Consolas, Monaco, Lucidia Console, Liberation Mono, DejaVu, Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+    white-space: pre;
+    float: left;
+}

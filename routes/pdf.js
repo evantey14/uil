@@ -1,173 +1,181 @@
-/*var p2jcmd = require('../node_modules/pdf2json/lib/p2jcmd'),
+var p2jcmd = require('../node_modules/pdf2json/lib/p2jcmd'),
     path = require('path'),
     _ = require('underscore'),
     fs = require('fs'),
     nodeUtil = require('util'),
+    mongo = require('mongodb'),
+    monk = require('monk'),
     PFParser = require('../node_modules/pdf2json/pdfparser');
+var db = monk('localhost:27017/nodetest1');
+var collection = db.get("questions");
 
-var input = '../State2008.pdf';
-
+var output;
+var input = "";
 var json = {
     formImage: {
         Pages: []
     }
-};*/
+};
 
-// var PDF2JSONUtil = (function () {
 
-//     var _continue = function(callback, err) {
-//         if (err)
-//             nodeUtil.p2jwarn(err);
-//         if (_.isFunction(callback))
-//             callback(err);
-//     };
+var PDF2JSONUtil = (function () {
 
-//     var _generateFieldsTypesFile = function(data, callback) {
-//         var pJSON = require("./pdffield").getAllFieldsTypes(data);
-//         var fieldsTypesPath = this.outputPath.replace(".json", ".fields.json");
-//         var fieldTypesFile = this.outputFile.replace(".json", ".fields.json");
+    var _continue = function (callback, err) {
+        if (err)
+            nodeUtil.p2jwarn(err);
+        if (_.isFunction(callback))
+            callback(err);
+    };
 
-//         fs.writeFile(fieldsTypesPath, JSON.stringify(pJSON), function(err) {
-//             if (err) {
-//                 nodeUtil.p2jwarn(this.inputFile + " => " + fieldTypesFile + " Exception: " + err);
-//             } else {
-//                 nodeUtil.p2jinfo(this.inputFile + " => " + fieldTypesFile + " [" + this.outputDir + "] OK");
-//             }
-//             _continue.call(this, callback, err);
-//         }.bind(this));
-//     };
+    var _generateFieldsTypesFile = function (data, callback) {
+        var pJSON = require("./pdffield").getAllFieldsTypes(data);
+        var fieldsTypesPath = this.outputPath.replace(".json", ".fields.json");
+        var fieldTypesFile = this.outputFile.replace(".json", ".fields.json");
 
-//     var _writeOneJSON = function(data, callback) {
-        
-//         json = {"formImage":data};
-//         this.curProcessor.successCount++;
-//         _continue.call(this,callback);
-//         /*fs.writeFile(this.outputPath, pJSON, function(err) {
-//             if(err) {
-//                 nodeUtil.p2jwarn(this.inputFile + " => " + this.outputFile + " Exception: " + err);
-//                 this.curProcessor.failedCount++;
-//                 _continue.call(this, callback, err);
-//             } else {
-//                 nodeUtil.p2jinfo(this.inputFile + " => " + this.outputFile + " [" + this.outputDir + "] OK");
-//                 this.curProcessor.successCount++;
+        fs.writeFile(fieldsTypesPath, JSON.stringify(pJSON), function (err) {
+            if (err) {
+                nodeUtil.p2jwarn(this.inputFile + " => " + fieldTypesFile + " Exception: " + err);
+            } else {
+                nodeUtil.p2jinfo(this.inputFile + " => " + fieldTypesFile + " [" + this.outputDir + "] OK");
+            }
+            _continue.call(this, callback, err);
+        }.bind(this));
+    };
 
-//                 if (_.has(argv, 't')) {//needs to generate fields.json file
-//                     _generateFieldsTypesFile.call(this, data, callback);
-//                 }
-//                 else {
-//                     _continue.call(this, callback);
-//                 }
-//             }
-//         }.bind(this));
-//         */
-//     };
+    var _writeOneJSON = function (data, callback) {
 
-//     var _parseOnePDF = function(callback) {
-//         this.pdfParser = new PFParser();
+        json = {
+            "formImage": data
+        };
+        this.curProcessor.successCount++;
+        _continue.call(this, callback);
+        /*fs.writeFile(this.outputPath, pJSON, function(err) {
+            if(err) {
+                nodeUtil.p2jwarn(this.inputFile + " => " + this.outputFile + " Exception: " + err);
+                this.curProcessor.failedCount++;
+                _continue.call(this, callback, err);
+            } else {
+                nodeUtil.p2jinfo(this.inputFile + " => " + this.outputFile + " [" + this.outputDir + "] OK");
+                this.curProcessor.successCount++;
 
-//         this.pdfParser.on("pdfParser_dataReady", function (evtData) {
-            
-//             if ((!!evtData) && (!!evtData.data)) {
-//                 _writeOneJSON.call(this, evtData.data, callback);
-//             }
-//             else {
-//                 this.curProcessor.failedCount++;
-//                 _continue.call(this, callback, "Exception: empty parsing result - " + this.inputPath);
-//             }
-//         }.bind(this));
+                if (_.has(argv, 't')) {//needs to generate fields.json file
+                    _generateFieldsTypesFile.call(this, data, callback);
+                }
+                else {
+                    _continue.call(this, callback);
+                }
+            }
+        }.bind(this));
+        */
+    };
 
-//         this.pdfParser.on("pdfParser_dataError", function (evtData) {
-//             this.curProcessor.failedCount++;
-//             var errMsg = "Exception: " + evtData.data;
-//             _continue.call(this, callback, errMsg);
-//         }.bind(this));
+    var _parseOnePDF = function (callback) {
+        this.pdfParser = new PFParser();
 
-//         nodeUtil.p2jinfo("Transcoding " + this.inputFile + " to - " + this.outputPath);
-//         this.pdfParser.loadPDF(this.inputPath, 5);//(_.has(argv, 's') ? 0 : 5));
-        
-//     };
+        this.pdfParser.on("pdfParser_dataReady", function (evtData) {
 
-//     // constructor
-//     var cls = function (inputDir, inputFile, curProcessor) {
-//         // public, this instance copies
-//         this.inputDir = path.normalize(inputDir);
-//         this.inputFile = inputFile;
-//         this.inputPath = this.inputDir + path.sep + this.inputFile;
+            if (( !! evtData) && ( !! evtData.data)) {
+                _writeOneJSON.call(this, evtData.data, callback);
+            } else {
+                this.curProcessor.failedCount++;
+                _continue.call(this, callback, "Exception: empty parsing result - " + this.inputPath);
+            }
+        }.bind(this));
 
-//         this.outputDir = path.normalize(inputDir);
-//         this.outputFile = null;
-//         this.outputPath = null;
-        
-//         this.pdfParser = null;
-//         this.curProcessor = curProcessor;
-//     };
+        this.pdfParser.on("pdfParser_dataError", function (evtData) {
+            this.curProcessor.failedCount++;
+            var errMsg = "Exception: " + evtData.data;
+            _continue.call(this, callback, errMsg);
+        }.bind(this));
 
-//     /*cls.prototype.validateParams = function() {
-//         var retVal = null;
+        nodeUtil.p2jinfo("Transcoding " + this.inputFile + " to - " + this.outputPath);
+        this.pdfParser.loadPDF(this.inputPath, 5); //(_.has(argv, 's') ? 0 : 5));
 
-//         if (!fs.existsSync(this.inputDir))
-//             retVal = "Input error: input directory doesn't exist - " + this.inputDir + ".";
-//         else if (!fs.existsSync(this.inputPath))
-//             retVal = "Input error: input file doesn't exist - " + this.inputPath + ".";
-//         else if (!fs.existsSync(this.outputDir))
-//             retVal = "Input error: output directory doesn't exist - " + this.outputDir + ".";
+    };
 
-//         if (retVal != null) {
-//             this.curProcessor.failedCount += 1;
-//             return retVal;
-//         }
+    // constructor
+    var cls = function (inputDir, inputFile, curProcessor) {
+        // public, this instance copies
+        this.inputDir = path.normalize(inputDir);
+        this.inputFile = inputFile;
+        this.inputPath = this.inputDir + path.sep + this.inputFile;
 
-//         var inExtName = path.extname(this.inputFile).toLowerCase();
-//         if (inExtName !== '.pdf')
-//             retVal = "Input error: input file name doesn't have pdf extention  - " + this.inputFile + ".";
-//         else {
-//             this.outputFile = path.basename(this.inputPath, inExtName) + ".json";
-//             this.outputPath = this.outputDir + path.sep + this.outputFile;
-//             if (fs.existsSync(this.outputPath))
-//                 nodeUtil.p2jinfo("Output file will be replaced - " + this.outputPath);
-//             else {
-//                 var fod = fs.openSync(this.outputPath, "wx");
-//                 if (!fod)
-//                     retVal = "Input error: can not write to " + this.outputPath;
-//                 else {
-//                     fs.closeSync(fod);
-//                     fs.unlinkSync(this.outputPath);
-//                 }
-//             }
-//         }
+        this.outputDir = path.normalize(inputDir);
+        this.outputFile = null;
+        this.outputPath = null;
 
-//         return retVal;
-//     };*/
+        this.pdfParser = null;
+        this.curProcessor = curProcessor;
+    };
 
-//     cls.prototype.destroy = function() {
-//         this.inputDir = null;
-//         this.inputFile = null;
-//         this.inputPath = null;
-//         this.outputDir = null;
-//         this.outputPath = null;
+    /*cls.prototype.validateParams = function() {
+        var retVal = null;
 
-//         if (this.pdfParser) {
-//             this.pdfParser.destroy();
-//         }
-//         this.pdfParser = null;
-//         this.curProcessor = null;
-//     };
+        if (!fs.existsSync(this.inputDir))
+            retVal = "Input error: input directory doesn't exist - " + this.inputDir + ".";
+        else if (!fs.existsSync(this.inputPath))
+            retVal = "Input error: input file doesn't exist - " + this.inputPath + ".";
+        else if (!fs.existsSync(this.outputDir))
+            retVal = "Input error: output directory doesn't exist - " + this.outputDir + ".";
 
-//     cls.prototype.processFile = function(callback) {
-//         /*var validateMsg = this.validateParams();
-//         if (!!validateMsg) {
-//             _continue.call(this, callback, validateMsg);
-//         }
-//         else {
-//             _parseOnePDF.call(this, callback);
-//         }*/
-//         _parseOnePDF.call(this,callback);
-//     };
+        if (retVal != null) {
+            this.curProcessor.failedCount += 1;
+            return retVal;
+        }
 
-//     return cls;
-// })();
+        var inExtName = path.extname(this.inputFile).toLowerCase();
+        if (inExtName !== '.pdf')
+            retVal = "Input error: input file name doesn't have pdf extention  - " + this.inputFile + ".";
+        else {
+            this.outputFile = path.basename(this.inputPath, inExtName) + ".json";
+            this.outputPath = this.outputDir + path.sep + this.outputFile;
+            if (fs.existsSync(this.outputPath))
+                nodeUtil.p2jinfo("Output file will be replaced - " + this.outputPath);
+            else {
+                var fod = fs.openSync(this.outputPath, "wx");
+                if (!fod)
+                    retVal = "Input error: can not write to " + this.outputPath;
+                else {
+                    fs.closeSync(fod);
+                    fs.unlinkSync(this.outputPath);
+                }
+            }
+        }
 
-/*var error = .5;
+        return retVal;
+    };*/
+
+    cls.prototype.destroy = function () {
+        this.inputDir = null;
+        this.inputFile = null;
+        this.inputPath = null;
+        this.outputDir = null;
+        this.outputPath = null;
+
+        if (this.pdfParser) {
+            this.pdfParser.destroy();
+        }
+        this.pdfParser = null;
+        this.curProcessor = null;
+    };
+
+    cls.prototype.processFile = function (callback) {
+        /*var validateMsg = this.validateParams();
+        if (!!validateMsg) {
+            _continue.call(this, callback, validateMsg);
+        }
+        else {
+            _parseOnePDF.call(this, callback);
+        }*/
+        _parseOnePDF.call(this, callback);
+    };
+    console.log(json);
+    //console.log(cls);
+    return cls;
+})();
+
+
+var error = .5;
 var equals = function (one, two) {
     if (Math.abs(two - one) < error) {
         return true;
@@ -175,23 +183,37 @@ var equals = function (one, two) {
         return false;
     }
 };
-
-var parseJSON = function(){
+var parseJSON = function (res) {
     console.log("Successfully converted PDF -> JSON");
-    fs.writeFile("State08.json", JSON.stringify(json), function(err) {
-        if(err){
+    //    console.log("here"  + json + " here" );
+    var testn = "";
+    fs.writeFile("State08.json", JSON.stringify(json), function (err) {
+        if (err) {
             console.log(err);
         }
     });
-    var finalrects = []; // will store final boxes
-    var newLines = []; // these are combined fill objects
-    var Verts = []; 
+    //console.log(JSON.stringify(json));
+    //lets try to add lines together
+    var questions = [];
+    var finalrects = [];
+    var newLines = [];
+    var Verts = [];
     var Horiz = [];
     var add = 0;
-    //adding lines together
     for (var i = 0; i < json.formImage.Pages.length; i++) {
-        var newFills = [];//to store new lines for a page
-        var dead = [];//to store "dead" lines that were already added to another line
+        var next = false;
+        for (var z = 0; z < json.formImage.Pages[0].Texts.length; z++) {
+            var text = unescape(json.formImage.Pages[0].Texts[z].R[0].T);
+            if (next) {
+                testn = text.substring(text.indexOf("(") + 1, text.indexOf(")"));
+                next = false;
+            }
+            if (text.indexOf("Computer Science Competition") !== -1) {
+                next = true;
+            }
+        }
+        var newFills = [];
+        var dead = [];
         for (var j = 0; j < json.formImage.Pages[i].Fills.length; j++) {
             var one = json.formImage.Pages[i].Fills[j];
             var cur = one;
@@ -212,20 +234,22 @@ var parseJSON = function(){
                     add++;
                     dead.push(k);
                 }
+
             }
             newFills.push(cur);
         }
+        //console.log('newFills: '+JSON.stringify(newFills));
         newLines.push(newFills);
+        //json.formImage.Pages[i].Fills = newFills;
     }
-    console.log("Finished making newLines. " + add + " lines were added");
-    //line refinement
-    var del = 0;
+    //console.log("Finished making newLines. " + add + " lines were added");
+
+    //line refinement???
     for (var i = 0; i < newLines.length; i++) {
         var curh = [],
             curv = [];
         for (var j = 0; j < newLines[i].length; j++) {
             if (newLines[i][j].w > 0.6 && newLines[i][j].h > 0.6) {
-                del++;
                 newLines[i].splice(j, 1);
                 j--;
             } else if (newLines[i][j].w > newLines[i][j].h) {
@@ -234,15 +258,12 @@ var parseJSON = function(){
                 curv.push(newLines[i][j]);
             }
         }
-        console.log("Page " + i + ". " + del + " boxes deleted. " + curh.length + " horiz lines. "+ curv.length + " vert lines.");
         Horiz.push(curh);
         Verts.push(curv);
     }
     //console.log(JSON.stringify(newLines));
-    
     var xbnds = [];
     var ybnds = [];
-    //making bounds
     for (var pg = 0; pg < newLines.length; pg++) {
         var pgx = [];
         var pgy = [];
@@ -279,36 +300,35 @@ var parseJSON = function(){
             }
             pgy.push(y);
         }
-        console.log('Page '+pg+'. '+pgx.length+' x bounds. '+pgy.length+' y bounds.');
         xbnds.push(pgx);
         ybnds.push(pgy);
     }
+    /* console.log("xbnds" + JSON.stringify(xbnds));
+    console.log("ybnds" + JSON.stringify(ybnds));*/
+    //DRAWING INCORRECT BOXES
 
-    //console.log("xbnds" + JSON.stringify(xbnds));
-    //console.log("ybnds" + JSON.stringify(ybnds));
-    
-    //making boxes
-    var push = 0;
     for (var i = 0; i < ybnds.length; i++) {
         var pg = [];
         var right = null;
         for (var j = 0; j < ybnds[i].length; j++) {
             var bool = false;
-            for(var k = 0; k < xbnds[i].length; k++){
-                if(equals(ybnds[i][j].end,xbnds[i][k].xi)){
+            for (var k = 0; k < xbnds[i].length; k++) {
+                if (equals(ybnds[i][j].end, xbnds[i][k].xi)) {
                     bool = true;
-                    if(!right){ // if no right box created, 
+                    if (!right) { // if no right box created, 
                         right = {
                             x: xbnds[i][k].xi,
                             y: ybnds[i][j].yi,
-                            w: xbnds[i][k].xf-xbnds[i][k].xi,
+                            w: xbnds[i][k].xf - xbnds[i][k].xi,
                             h: 0,
                             pg: i
                         };
                     }
                 }
             }
-            if(!bool && right){//if long and right exists                
+
+
+            if (!bool && right) { //if long and right exists                
                 var rect = {
                     x: ybnds[i][j].begin,
                     y: ybnds[i][j].yi,
@@ -317,7 +337,7 @@ var parseJSON = function(){
                     pg: i
                 };
                 pg.push(rect);
-                push++;
+                //console.log("PUSH");
                 right['h'] = ybnds[i][j].yf - right['y'];
                 //console.log(JSON.stringify(right));
                 pg.push(right);
@@ -328,179 +348,218 @@ var parseJSON = function(){
                     y: ybnds[i][j].yi,
                     w: ybnds[i][j].end - ybnds[i][j].begin,
                     h: ybnds[i][j].yf - ybnds[i][j].yi,
-                    pg: i
+                    pg: i,
+                    text: ""
                 };
-                pg.push(rect);    
+                pg.push(rect);
             }
         }
         finalrects.push(pg);
     }
-    console.log('pushed '+push+' right boxes.');
 
-    //splitting boxes
-    var split = 0;
-    for(var i = 0; i<finalrects.length; i++){
-        for(var j = 0; j<finalrects[i].length; j++){
+    var newfinal = [];
+    //splitting boxes by Verts
+    for (var i = 0; i < finalrects.length; i++) {
+
+        var newlist = [];
+        for (var j = 0; j < finalrects[i].length; j++) {
             var rect = finalrects[i][j];
-            for(var k = 0; k<Verts[i].length; k++){
+            for (var k = 0; k < Verts[i].length; k++) {
                 var vline = Verts[i][k];
-                //console.log("vline-"+JSON.stringify(vline));
-                if(vline.x > rect.x && vline.x < rect.x+rect.w){
-                    if((vline.y<rect.y || equals(vline.y,rect.y)) && (rect.y+rect.h<vline.y+vline.h || equals(rect.y+rect.h,vline.y+vline.h))){
-                        split++;
+                //console.log("vline-" + JSON.stringify(vline));
+                if (vline.x > rect.x + 2 && vline.x < rect.x + rect.w - 2) {
+                    if ((vline.y < rect.y || equals(vline.y, rect.y)) && (rect.y + rect.h < vline.y + vline.h || equals(rect.y + rect.h, vline.y + vline.h))) {
+                        //console.log("SPLIT");
                         finalrects[i][j] = {
                             x: rect.x,
                             y: rect.y,
-                            w: vline.x-rect.x,
+                            w: vline.x - rect.x,
                             h: rect.h,
+                            pg: rect.pg,
+                            text: ""
                         };
-                        var newrect = {
+                        var newrect2 = {
                             x: vline.x,
                             y: rect.y,
-                            w: rect.x+rect.w-vline.x,
-                            h: rect.h
+                            w: rect.x + rect.w - vline.x,
+                            h: rect.h,
+                            pg: rect.pg,
+                            text: ""
                         };
-                        finalrects[i].push(newrect);
+                        newlist.push(newrect2);
+                        break;
                     }
                 }
             }
         }
+        //add newlist to rect
+        /* console.log("start length " + finalrects[i].length);
+        console.log('add length ' + newlist.length);*/
+        finalrects[i] = finalrects[i].concat(newlist);
+        //console.log("new length " + finalrects[i].length);
+
     }
-    console.log('split '+split+' boxes');
-    console.log('finished making boxes');
-    //console.log(JSON.stringify(finalrects));
-    var str = "";
-    for(var i = 0; i<json.formImage.Pages.length; i++){
-        var pgtxt = json.formImage.Pages[i].Texts;
-        for(var k = 0; k<pgtxt.length; k++){
-                //console.log(pgtxt[k].R[0].T);
-                str+=pgtxt[k].R[0].T+'\n';
+
+    for (var i = 0; i < json.formImage.Pages.length; i++) {
+        for (var q = 0; q < finalrects[i].length; q++) {
+            var box = finalrects[i][q];
+            var last = json.formImage.Pages[i].Texts[0].y;
+            for (var j = 0; j < json.formImage.Pages[i].Texts.length; j++) {
+                var last = json.formImage.Pages[i].Texts[0].y;
+                var obj = json.formImage.Pages[i].Texts[j];
+                if (obj.x > box.x && obj.x < box.x + box.w && obj.y + .5 > box.y && obj.y + .3 < box.y + box.h) {
+                    if (obj.R[0].T || !(obj.R[0].T === "undefined")) {
+                        //console.log(unescape(obj.R[0].T)); //does "undefined" === undefined
+                        finalrects[i][q].text += obj.R[0].T;
+                    }
+                    if (obj.y != last)
+                        finalrects[i][q].text += "\n";
+
+                }
             }
+        }
     }
 
-    var regex = new RegExp('%20','g');
-    str = str.replace(regex," ");
-    regex = new RegExp('%3A','g');
-    str = str.replace(regex,':');
-
-    fs.writeFile("text.txt", str, function(err) {
-        if(err){
-            console.log(err);
+    var last = json.formImage.Pages.length - 1;
+    var answers = {};
+    var regexch = /[A-E]/;
+    var notspace = /\S/;
+    var next = "";
+    for (var z = 0; z < json.formImage.Pages[last].Texts.length; z++) {
+        var text = unescape(json.formImage.Pages[last].Texts[z].R[0].T);
+        if (text.search(regexch) === -1) {
+            next = text;
+            continue;
         }
-    });
+        text = next + " " + text;
+        next = "";
+        var num = text.substring(text.search(notspace));
+        num = num.substring(0, num.indexOf(" "));
+        var letter = text.charAt(text.search(regexch));
+        answers[num] = letter;
+    }
+    for (var z = 0; z < finalrects.length; z++) {
+        var min = 1000;
+        var secondColumn = 1000;
+        var qpage = [];
+        if (Verts[z][0]) {
+            for (var q = 0; q < Verts[z].length; q++) {
+                if (Verts[z][q].x < min) {
+                    min = Verts[z][q].x;
+                }
+
+            }
+            for (var q = 0; q < Verts[z].length; q++) {
+                if (Verts[z][q].x < secondColumn && Verts[z][q].x > min) {
+                    secondColumn = Verts[z][q].x;
+                }
+
+            }
+            //console.log("here" + secondColumn + " " + min);
+            var next = "";
+            for (var j = 0; j < finalrects[z].length; j++) {
+                if (finalrects[z][j].x >= secondColumn) {
+                    //console.log(z + " " + j + " " + finalrects[z][j].x);
+                    continue;
+                }
+                if (finalrects[z][j].text.indexOf("Assume") === 0) {
+                    next = finalrects[z][j].text;
+                    continue;
+                }
+                var question = {
+                    test: testn,
+                    ques: 1,
+                    tags: [],
+                    text: "",
+                    code: "",
+                    ans: [],
+                    key: ""
+                };
+                for (var ot = 0; ot < finalrects[z].length; ot++) {
+                    if (equals(finalrects[z][ot].y, finalrects[z][j].y) && ot !== j) {
+                        question.code += unescape(finalrects[z][ot].text + " ");
+                    } else if (finalrects[z][ot].y < finalrects[z][j].y && finalrects[z][ot].y + finalrects[z][ot].h > finalrects[z][j].y) {
+                        question.code += unescape(finalrects[z][ot].text + " ");
+                    }
+                }
+                var itext = unescape(finalrects[z][j].text);
+                console.log(itext);
+                var qloc = itext.indexOf("Q\nUESTION");
+                console.log(qloc);
+                var qno = itext.substring(qloc + 12, qloc + 16);
+                console.log(qno);
+                question.ques = qno.substring(0, qno.indexOf(" "));
+                question.text = unescape(next) + " " + itext.substring(qloc + 14+ question.ques.length, itext.lastIndexOf("A. "));
+                question.ans.push(itext.substring(itext.lastIndexOf("A. ")+4, itext.lastIndexOf("B. ")));
+                question.ans.push(itext.substring(itext.lastIndexOf("B. ")+4, itext.lastIndexOf("C. ")));
+                question.ans.push(itext.substring(itext.lastIndexOf("C. ")+4 , itext.lastIndexOf("D. ")));
+                if (itext.indexOf('E') === -1)
+                    question.ans.push(itext.substring(itext.lastIndexOf("D. ")+4));
+                else {
+                    question.ans.push(itext.substring(itext.lastIndexOf("D. ") + 4, itext.lastIndexOf("E. ")));
+                    question.ans.push(itext.substring(itext.lastIndexOf("E. ") + 4));
+
+                }
+                for(var v = 0; v<question.ans.length; v++){
+                    var temp = question.ans[v];
+                    while (temp.indexOf('\n') > 0)
+                        temp = temp.replace('\n', '');
+                    question.ans[v]=temp;
+                }
+                question.key = answers[question.ques + '.'];
+                //console.log(JSON.stringify(question));
+                //console.log(qno);
+                next = "";
+                qpage.push(question);
+            }
+        }
+        questions.push(qpage);
+    }
+
+    output = questions;
+    //console.log(output);
+    console.log("bef");
+    for (var r = 0; r < output.length; r++) {
+        collection.insert(output[r]);
+    }
+    console.log("what");
+    res.send(output);
 
 };
 
 
-var inputDir = path.dirname(input);
-var inputFile = path.basename(input);
-
-var p2j = new p2jcmd();
-p2j.inputCount = 1;
-p2j.p2j = new PDF2JSONUtil(inputDir, inputFile, p2j);
-//p2j.p2j.processFile(_.bind(p2j.complete, p2j));
-p2j.p2j.processFile(parseJSON);
-*/
 
 
 
+var pdfText = require('pdf-text'),
+    _ = require('lodash'),
+    fs = require('fs');
 
-    var pdfText = require('pdf-text')
-      , _ = require('lodash')
-      , fs = require('fs');
+var mongo = require('mongodb');
+var monk = require('monk');
 
-    var mongo = require('mongodb');
-    var monk = require('monk');
-    var db = monk('localhost:27017/nodetest1');
-    var collection = db.get("questions");
 
-    var pathToPdf = __dirname + "/../A.pdf"
+var pathToPdf = __dirname + "/../A.pdf"
 
-    exports.index = function(req, res) {
-        pdfText(pathToPdf, function(err, chunks) {
-            if(err){
-               // throw err;
-            }
-            for(var i=0;i<chunks.length;i++) {
-                if(chunks[i] === "Q" && ("" + chunks[i+1]).indexOf("UESTION") === 0) {
-                    chunks[i+1] = "Q" + chunks[i+1];
-                    chunks.splice(i, 1);
-                }
-            }
-            chunks = _.map(chunks, function(x) { return x.trim(); });
-            
-            var out = []
-              , mode = null
-              , cur = {test: "", ques: "", tags: [], text: "", ans: [], key: ""}
-              , key = []
-              , test = "" // stores test id
-              , data = ""; // to be printed to chunks.txt
+exports.index = function (req, res) {
+    pdfText(pathToPdf, function (err) {
+        input = pathToPdf;
+        if (err) {
+            // throw err;
+        }
+        var inputDir = path.dirname(input);
+        var inputFile = path.basename(input);
 
-            for(var i=0;i<chunks.length;i++) {
-                data = data + chunks[i] + '\n';
-                if(chunks[i] === "Computer Science Competition"){
-                    test = chunks[i+1];
-                } else if(chunks[i] === "QUESTION") {
-                    if(cur["test"] !== "") {
-                        out.push(cur);
-                    }
-                    cur = {test: test, ques: "", tags: [], text: "", ans: [], key: ""};
-                    cur["ques"] = chunks[i+1];
-                    i = i+2;
-                    mode = 'txt';
-                } else if (chunks[i].match(/^[A-E]\.$/i) !== null) {
-                    mode = null;
-                    cur['ans'].push(chunks[i+1]); // does not allow for multiple line answers
-                } else if (chunks[i] === "Computer   Science   Answer   Key"){
-                    mode = 'ans';
-                    test = chunks[i+1];
-                    i = i + 1;
-                }
-                switch(mode) {
-                    case 'txt':
-                        cur['text'] += chunks[i] + '\n';
-                        break;
-                    case 'ans':
-                        console.log("+"+chunks[i]+"++"+i);
-                        if(chunks[i]==="Notes:"){
-                            i = chunks.length;
-                        } else {
-                            if(chunks[i].length>3){
-                                var index = chunks[i].indexOf('.');
-                                //key[chunks[i].substring(0,index)] = chunks[i][chunks[i].length-1];
-                                key[chunks[i].substring(0,index)] = chunks[i][chunks[i].length-1];
-                                console.log("added to key");
-                            } else {
-                                //key[chunks[i].substring(0,chunks[i].length-1)] = chunks[i+1];
-                                key[chunks[i].substring(0,chunks[i].length-1)] = chunks[i+1];
-                                i = i + 1;
-                                console.log("added to key");
-                            }
-                        }
-                        break;
-                }
-            }
-
-            out.push(cur);
-
-            fs.writeFile(__dirname + '/../chunks.txt', data, function(err){
-                if(err){
-                    console.log(err);
-                } else {
-                    console.log('printed chunks');
-                }
-            });
-
-            out = _.map(out, function(obj){
-                console.log("NEW OBJ");
-                console.log(obj);
-                obj["key"]=key[parseInt(obj["ques"])];
-                console.log(obj);
-                return obj;
-            });
-            
-            res.send([out,key]);
-            collection.insert(out);
+        var p2j = new p2jcmd();
+        p2j.inputCount = 1;
+        console.log("bef");
+        p2j.p2j = new PDF2JSONUtil(inputDir, inputFile, p2j);
+        //p2j.p2j.processFile(_.bind(p2j.complete, p2j));
+        console.log("aft");
+        p2j.p2j.processFile(function () {
+            parseJSON(res);
         });
-    }
 
+    });
+    console.log("here");
+}

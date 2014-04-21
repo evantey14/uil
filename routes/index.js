@@ -1,5 +1,6 @@
 var passwordHash = require('password-hash');
 var cookie = false;
+var nodemailer = require('nodemailer');
 
 exports.signin = function (db) {
     return function (req, res) {
@@ -10,7 +11,6 @@ exports.signin = function (db) {
             collection.findOne({
                 "username": username
             }, function (err, found) {
-                //console.log(found);
                 if (err) {
                     throw err.$animate
                 }
@@ -74,8 +74,10 @@ exports.home = function (db) {
                         correctlength: found.correct.length,
                         incorrectlength: found.incorrect.length,
                         passedlength: found.passed.length,
-                        score: req.session.score,
+                        score: found.score,
                         session: req.session,
+                        streak: found.streak,
+                        longeststreak: found.longeststreak
                     });
                 }
             });
@@ -132,9 +134,18 @@ exports.checkquestion = function (db) {
                             var otherarray = found['questions'];
                             var score = found.score;
                             var streak = found.streak;
+                            var longeststreak = found.longeststreak;
                             score += 60;
                             streak++;
-                            req.session.streak = streak;
+                            if (streak > longeststreak) {
+                                users.update({
+                                    '_id': req.session.id
+                                }, {
+                                    $set: {
+                                        'longeststreak': streak
+                                    }
+                                });
+                            }
                             otherarray.shift();
                             users.update({
                                 '_id': req.session.id
@@ -194,7 +205,6 @@ exports.checkquestion = function (db) {
                             }, {
                                 $set: {
                                     'passed': array,
-                                    'streak': streak
                                 }
                             });
                         }
@@ -216,12 +226,15 @@ exports.checkquestion = function (db) {
                             otherarray.shift();
                             var score = found.score;
                             score -= 20;
+                            var streak = found.streak;
+                            streak = 0;
                             users.update({
                                 '_id': req.session.id
                             }, {
                                 $set: {
                                     'questions': otherarray,
-                                    'score': score
+                                    'score': score,
+                                    'streak': streak
                                 }
                             });
                             var array = found['incorrect'];
@@ -270,6 +283,7 @@ exports.viewquestion = function (db) {
                 var title = 'Random Question';
                 var prompt = 'Test: ' + found['test'] + '\nQuestion: ' + found['ques'];
                 var answers = found['ans'];
+                //console.log("thing" + JSON.stringify(found));
                 res.render('renderquestion', {
                     cookie: cookie,
                     title: title,
@@ -277,6 +291,7 @@ exports.viewquestion = function (db) {
                     qnum: found['ques'],
                     test: found['test'],
                     question: found['text'],
+                    side: found['code'],
                     A: answers[0],
                     B: answers[1],
                     C: answers[2],
@@ -308,6 +323,10 @@ exports.getquestion = function (db) {
         }, function (err, found) {
             if (err) {
                 throw err;
+            } else if (!found) {
+                res.redirect("/signin");
+            } else if (found.questions.length === 0) {
+                res.send("You answered all of the questions...all bajillion of them...go read a book or something...or answer some of the questions you missed or passed!");
             } else {
                 var id = found['questions'][0];
                 res.redirect('/random/' + id);
@@ -386,4 +405,63 @@ exports.scoreboard = function (db) {
             });
         });
     }
-}
+};
+
+exports.getfeedback = function () {
+    return function (req, res) {
+        res.render('feedback', {
+            cookie: cookie,
+            session: req.session
+        });
+    }
+};
+
+exports.sendfeedback = function () {
+    return function (req, res) {
+        var name = req.body.name;
+        var subject = req.body.subject;
+        var text = req.body.text;
+        var email = req.body.email;
+        var smtpTransport = nodemailer.createTransport("SMTP", {
+            service: "Gmail",
+            auth: {
+                user: "lasauiltraining@gmail.com",
+                pass: "jacobstephens"
+            }
+        });
+        var mailOptions = {
+            to: "lasauiltraining@gmail.com",
+            from: name,
+            subject: subject,
+            text: text + "\n\nRespond to this person at: " + email
+        }
+        smtpTransport.sendMail(mailOptions, function (err, response) {
+            if (err) {
+                throw err;
+            } else {
+                res.redirect("/");
+            }
+        });
+    }
+};
+
+exports.user = function (db) {
+    return function (req, res) {
+        username = req.url;
+        username = username.substring(6);
+        var users = db.get('users');
+        users.findOne({
+            'username': username
+        }, function (err, found) {
+            if (err) {
+                throw err;
+            } else {
+                res.render('profile', {
+                    found: found,
+                    cookie: cookie,
+                    session: req.session
+                });
+            }
+        });
+    }
+};

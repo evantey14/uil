@@ -1,6 +1,6 @@
 var express = require('express'),
     routes = require('./routes/index'),
-    newuser = require('./routes/newuser')
+    newuser = require('./routes/newuser'),
     pdf = require('./routes/pdf'),
     http = require('http'),
     path = require('path');
@@ -12,7 +12,6 @@ var monk = require('monk');
 var db = monk('localhost:27017/nodetest1');
 
 var app = express();
-
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -28,6 +27,8 @@ app.use(express.cookieParser('lasacs'));
 app.use(express.cookieSession('lasacs'));
 
 app.use(verification());
+
+
 
 app.use(app.router);
 // development only
@@ -49,10 +50,14 @@ app.all('/checkquestion', routes.checkquestion(db));
 
 app.all('/random', routes.getquestion(db));
 app.all('/random/:id', routes.viewquestion(db));
+
+app.all('/user/:username',routes.user(db));
+
 app.all('/checkquestion', routes.checkquestion(db));
 app.all('/logout', routes.logout);
 app.all('/scoreboard', routes.scoreboard(db));
-//app.all('/:username', routes.profile(db));
+app.all('/getfeedback',routes.getfeedback());
+app.all('/sendfeedback',routes.sendfeedback());
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
