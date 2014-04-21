@@ -77,7 +77,7 @@ exports.home = function (db) {
                         score: found.score,
                         session: req.session,
                         streak: found.streak,
-                        longeststreak:found.longeststreak
+                        longeststreak: found.longeststreak
                     });
                 }
             });
@@ -137,10 +137,22 @@ exports.checkquestion = function (db) {
                             var longeststreak = found.longeststreak;
                             score += 60;
                             streak++;
-                            if(streak>longeststreak){
-                                users.update({'_id':req.session.id},{$set:{'longeststreak':streak}});
+                            if (streak > longeststreak) {
+                                users.update({
+                                    '_id': req.session.id
+                                }, {
+                                    $set: {
+                                        'longeststreak': streak
+                                    }
+                                });
                             }
-                            otherarray.shift();
+                            var index = otherarray.map(function (obj, index) {
+                                if (obj.id == id) {
+                                    return index;
+                                }
+                            }).filter(isFinite)
+                            otherarray.splice(index, 1);
+                            console.log(index);
                             users.update({
                                 '_id': req.session.id
                             }, {
@@ -177,7 +189,12 @@ exports.checkquestion = function (db) {
                             throw err;
                         } else {
                             var otherarray = found['questions'];
-                            otherarray.shift();
+                            var index = otherarray.map(function (obj, index) {
+                                if (obj.id == id) {
+                                    return index;
+                                }
+                            }).filter(isFinite)
+                            otherarray.splice(index, 1);
                             users.update({
                                 '_id': req.session.id
                             }, {
@@ -214,7 +231,12 @@ exports.checkquestion = function (db) {
                             throw err;
                         } else {
                             var otherarray = found['questions'];
-                            otherarray.shift();
+                            var index = otherarray.map(function (obj, index) {
+                                if (obj.id == id) {
+                                    return index;
+                                }
+                            }).filter(isFinite)
+                            otherarray.splice(index, 1);
                             var score = found.score;
                             score -= 20;
                             var streak = found.streak;
@@ -225,7 +247,7 @@ exports.checkquestion = function (db) {
                                 $set: {
                                     'questions': otherarray,
                                     'score': score,
-                                    'streak':streak
+                                    'streak': streak
                                 }
                             });
                             var array = found['incorrect'];
@@ -314,14 +336,11 @@ exports.getquestion = function (db) {
         }, function (err, found) {
             if (err) {
                 throw err;
-            }
-            else if(!found){
+            } else if (!found) {
                 res.redirect("/signin");
-            }
-            else if (found.questions.length===0){
+            } else if (found.questions.length === 0) {
                 res.send("You answered all of the questions...all bajillion of them...go read a book or something...or answer some of the questions you missed or passed!");
-            }
-            else {
+            } else {
                 var id = found['questions'][0];
                 res.redirect('/random/' + id);
             }
@@ -401,14 +420,17 @@ exports.scoreboard = function (db) {
     }
 };
 
-exports.getfeedback = function(){
-    return function(req,res){
-        res.render('feedback',{cookie:cookie,session:req.session});
+exports.getfeedback = function () {
+    return function (req, res) {
+        res.render('feedback', {
+            cookie: cookie,
+            session: req.session
+        });
     }
 };
 
-exports.sendfeedback = function(){
-    return function(req,res){
+exports.sendfeedback = function () {
+    return function (req, res) {
         var name = req.body.name;
         var subject = req.body.subject;
         var text = req.body.text;
@@ -420,35 +442,110 @@ exports.sendfeedback = function(){
                 pass: "jacobstephens"
             }
         });
+        console.log("smtp made");
         var mailOptions = {
             to: "lasauiltraining@gmail.com",
             from: name,
             subject: subject,
             text: text + "\n\nRespond to this person at: " + email
         }
-        smtpTransport.sendMail(mailOptions,function(err, response){
-            if(err){
+        console.log("mail options set");
+        smtpTransport.sendMail(mailOptions, function (err, response) {
+            if (err) {
                 throw err;
-            }
-            else{
+            } else {
+                console.log("message sending");
                 res.redirect("/");
+                console.log("message sent");
             }
         });
     }
 };
 
-exports.user = function(db){
-    return function(req,res){
+exports.user = function (db) {
+    return function (req, res) {
         username = req.url;
+        console.log(req.url.username);
         username = username.substring(6);
         var users = db.get('users');
-        users.findOne({'username':username}, function(err,found){
-            if(err){
+        users.findOne({
+            'username': username
+        }, function (err, found) {
+            if (err) {
                 throw err;
-            }
-            else{
-                res.render('profile', {found:found,cookie:cookie,session:req.session});
+            } else {
+                res.render('profile', {
+                    found: found,
+                    cookie: cookie,
+                    session: req.session
+                });
             }
         });
     }
 };
+
+exports.listofcorrects = function (db) {
+    return function (req, res) {
+        var username = req.url.substring(1, 5);
+        console.log(username);
+        var users = db.get('users');
+        users.findOne({
+            'username': username
+        }, function (err, found) {
+            if (err) {
+                throw err;
+            } else {
+                console.log(found);
+                res.render('listofcorrects', {
+                    found: found,
+                    session: req.session,
+                    cookie: cookie
+                });
+            }
+        });
+    }
+};
+
+exports.listofincorrects = function (db) {
+    return function (req, res) {
+        var username = req.url.substring(1, 5);
+        console.log(username);
+        var users = db.get('users');
+        users.findOne({
+            'username': username
+        }, function (err, found) {
+            if (err) {
+                throw err;
+            } else {
+                console.log(found);
+                res.render('listofincorrects', {
+                    found: found,
+                    session: req.session,
+                    cookie: cookie
+                });
+            }
+        });
+    }
+};
+
+exports.listofpassed = function (db) {
+    return function (req, res) {
+        var username = req.url.substring(1, 5);
+        console.log(username);
+        var users = db.get('users');
+        users.findOne({
+            'username': username
+        }, function (err, found) {
+            if (err) {
+                throw err;
+            } else {
+                console.log(found);
+                res.render('listofpassed', {
+                    found: found,
+                    session: req.session,
+                    cookie: cookie
+                });
+            }
+        });
+    }
+}
