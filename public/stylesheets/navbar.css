@@ -29,29 +29,48 @@ h1 {
     padding: 0;
     border-bottom: 1px solid #ababab;
 }
-input[type="checkbox"] {
+.navbar > input[type="checkbox"] {
     display: none;
 }
-input[type="checkbox"]+.drop {
+.navbar > input[type="checkbox"]+.drop {
     display: none;
 }
-input[type="checkbox"]:checked+.drop {
+.navbar > input[type="checkbox"]:checked+.drop {
     display: block;
+}
+.dropnav:hover {
+    background: #E6E6E6;
 }
 .drop {
     position: absolute;
     top: 37px;
     right: 5px;
-    width: 100px;
+    width: 130px;
     display: block;
     background: #EBEBEB;
     border-top: 0;
     border-right: 1px;
     border-bottom: 1px;
     border-left: 1px;
-    border-color: grey;
+    border-color: #E6E6E6;
     border-style: solid;
     z-index: 2;
+    background: -webkit-linear-gradient(#FFFFFF, #E6E6E6);
+    /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#FFFFFF, #E6E6E6);
+    /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#FFFFFF, #E6E6E6);
+    /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#FFFFFF, #E6E6E6);
+    /* Standard syntax */
+}
+.drop a {
+    text-decoration: none;
+}
+.drop i {
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
 }
 .dropnav {
     margin: 0 5px 0 5px;
