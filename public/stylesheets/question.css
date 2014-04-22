@@ -33,7 +33,7 @@
 .code {
     clear: left;
 }
-.side {} .id {
+.id {
     clear: left;
     display: none;
     font-size: 10px;
@@ -70,12 +70,25 @@ hr {
     margin-left: 5px;
 }
 .question {
-    margin: 5px;
-    width: 45%;
     word-wrap: break-word;
     padding: 10px;
     background-color: #EEEEEE;
     font-family: Consolas, Monaco, Lucidia Console, Liberation Mono, DejaVu, Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
     white-space: pre;
+}
+.leftcol {
+    position: absolute;
+    top: 190px;
+    left: 1%;
+    display: inline-block;
+    width: 48%;
     float: left;
+}
+.rightcol {
+    position: absolute;
+    top: 190px;
+    left: 51%;
+    display: inline-block;
+    width: 48%;
+    float: right;
 }
