@@ -1,0 +1,17 @@
+a {
+    text-decoration: none;
+}
+li {
+    padding: 2px 2px 2px 0;
+    list-style: none;
+}
+h1 {
+    color: rgb(53, 53, 53);
+    clear: left;
+}
+.nums{
+    font-size:80px;
+}
+.numstwo{
+    font-size:50px;
+}

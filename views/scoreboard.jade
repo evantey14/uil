@@ -10,5 +10,6 @@ block content
         each person in ranking
             tr
                 td
-                    a(href= "/user/"+person.username)= person.username
+                    a(href= "/user/"+person.username)
+                        div.name= person.username
                 td= person.score

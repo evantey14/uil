@@ -1,25 +1,28 @@
 extends layout
-
+block head
+    link(rel='stylesheet', href='/stylesheets/profile.css')
 block content
-    h1= found.username
-        h2= "This user's score is: " + found.score
-        h3= "This user's current streak is: " + found.streak
-        h3= "This user's longest streak is: " + found.longeststreak
-        h3= "Questions this user answered correctly: " + found.correct.length
+    h1= found.username + " "
+        span.nums= found.score
+        h3= "Current Streak " 
+            span.numstwo= found.streak
+        h3= "Longest Streak "
+            span.numstwo= found.longeststreak
+        h3= "Correct " + found.correct.length
         for question, i in found.correct
             if(i<10)
                 a(href="/random/"+question.id)
                     li=question.id
         a(href="/"+found.username+"/correct")
             h4="    See all"
-        h3="Questions this user answered incorrectly: " + found.incorrect.length
+        h3="Incorrect " + found.incorrect.length
         for question, i in found.incorrect
             if(i<10)
                 a(href="/random/"+question.id)
                     li=question.id
-        a(href="/"+found.username+"/incorrect")
-            h4="    See all"
-        h3="Questions this user passed: " + found.passed.length
+        a(href="/"+found.username+"/incorrect") 
+                h4="    See all"
+        h3="Passed " + found.passed.length
         for question, i in found.passed
             if(i<10)
                 a(href="/random/"+question.id)
