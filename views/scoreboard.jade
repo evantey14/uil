@@ -1,9 +1,10 @@
 extends layout
-
+block head
+    link(rel='stylesheet', href='/stylesheets/scoreboard.css')
 block content
     h1= "Most Recent Rankings"
-    table(border= 1)
-        tr
+    table(border= 1 frame="void" rules="all")
+        tr#top
             td= "Username"
             td= "Score"
         each person in ranking
