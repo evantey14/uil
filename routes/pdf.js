@@ -19,7 +19,7 @@ var json = {
 
 
 var PDF2JSONUtil = (function () {
-
+    
     var _continue = function (callback, err) {
         if (err)
             nodeUtil.p2jwarn(err);
@@ -27,25 +27,10 @@ var PDF2JSONUtil = (function () {
             callback(err);
     };
 
-    var _generateFieldsTypesFile = function (data, callback) {
-        var pJSON = require("./pdffield").getAllFieldsTypes(data);
-        var fieldsTypesPath = this.outputPath.replace(".json", ".fields.json");
-        var fieldTypesFile = this.outputFile.replace(".json", ".fields.json");
-
-        fs.writeFile(fieldsTypesPath, JSON.stringify(pJSON), function (err) {
-            if (err) {
-                nodeUtil.p2jwarn(this.inputFile + " => " + fieldTypesFile + " Exception: " + err);
-            } else {
-                nodeUtil.p2jinfo(this.inputFile + " => " + fieldTypesFile + " [" + this.outputDir + "] OK");
-            }
-            _continue.call(this, callback, err);
-        }.bind(this));
-    };
-
     var _writeOneJSON = function (data, callback) {
 
         json = {
-            "formImage": data
+            formImage: data
         };
         this.curProcessor.successCount++;
         _continue.call(this, callback);
@@ -108,43 +93,6 @@ var PDF2JSONUtil = (function () {
         this.curProcessor = curProcessor;
     };
 
-    /*cls.prototype.validateParams = function() {
-        var retVal = null;
-
-        if (!fs.existsSync(this.inputDir))
-            retVal = "Input error: input directory doesn't exist - " + this.inputDir + ".";
-        else if (!fs.existsSync(this.inputPath))
-            retVal = "Input error: input file doesn't exist - " + this.inputPath + ".";
-        else if (!fs.existsSync(this.outputDir))
-            retVal = "Input error: output directory doesn't exist - " + this.outputDir + ".";
-
-        if (retVal != null) {
-            this.curProcessor.failedCount += 1;
-            return retVal;
-        }
-
-        var inExtName = path.extname(this.inputFile).toLowerCase();
-        if (inExtName !== '.pdf')
-            retVal = "Input error: input file name doesn't have pdf extention  - " + this.inputFile + ".";
-        else {
-            this.outputFile = path.basename(this.inputPath, inExtName) + ".json";
-            this.outputPath = this.outputDir + path.sep + this.outputFile;
-            if (fs.existsSync(this.outputPath))
-                nodeUtil.p2jinfo("Output file will be replaced - " + this.outputPath);
-            else {
-                var fod = fs.openSync(this.outputPath, "wx");
-                if (!fod)
-                    retVal = "Input error: can not write to " + this.outputPath;
-                else {
-                    fs.closeSync(fod);
-                    fs.unlinkSync(this.outputPath);
-                }
-            }
-        }
-
-        return retVal;
-    };*/
-
     cls.prototype.destroy = function () {
         this.inputDir = null;
         this.inputFile = null;
@@ -160,13 +108,6 @@ var PDF2JSONUtil = (function () {
     };
 
     cls.prototype.processFile = function (callback) {
-        /*var validateMsg = this.validateParams();
-        if (!!validateMsg) {
-            _continue.call(this, callback, validateMsg);
-        }
-        else {
-            _parseOnePDF.call(this, callback);
-        }*/
         _parseOnePDF.call(this, callback);
     };
     console.log(json);
@@ -185,7 +126,7 @@ var equals = function (one, two) {
 };
 var parseJSON = function (res) {
     console.log("Successfully converted PDF -> JSON");
-    //    console.log("here"  + json + " here" );
+    
     var testn = "";
     fs.writeFile("State08.json", JSON.stringify(json), function (err) {
         if (err) {
@@ -193,26 +134,32 @@ var parseJSON = function (res) {
         }
     });
     //console.log(JSON.stringify(json));
-    //lets try to add lines together
-    var questions = [];
-    var finalrects = [];
-    var newLines = [];
-    var Verts = [];
-    var Horiz = [];
+    
+    var newLines = []; //concatenated lines
+    var Verts = []; // vertical lines
+    var Horiz = []; // horizontal lines
+    var xbnds = []; // x bounds
+    var ybnds = []; // y bounds
+    var finalrects = []; // final boxes ()
+    var questions = []; //question objects
+    
+    //find name of test
+    var next = false;
+    for (var z = 0; z < json.formImage.Pages[0].Texts.length; z++) {
+        var text = unescape(json.formImage.Pages[0].Texts[z].R[0].T);
+        if (next) {
+            testn = text.substring(text.indexOf("(") + 1, text.indexOf(")"));
+            next = false;
+        }
+        if (text.indexOf("Computer Science Competition") !== -1) {
+            next = true;
+        }
+    }
+
+    //add lines together
     var add = 0;
     for (var i = 0; i < json.formImage.Pages.length; i++) {
-        var next = false;
-        for (var z = 0; z < json.formImage.Pages[0].Texts.length; z++) {
-            var text = unescape(json.formImage.Pages[0].Texts[z].R[0].T);
-            if (next) {
-                testn = text.substring(text.indexOf("(") + 1, text.indexOf(")"));
-                next = false;
-            }
-            if (text.indexOf("Computer Science Competition") !== -1) {
-                next = true;
-            }
-        }
-        var newFills = [];
+        var newFills = []; // per page
         var dead = [];
         for (var j = 0; j < json.formImage.Pages[i].Fills.length; j++) {
             var one = json.formImage.Pages[i].Fills[j];
@@ -222,7 +169,7 @@ var parseJSON = function (res) {
             }
             for (var k = j + 1; k < json.formImage.Pages[i].Fills.length; k++) {
                 var two = json.formImage.Pages[i].Fills[k];
-                //sketch assumptions that I made: 
+                //assumptions that I made: 
                 //I only need to check below/to the right because k>j
                 //object one wont expand in both directions (so like, it cant expand H, then somehow match up with something vertically)
                 if (equals(one.x, two.x) && equals(one.w, two.w) && equals((one.y + one.h), two.y)) {
@@ -238,18 +185,16 @@ var parseJSON = function (res) {
             }
             newFills.push(cur);
         }
-        //console.log('newFills: '+JSON.stringify(newFills));
         newLines.push(newFills);
-        //json.formImage.Pages[i].Fills = newFills;
     }
-    //console.log("Finished making newLines. " + add + " lines were added");
+    console.log("Finished making newLines. " + add + " lines were added");
 
-    //line refinement???
+    //separating horizontal and vertical lines
     for (var i = 0; i < newLines.length; i++) {
         var curh = [],
             curv = [];
         for (var j = 0; j < newLines[i].length; j++) {
-            if (newLines[i][j].w > 0.6 && newLines[i][j].h > 0.6) {
+            if (newLines[i][j].w > 0.6 && newLines[i][j].h > 0.6) { // remove big "QUESTION" boxes
                 newLines[i].splice(j, 1);
                 j--;
             } else if (newLines[i][j].w > newLines[i][j].h) {
@@ -261,12 +206,13 @@ var parseJSON = function (res) {
         Horiz.push(curh);
         Verts.push(curv);
     }
-    //console.log(JSON.stringify(newLines));
-    var xbnds = [];
-    var ybnds = [];
+    
+    //make x bounds and y bounds
     for (var pg = 0; pg < newLines.length; pg++) {
         var pgx = [];
         var pgy = [];
+        
+        //x bounds - find smallest dist to another line, call it a "box" bound
         for (var h = 0; h < Verts[pg].length - 1; h++) {
             if (Verts[pg][h + 1].x < Verts[pg][h].x) {
                 h++;
@@ -274,7 +220,7 @@ var parseJSON = function (res) {
             var xdiff = Number.MAX_VALUE;
             for (var k = 0; k < Verts[pg].length; k++) { //not necessarily in order right and down
                 var x;
-                if (Verts[pg][k].x - Verts[pg][h].x < xdiff && Verts[pg][k].x - Verts[pg][h].x > 0) { // this pushes 3 columns, two of which are the same, I can't figure out why
+                if (Verts[pg][k].x - Verts[pg][h].x < xdiff && Verts[pg][k].x - Verts[pg][h].x > 0) { 
                     x = {
                         xi: Verts[pg][h].x,
                         xf: Verts[pg][k].x
@@ -284,6 +230,8 @@ var parseJSON = function (res) {
             }
             pgx.push(x);
         }
+        
+        //y bounds similarly
         for (var h = 0; h < Horiz[pg].length - 1; h++) {
             var ydiff = Number.MAX_VALUE;
             for (var k = 0; k < Horiz[pg].length; k++) { //not necessarily in order right and down
@@ -303,17 +251,16 @@ var parseJSON = function (res) {
         xbnds.push(pgx);
         ybnds.push(pgy);
     }
-    /* console.log("xbnds" + JSON.stringify(xbnds));
-    console.log("ybnds" + JSON.stringify(ybnds));*/
-    //DRAWING INCORRECT BOXES
 
+    //making boxes out of bounds and lines
+    //this goes through and makes boxes based on the length of the horizontal lines
     for (var i = 0; i < ybnds.length; i++) {
         var pg = [];
         var right = null;
         for (var j = 0; j < ybnds[i].length; j++) {
-            var bool = false;
+            var bool = false; // stores if box is a "short" box (only spans half page)
             for (var k = 0; k < xbnds[i].length; k++) {
-                if (equals(ybnds[i][j].end, xbnds[i][k].xi)) {
+                if (equals(ybnds[i][j].end, xbnds[i][k].xi)) { // if the right edge of a ybnds equals a new xbnds, the left box is only half the page wide
                     bool = true;
                     if (!right) { // if no right box created, 
                         right = {
@@ -327,7 +274,6 @@ var parseJSON = function (res) {
                 }
             }
 
-
             if (!bool && right) { //if long and right exists                
                 var rect = {
                     x: ybnds[i][j].begin,
@@ -337,9 +283,7 @@ var parseJSON = function (res) {
                     pg: i
                 };
                 pg.push(rect);
-                //console.log("PUSH");
                 right['h'] = ybnds[i][j].yf - right['y'];
-                //console.log(JSON.stringify(right));
                 pg.push(right);
                 right = null;
             } else {
@@ -357,19 +301,16 @@ var parseJSON = function (res) {
         finalrects.push(pg);
     }
 
-    var newfinal = [];
+    
     //splitting boxes by Verts
     for (var i = 0; i < finalrects.length; i++) {
-
         var newlist = [];
         for (var j = 0; j < finalrects[i].length; j++) {
             var rect = finalrects[i][j];
             for (var k = 0; k < Verts[i].length; k++) {
                 var vline = Verts[i][k];
-                //console.log("vline-" + JSON.stringify(vline));
                 if (vline.x > rect.x + 2 && vline.x < rect.x + rect.w - 2) {
                     if ((vline.y < rect.y || equals(vline.y, rect.y)) && (rect.y + rect.h < vline.y + vline.h || equals(rect.y + rect.h, vline.y + vline.h))) {
-                        //console.log("SPLIT");
                         finalrects[i][j] = {
                             x: rect.x,
                             y: rect.y,
@@ -392,14 +333,10 @@ var parseJSON = function (res) {
                 }
             }
         }
-        //add newlist to rect
-        /* console.log("start length " + finalrects[i].length);
-        console.log('add length ' + newlist.length);*/
         finalrects[i] = finalrects[i].concat(newlist);
-        //console.log("new length " + finalrects[i].length);
-
     }
 
+    //adding text to finalrect boxes
     for (var i = 0; i < json.formImage.Pages.length; i++) {
         for (var q = 0; q < finalrects[i].length; q++) {
             var box = finalrects[i][q];
@@ -425,6 +362,8 @@ var parseJSON = function (res) {
     var regexch = /[A-E]/;
     var notspace = /\S/;
     var next = "";
+
+    //finding answers
     for (var z = 0; z < json.formImage.Pages[last].Texts.length; z++) {
         var text = unescape(json.formImage.Pages[last].Texts[z].R[0].T);
         if (text.search(regexch) === -1) {
@@ -438,6 +377,7 @@ var parseJSON = function (res) {
         var letter = text.charAt(text.search(regexch));
         answers[num] = letter;
     }
+
     for (var z = 0; z < finalrects.length; z++) {
         var min = 1000;
         var secondColumn = 1000;
@@ -455,7 +395,7 @@ var parseJSON = function (res) {
                 }
 
             }
-            //console.log("here" + secondColumn + " " + min);
+            
             var next = "";
             for (var j = 0; j < finalrects[z].length; j++) {
                 if (finalrects[z][j].x >= secondColumn) {
@@ -542,24 +482,19 @@ var monk = require('monk');
 var pathToPdf = __dirname + "/../A.pdf"
 
 exports.index = function (req, res) {
-    pdfText(pathToPdf, function (err) {
-        input = pathToPdf;
-        if (err) {
-            // throw err;
-        }
-        var inputDir = path.dirname(input);
-        var inputFile = path.basename(input);
+    input = pathToPdf;
+    var inputDir = path.dirname(input);
+    var inputFile = path.basename(input);
 
-        var p2j = new p2jcmd();
-        p2j.inputCount = 1;
-        console.log("bef");
-        p2j.p2j = new PDF2JSONUtil(inputDir, inputFile, p2j);
-        //p2j.p2j.processFile(_.bind(p2j.complete, p2j));
-        console.log("aft");
-        p2j.p2j.processFile(function () {
-            parseJSON(res);
-        });
-
+    var p2j = new p2jcmd();
+    p2j.inputCount = 1;
+    console.log("bef");
+    p2j.p2j = new PDF2JSONUtil(inputDir, inputFile, p2j);
+    //p2j.p2j.processFile(_.bind(p2j.complete, p2j));
+    console.log("aft");
+    p2j.p2j.processFile(function () {
+        parseJSON(res);
     });
+
     console.log("here");
 }
