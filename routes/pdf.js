@@ -481,20 +481,66 @@ var monk = require('monk');
 
 var pathToPdf = __dirname + "/../A.pdf"
 
-exports.index = function (req, res) {
-    input = pathToPdf;
-    var inputDir = path.dirname(input);
-    var inputFile = path.basename(input);
+var save = function (file, dirname, filename, callback) {
+    fs.exists(path.join(dirname, filename), function (exists) {
+        if (exists) callback("File already exists, rename the file");
+        else {
+            fs.readFile(file.path, function (err, data) {
+                if (err) callback(err)
+                else {
+                    fs.writeFile(path.join(dirname, filename), data, function (err) {
+                        if (err) callback(err);
+                        else callback(err, file);
+                    });
+                }
+            });
+        }
+    });
+}
 
-    var p2j = new p2jcmd();
-    p2j.inputCount = 1;
-    console.log("bef");
-    p2j.p2j = new PDF2JSONUtil(inputDir, inputFile, p2j);
-    //p2j.p2j.processFile(_.bind(p2j.complete, p2j));
-    console.log("aft");
-    p2j.p2j.processFile(function () {
-        parseJSON(res);
+var pathToPdf = __dirname + "/../A.pdf"
+exports.upload = function (req, res) {
+    res.render('pdf');
+    /*fs.exists(path.join(dirname, filename), function(exists){
+     if (exists) callback ("File already exists, rename the file");
+     else{
+       fs.readFile(file.path, function(err, data){
+         if (err) callback(err)
+         else { 
+           fs.writeFile(path.join(dirname, filename), data, function(err){
+             if (err) callback(err);
+             else callback(err, file);
+           });
+         }
+       });
+     }
+   });*/
+    //  console.log(req.body.path);
+
+}
+exports.index = function (req, res) {
+    console.log(req.files.upload);
+    save(req.files.upload, ".", req.files.upload.name, function (err) {
+        if (err) console.log(err);
+        else {
+            console.log("clayton");
+            pathToPdf = "./" + req.files.upload.name;
+            input = pathToPdf;
+            var inputDir = path.dirname(input);
+            var inputFile = path.basename(input);
+
+            var p2j = new p2jcmd();
+            p2j.inputCount = 1;
+            console.log("bef");
+            p2j.p2j = new PDF2JSONUtil(inputDir, inputFile, p2j);
+            //p2j.p2j.processFile(_.bind(p2j.complete, p2j));
+            console.log("aft");
+            p2j.p2j.processFile(function () {
+                parseJSON(res);
+            });
+
+
+        }
     });
 
-    console.log("here");
 }
