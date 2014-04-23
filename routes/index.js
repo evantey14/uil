@@ -109,7 +109,6 @@ exports.renderquestion = function (req, res) {
     });
 };
 
-
 exports.checkquestion = function (db) {
     return function (req, res) {
         var choice = req.body.choice;
@@ -280,42 +279,72 @@ exports.viewquestion = function (db) {
     return function (req, res) {
         var id = req.params.id;
         var collection = db.get('questions');
-        var thing = collection.findOne({
-            '_id': id
-        }, function (err, found) {
-            if (err) {
+        var users = db.get('users');
+
+        users.findOne({'_id':req.session.id}, function(err,found){
+            if(err){
                 throw err;
-            } else if (!found) {
-                res.render('error', {
-                    cookie: cookie,
-                    title: 'Error',
-                    prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.',
-                    session: req.session
-                });
-            } else {
-                var title = 'Random Question';
-                var prompt = 'Test: ' + found['test'] + '\nQuestion: ' + found['ques'];
-                var answers = found['ans'];
-                //console.log("thing" + JSON.stringify(found));
-                res.render('renderquestion', {
-                    cookie: cookie,
-                    title: title,
-                    prompt: prompt,
-                    qnum: found['ques'],
-                    test: found['test'],
-                    question: found['text'],
-                    side: found['code'],
-                    A: answers[0],
-                    B: answers[1],
-                    C: answers[2],
-                    D: answers[3],
-                    E: answers[4],
-                    id: found["_id"],
-                    url: found["_id"],
-                    session: req.session
-                });
+            }
+            else{
+                var questions = found.questions;
+                if(JSON.stringify(questions).indexOf(id)>-1){
+                    collection.findOne({
+                        '_id': id
+                    }, function (err, found) {
+                        if (err) {
+                            throw err;
+                        } else if (!found) {
+                            res.render('error', {
+                                cookie: cookie,
+                                title: 'Error',
+                                prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.',
+                                session: req.session
+                            });
+                        } else {
+                            var title = 'Random Question';
+                            var prompt = 'Test: ' + found['test'] + '\nQuestion: ' + found['ques'];
+                            var answers = found['ans'];
+                            res.render('renderquestion', {
+                                cookie: cookie,
+                                title: title,
+                                prompt: prompt,
+                                qnum: found['ques'],
+                                test: found['test'],
+                                question: found['text'],
+                                side: found['code'],
+                                A: answers[0],
+                                B: answers[1],
+                                C: answers[2],
+                                D: answers[3],
+                                E: answers[4],
+                                id: found["_id"],
+                                url: found["_id"],
+                                session: req.session
+                            });
+                        }
+                    });
+                }
+                else{
+                    var correct = found.correct;
+                    var incorrect = found.incorrect;
+                    if(JSON.stringify(correct).indexOf(id)>-1){
+                        res.send("This question has already been answered correctly");
+                    }
+                    else if(JSON.stringify(incorrect).indexOf(id)>-1){
+                        res.send("This question has already been answered incorrectly");
+                    }
+                    else{
+                        res.send("This question was previously passed");
+                    }
+                }
             }
         });
+    }
+};
+
+exports.tryagain = function (db) {
+    return function (req, res) {
+        res.send("at try again")
     }
 };
 

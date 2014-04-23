@@ -51,6 +51,8 @@ app.all('/checkquestion', routes.checkquestion(db));
 app.all('/random', routes.getquestion(db));
 app.all('/random/:id', routes.viewquestion(db));
 
+app.all('/tryagain/:id', routes.tryagain(db));
+
 app.all('/user/:username', routes.user(db));
 app.all('/:username/correct', routes.listofcorrects(db));
 app.all('/:username/incorrect', routes.listofincorrects(db));
