@@ -7,7 +7,7 @@
 body {
     padding: 0px;
     /*padding-top: 36px;*/
-    margin: 0 5px 0 5px;
+    margin: 0;
     /*font-family: 'Ubuntu', sans-serif;*/
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -18,16 +18,24 @@ h1 {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 .content {
-    margin: 5px;
+    position: relative;
+    width: 1000px;
+    left: 50%;
+    margin-left: -500px;
+}
+.navbar-content {
+    background-color: #E6E6E6;
+    margin: 0;
+    border-bottom: 1px solid #E6E6E6;
 }
 .navbar {
-    background-color: white;
-    width: 100%;
+    position: relative;
+    left: 50%;
+    padding: 18px 0 18px 0;
+    width: 1000px;
+    margin: 0 0 0 -500px;
     height: 36px;
     list-style-type: none;
-    margin: 0;
-    padding: 0;
-    border-bottom: 1px solid #E6E6E6;
 }
 .navbar > input[type="checkbox"] {
     display: none;
@@ -43,7 +51,7 @@ h1 {
 }
 .drop {
     position: absolute;
-    top: 37px;
+    top: 72px;
     right: 5px;
     width: 130px;
     display: block;
@@ -93,15 +101,11 @@ h1 {
     color: black;
     font-size: 22px;
     position: relative;
-    height: 25px;
+    height: 100%;
     display: inline-block;
 }
 .nav:hover {
-    animation: glow 2s ease infinite;
-    -webkit-animation: inglow 1s ease-out, glow 20s 1s infinite ease-in-out;
-    border-width: 0 0 1px 0;
-    border-color: #7f33cc;
-    border-style: solid;
+    color: #7f33cc;
 }
 .right {
     float: right;

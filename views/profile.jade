@@ -2,30 +2,40 @@ extends layout
 block head
     link(rel='stylesheet', href='/stylesheets/profile.css')
 block content
-    h1= found.username + " "
-        span.nums= found.score
-        h3= "Current Streak " 
-            span.numstwo= found.streak
-        h3= "Longest Streak "
-            span.numstwo= found.longeststreak
-        h3= "Correct " + found.correct.length
-        for question, i in found.correct
-            if(i<10)
-                a(href="/random/"+question.id)
-                    li=question.id
-        a(href="/"+found.username+"/correct")
-            h4="    See all"
-        h3="Incorrect " + found.incorrect.length
-        for question, i in found.incorrect
-            if(i<10)
-                a(href="/random/"+question.id)
-                    li=question.id
-        a(href="/"+found.username+"/incorrect") 
-                h4="    See all"
-        h3="Passed " + found.passed.length
-        for question, i in found.passed
-            if(i<10)
-                a(href="/random/"+question.id)
-                    li=question.id
-        a(href="/"+found.username+"/passed")
-            h4="    See all"
+    span.left-gold
+        h1= found.username
+            span.nums= found.score
+    span.right-gold
+        div.horizontal
+            span.left-gold
+                h3= "Current Streak "
+                    span.numstwo= found.streak
+            span.right-gold
+                h3= "Longest Streak "
+                    span.numstwo= found.longeststreak
+        div.horizontal
+            span.left-third
+                h3= "Correct " + found.correct.length
+                for question, i in found.correct
+                    if(i<10)
+                        a(href="/random/"+question.id)
+                            li.qid=question.id
+                a(href="/"+found.username+"/correct")
+                    h4="    See all"
+            span.middle-third
+                h3="Incorrect " + found.incorrect.length
+                for question, i in found.incorrect
+                    if(i<10)
+                        a(href="/random/"+question.id)
+                            li.qid=question.id
+                a(href="/"+found.username+"/incorrect")
+                        h4="    See all"
+            span.right-third
+                h3="Passed " + found.passed.length
+                for question, i in found.passed
+                    if(i<10)
+                        a.qid(href="/random/"+question.id)
+                            span.question-preview
+                                li=question.id
+                a(href="/"+found.username+"/passed")
+                    h4="    See all"

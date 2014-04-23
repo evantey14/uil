@@ -10,47 +10,48 @@ html
     script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js")
     block head
   body
-    ul.navbar
-        a(href="/")
-            li.nav.button.left
-                |LASA UIL Training
-        a(href="/about")
-            li.nav.left
-                |About
-        a(href="/getfeedback")
-            li.nav.left
-                |Send Us Feedback
-        if cookie
-            //a(href="/home")
-            a(href="/random")
+    .navbar-content
+        ul.navbar
+            a(href="/")
                 li.nav.button.left
-                    img.ico(src='/images/random.png')
-            label(for="dropdown").nav.right= session.user
-            input(type="checkbox")#dropdown
-            .drop
-                a(href="/home")
-                    div.dropnav
-                        i.fa.fa-user
-                        span="Profile"
-                a(href="/scoreboard")
-                    div.dropnav
-                        i.fa.fa-bar-chart-o
-                        span="Graph"
-                a(href="/settings")
-                    div.dropnav
-                        i.fa.fa-gear
-                        span="Settings"
-                a(href="/logout")
-                    div.dropnav
-                        i.fa.fa-sign-out
-                        span="Logout"
-        else
-            a(href="/newuser")
-                li.nav.button.right
-                    |Register
-            a(href="/signin")
-                li.nav.button.right
-                    |Login
+                    |LASA UIL Training
+            a(href="/about")
+                li.nav.left
+                    |About
+            a(href="/getfeedback")
+                li.nav.left
+                    |Send Us Feedback
+            if cookie
+                //a(href="/home")
+                a(href="/random")
+                    li.nav.button.left
+                        i.fa.fa-random
+                label(for="dropdown").nav.right= session.user
+                input(type="checkbox")#dropdown
+                .drop
+                    a(href="/home")
+                        div.dropnav
+                            i.fa.fa-user
+                            span="Profile"
+                    a(href="/scoreboard")
+                        div.dropnav
+                            i.fa.fa-bar-chart-o
+                            span="Graph"
+                    a(href="/settings")
+                        div.dropnav
+                            i.fa.fa-gear
+                            span="Settings"
+                    a(href="/logout")
+                        div.dropnav
+                            i.fa.fa-sign-out
+                            span="Logout"
+            else
+                a(href="/newuser")
+                    li.nav.button.right
+                        |Register
+                a(href="/signin")
+                    li.nav.button.right
+                        |Login
 
     div.content
         block content
