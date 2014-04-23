@@ -403,16 +403,6 @@ exports.about = function (req, res) {
             img: "/images/about/ryan.jpg",
             desc: "Like the tears we cried\nThat day we had to leave\nIt was everything we wanted it to be\nThe summer of\n19 you and me",
             src: "https://github.com/ryanr1230"
-        }, {
-            name: "Clayton Petty",
-            img: "/images/about/clayton.jpg",
-            desc: "We had our first dance in the sand\nIt was one hell of a a souvenir\nTangled up, so in love\nSo, let\'s just stay right here",
-            src: "https://github.com/notyalc"
-        }, {
-            name: "Keivaun Waugh",
-            img: "/images/about/alec.jpg",
-            desc: "We had our first dance in the sand\nIt was one hell of a a souvenir\nTangled up, so in love\nSo, let\'s just stay right here",
-            src: "https://github.com/notyalc"
         }]
     });
 };
