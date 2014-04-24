@@ -1,6 +1,10 @@
 extends layout
 block head
     link(rel='stylesheet', href='/stylesheets/question.css')
+    script(type="text/javascript" src="/plugins/syntaxhighlighter_3.0.83/scripts/shCore.js")
+    script(type="text/javascript" src="/plugins/syntaxhighlighter_3.0.83/scripts/shBrushJava.js")
+    link(href="/plugins/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css")
+    link(href="/plugins/syntaxhighlighter_3.0.83/styles/shCoreDefault.css" rel="stylesheet" type="text/css")
 block content
     div.top
         if qnum
@@ -35,6 +39,8 @@ block content
             button.next(type="submit") submit
     span.rightcol
         if side
-            div.question.side= side
+            pre.question.side(class="brush: java")= side
 block footer
     script(src="/scripts/keys.js")
+    script.
+        SyntaxHighlighter.all()

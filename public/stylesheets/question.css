@@ -69,6 +69,7 @@ hr {
     margin-left: 5px;
 }
 .question {
+    margin: 0;
     word-wrap: break-word;
     padding: 10px;
     background-color: #EEEEEE;

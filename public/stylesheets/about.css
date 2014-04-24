@@ -61,12 +61,12 @@ body {
     display: inline-block;
     position: relative;
     height: 500px;
-    width: 40%;
+    width: 60%;
     float: left;
 }
 .profile {
     position: relative;
-    width: 30%;
+    width: 20%;
     float: left;
 }
 h2 {
