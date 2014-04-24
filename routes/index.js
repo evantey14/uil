@@ -1,6 +1,7 @@
 var passwordHash = require('password-hash');
 var cookie = false;
 var nodemailer = require('nodemailer');
+var teacher = "jacobstephens"
 
 exports.signin = function (db) {
     return function (req, res) {
@@ -77,7 +78,8 @@ exports.home = function (db) {
                         score: found.score,
                         session: req.session,
                         streak: found.streak,
-                        longeststreak: found.longeststreak
+                        longeststreak: found.longeststreak,
+                        found:found
                     });
                 }
             });
@@ -458,7 +460,7 @@ exports.sendfeedback = function () {
             service: "Gmail",
             auth: {
                 user: "lasauiltraining@gmail.com",
-                pass: "jacobstephens"
+                pass: teacher
             }
         });
         console.log("smtp made");
@@ -468,14 +470,14 @@ exports.sendfeedback = function () {
             subject: subject,
             text: text + "\n\nRespond to this person at: " + email
         }
-        console.log("mail options set");
+        //console.log("mail options set");
         smtpTransport.sendMail(mailOptions, function (err, response) {
             if (err) {
                 throw err;
             } else {
-                console.log("message sending");
+                //console.log("message sending");
                 res.redirect("/");
-                console.log("message sent");
+                //console.log("message sent");
             }
         });
     }

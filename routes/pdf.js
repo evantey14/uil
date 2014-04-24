@@ -440,6 +440,10 @@ var parseJSON = function (res) {
                     question.ans.push(itext.substring(itext.lastIndexOf("E. ") + 4));
 
                 }
+                var uloc = question.code.indexOf("undefined");
+                if(uloc!==-1){
+                    question.code = question.code.substr(uloc+9);
+                }
                 for(var v = 0; v<question.ans.length; v++){
                     var temp = question.ans[v];
                     while (temp.indexOf('\n') > 0)

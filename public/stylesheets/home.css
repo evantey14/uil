@@ -4,6 +4,7 @@ a {
 li {
     padding: 2px 2px 2px 0;
     list-style: none;
+    font-size:10px;
 }
 h1 {
     color: rgb(53, 53, 53);
@@ -16,10 +17,7 @@ h1 {
     font-size: 50px;
 }
 /*golden rati$on proportion*/
-.ans{
-    font-size:12px;
-    word-wrap:break-word;
-}
+
 .left-column {
     display: block;
     position: absolute;
