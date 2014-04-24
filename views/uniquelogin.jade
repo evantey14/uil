@@ -19,13 +19,19 @@ block content
             div.horizontal
                 span.left-third
                     h3= "Correct " + correctlength
-                    span.ans= correct
+                    for question in found.correct
+                        a(href="/random/"+question.id)
+                            li=question.id
                 span.middle-third
                     h3="Incorrect " + incorrectlength
-                    span.ans= incorrect
+                    for question in found.incorrect
+                        a(href="/random/"+question.id)
+                            li=question.id
                 span.right-third
                     h3="Passed " + passedlength
-                    span.ans= passed    
+                    for question in found.passed
+                        a(href="/random/"+question.id)
+                            li=question.id
 block footer
     script.
         var correct = !{correct};

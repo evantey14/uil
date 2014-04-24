@@ -77,7 +77,8 @@ exports.home = function (db) {
                         score: found.score,
                         session: req.session,
                         streak: found.streak,
-                        longeststreak: found.longeststreak
+                        longeststreak: found.longeststreak,
+                        found:found
                     });
                 }
             });
