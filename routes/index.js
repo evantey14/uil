@@ -100,7 +100,6 @@ exports.logout = function (req, res) {
     }
 };
 
-
 exports.renderquestion = function (req, res) {
     res.render('renderquestion', {
         cookie: cookie,
@@ -289,55 +288,55 @@ exports.viewquestion = function (db) {
             }
             else{
                 var questions = found.questions;
+                var correct = found.correct;
+                var incorrect = found.incorrect
+                var passed = found.passed;
+                if(JSON.stringify(correct).indexOf(id)>-1){
+                    res.send("This question has already been answered correctly");
+                }
+                else if(JSON.stringify(incorrect).indexOf(id)>-1){
+                    res.send("This question has already been answered incorrectly");
+                }
+                else if (JSON.stringify(passed).indexOf(id)>-1){
+                    res.send("This question was previously passed");
+                }
                 if(JSON.stringify(questions).indexOf(id)>-1){
                     collection.findOne({
                         '_id': id
-                    }, function (err, found) {
+                    }, function (err, question) {
                         if (err) {
                             throw err;
-                        } else if (!found) {
+                        } else if (!question) {
                             res.render('error', {
                                 cookie: cookie,
                                 title: 'Error',
                                 prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.',
                                 session: req.session
                             });
-                        } else {
+                        }
+                        else {
                             var title = 'Random Question';
-                            var prompt = 'Test: ' + found['test'] + '\nQuestion: ' + found['ques'];
-                            var answers = found['ans'];
+                            var prompt = 'Test: ' + question['test'] + '\nQuestion: ' + question['ques'];
+                            var answers = question['ans'];
                             res.render('renderquestion', {
                                 cookie: cookie,
                                 title: title,
                                 prompt: prompt,
-                                qnum: found['ques'],
-                                test: found['test'],
-                                question: found['text'],
-                                side: found['code'],
+                                qnum: question['ques'],
+                                test: question['test'],
+                                question: question['text'],
+                                side: question['code'],
                                 A: answers[0],
                                 B: answers[1],
                                 C: answers[2],
                                 D: answers[3],
                                 E: answers[4],
-                                id: found["_id"],
-                                url: found["_id"],
+                                id: question["_id"],
+                                url: question["_id"],
                                 session: req.session
                             });
                         }
                     });
-                }
-                else{
-                    var correct = found.correct;
-                    var incorrect = found.incorrect;
-                    if(JSON.stringify(correct).indexOf(id)>-1){
-                        res.send("This question has already been answered correctly");
-                    }
-                    else if(JSON.stringify(incorrect).indexOf(id)>-1){
-                        res.send("This question has already been answered incorrectly");
-                    }
-                    else{
-                        res.send("This question was previously passed");
-                    }
                 }
             }
         });
@@ -372,6 +371,11 @@ exports.getquestion = function (db) {
             } else if (found.questions.length === 0) {
                 res.send("You answered all of the questions...all bajillion of them...go read a book or something...or answer some of the questions you missed or passed!");
             } else {
+                var arrayofquestions = found.questions;
+                
+                var temporary = arrayofquestions.shift();
+                arrayofquestions.push(temporary);
+                users.update({'_id': req.session.id}, {$set: {'questions': arrayofquestions}});
                 var id = found['questions'][0];
                 res.redirect('/random/' + id);
             }
