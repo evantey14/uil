@@ -4,7 +4,7 @@ block head
     script(type="text/javascript" src="/plugins/syntaxhighlighter_3.0.83/scripts/shCore.js")
     script(type="text/javascript" src="/plugins/syntaxhighlighter_3.0.83/scripts/shBrushJava.js")
     link(href="/plugins/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css")
-    link(href="/plugins/syntaxhighlighter_3.0.83/styles/shCoreDefault.css" rel="stylesheet" type="text/css")
+    link(href="/plugins/syntaxhighlighter_3.0.83/styles/shThemeEclipse.css" rel="stylesheet" type="text/css")
 block content
     div.top
         if qnum
@@ -17,7 +17,8 @@ block content
             div.qnum= "Random"
                 label.id= id
     span.leftcol
-        div.question.code= question
+        pre.question.code(class="brush: java")= question
+        //div.question.code= question
         form.submit(name="checkquestion",method="post",action="/checkquestion")
             label(for='A')
                 input#A(type="radio",name="choice",value="A")
