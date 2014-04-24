@@ -2,17 +2,30 @@ extends layout
 
 block head
     script(src="/scripts/home.js")
+    link(rel='stylesheet', href='/stylesheets/home.css')
 block content
-        h1= "Welcome " + session.user
-        h2= "Your score is: " + score
-        h3= "Your current streak is: " + streak
-        h3= "Your longest streak is: " + longeststreak
-        h3= "Correct: " + correctlength
-        h5= correct
-        h3="Incorrect: " + incorrectlength
-        h5= incorrect
-        h3="Passed: " + passedlength
-        h5= passed
+        span.left-gold
+        h1= "Welcome " + session.user     
+            br
+            span.nums= score
+        span.right-gold
+            div.horizontal
+                span.left-gold
+                    h3= "Current Streak "
+                        span.numstwo= streak
+                span.right-gold
+                    h3= "Longest Streak "
+                        span.numstwo= longeststreak
+            div.horizontal
+                span.left-third
+                    h3= "Correct " + correctlength
+                    span.ans= correct
+                span.middle-third
+                    h3="Incorrect " + incorrectlength
+                    span.ans= incorrect
+                span.right-third
+                    h3="Passed " + passedlength
+                    span.ans= passed    
 block footer
     script.
         var correct = !{correct};
