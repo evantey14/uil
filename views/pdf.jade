@@ -1,7 +1,9 @@
 extends layout
 
 block content
-    form(action="/pdfup" enctype="multipart/form-data" method="post")
+    h1= title
+    h4= prompt
+    form(action="/pdf" enctype="multipart/form-data" method="post")
         input(type="file" name="upload")
         br
         input(type="submit" value="upload")

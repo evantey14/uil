@@ -471,23 +471,11 @@ var parseJSON = function (res) {
 
 };
 
-
-
-
-
-var pdfText = require('pdf-text'),
-    _ = require('lodash'),
-    fs = require('fs');
-
-var mongo = require('mongodb');
-var monk = require('monk');
-
-
-var pathToPdf = __dirname + "/../A.pdf"
-
 var save = function (file, dirname, filename, callback) {
     fs.exists(path.join(dirname, filename), function (exists) {
-        if (exists) callback("File already exists, rename the file");
+        if (exists){
+            callback("File already exists, rename the file");
+        }
         else {
             fs.readFile(file.path, function (err, data) {
                 if (err) callback(err)
@@ -502,9 +490,11 @@ var save = function (file, dirname, filename, callback) {
     });
 }
 
-var pathToPdf = __dirname + "/../A.pdf"
 exports.upload = function (req, res) {
-    res.render('pdf');
+    res.render('pdf', {
+        title: 'Upload A PDF',
+        prompt: 'Browse for a PDF'
+    });
     /*fs.exists(path.join(dirname, filename), function(exists){
      if (exists) callback ("File already exists, rename the file");
      else{
@@ -524,12 +514,18 @@ exports.upload = function (req, res) {
 }
 exports.index = function (req, res) {
     console.log(req.files.upload);
-    save(req.files.upload, ".", req.files.upload.name, function (err) {
-        if (err) console.log(err);
+    save(req.files.upload, "./pdf", req.files.upload.name, function (err) {
+        if (err){ 
+            console.log(err);
+            res.render('pdf', {
+                title: 'Upload A PDF',
+                prompt: err
+            });
+        }
         else {
             console.log("clayton");
-            pathToPdf = "./" + req.files.upload.name;
-            input = pathToPdf;
+            input = "./" + req.files.upload.name;
+            
             var inputDir = path.dirname(input);
             var inputFile = path.basename(input);
 
