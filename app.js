@@ -39,7 +39,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.all('/about', routes.about);
 app.get('/pdf', pdf.upload);
-app.post('/pdfup',pdf.index);
+app.post('/pdf',pdf.index);
 app.get('/newuser', newuser.newuser);
 app.all('/renderquestion', routes.renderquestion);
 
