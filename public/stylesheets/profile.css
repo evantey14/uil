@@ -4,50 +4,96 @@ a {
 li {
     padding: 2px 2px 2px 0;
     list-style: none;
+    font-size: 10px;
 }
 h1 {
     color: rgb(53, 53, 53);
     clear: left;
 }
+.name{
+    height:80px;
+    width:250px;
+    position:relative;
+    font-size:20px;
+}
 .nums {
     font-size: 80px;
 }
-.numstwo {
-    font-size: 50px;
+.streak {
+    text-align: right;
+    font-size:60px;
+    vertical-align: top;
 }
-/*golden ration proportion*/
+.streak > .t{
+    font-size:20px;
+}
+.streak > .s{
 
-.left-column {
+}
+.top-gold{
+    color: rgb(53, 53, 53);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height:200px;
+    width:1000px;
+    margin:25px 0 25px 0;
+}
+.stats{
+    float:right;
+}
+.stats > span{
+    height:12px;
     display: block;
+    float: left;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+.stats > .correct{
+    background-color:#39c639;
+}
+.stats > .incorrect{
+    background-color: #c6393c;
+}
+.stats > .passed{
+    background-color:grey;
+}
+.p-image{
+    width:200px;
+    height:200px;
     position: absolute;
-    width: 381.97px;
-    left: 0;
+}
+.p-image > img{
+    width:200px;
+    height:200px;
+}
+.info{
+    height:200px;
+    width:1000px;
+}
+.info > .score{
+    position:absolute;
+    font-size: 200px;
+    left:250px;
+    height:200px;
+}
+.bottom{
+    position: absolute;
+    top:200px;
+}
+.left-third{
+    position:absolute;
+    top:0;
+    left:250px;
+}
+.middle-third{
+    position:absolute;
     top: 0;
+    left:500px;
+    width:250px;
 }
-.right-gold {
-    display: block;
-    position: absolute;
-    width: 618.03px;
-    left: 38.197%;
+.right-third{
     top: 0;
-}
-.left-third {
-    display: block;
-    position: absolute;
-    left: 0;
-    width: 33%;
-}
-.middle-third {
-    display: block;
-    position: absolute;
-    left: 33%;
-    width: 33%;
-}
-.right-third {
-    display: block;
-    position: absolute;
-    left: 66%;
-    width: 33%;
+    position:absolute;
+    left:750px;
+    width:250px;
 }
 .qid {
     font-size: 11px;
@@ -57,3 +103,89 @@ h1 {
 .qid:hover {
     color: rgb(78, 87, 200);
 }
+.streak {
+    width: 618.03px;
+    height: 70px;
+}
+.answered {
+    position: absolute;
+    top: 70px;
+    width: 618.03px;
+}
+/*fancy score board*/
+/*
+.big{
+  font-size:100px;
+}
+.big{
+  height:100px;
+}
+.medium{
+  height:50px;
+  font-size:50px;
+}
+.score{
+    top:0;
+  z-index:-5;
+  position:absolute;
+}
+.score > .top{
+  color:black;
+  z-index:0;
+  position:absolute;
+  left:0px;
+  top:0px;
+}
+.score > .a{
+  z-index:-1;
+  position:absolute;
+  left:2px;
+  top:2px;
+  -webkit-animation:cyclecolor 1s 0s infinite;
+  opacity:.75;
+}
+.score > .b{
+  z-index:-2;
+  position:absolute;
+  left:4px;
+  top:4px;
+  -webkit-animation:cyclecolor 1s 0.1s infinite;
+  opacity:.5;
+}
+.score > .c{
+  z-index:-3;
+  position:absolute;
+  left:6px;
+  top:6px;
+  -webkit-animation:cyclecolor 1s 0.2s infinite;
+  opacity:.25;
+}
+@-webkit-keyframes cyclepos{
+  0%{
+    -webkit-transform:rotate(7deg);
+    
+  }
+  50%{
+    -webkit-transform:rotate(-7deg);
+  }
+  100%{
+    -webkit-transform:rotate(7deg);
+  }
+}
+@-webkit-keyframes cyclecolor{
+  0%{
+    color:hsl(0, 100%, 23%);
+  }
+  25%{
+    color:hsl(90, 100%, 23%);
+  }
+  50%{
+    color:hsl(180, 100%, 23%);
+  }
+  75%{
+    color:hsl(270, 100%, 23%);
+  }
+  100%{
+    color:hsl(365, 100%, 23%);
+  }
+}*/

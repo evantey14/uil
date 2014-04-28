@@ -1,5 +1,6 @@
 var passwordHash = require('password-hash');
 var cookie = false;
+var crypto = require('crypto'); //To generate a hash for gravatar
 var nodemailer = require('nodemailer');
 var teacher = "jacobstephens"
 
@@ -79,7 +80,7 @@ exports.home = function (db) {
                         session: req.session,
                         streak: found.streak,
                         longeststreak: found.longeststreak,
-                        found:found
+                        found: found
                     });
                 }
             });
@@ -283,13 +284,14 @@ exports.viewquestion = function (db) {
         var collection = db.get('questions');
         var users = db.get('users');
 
-        users.findOne({'_id':req.session.id}, function(err,found){
-            if(err){
+        users.findOne({
+            '_id': req.session.id
+        }, function (err, found) {
+            if (err) {
                 throw err;
-            }
-            else{
+            } else {
                 var questions = found.questions;
-                if(JSON.stringify(questions).indexOf(id)>-1){
+                if (JSON.stringify(questions).indexOf(id) > -1) {
                     collection.findOne({
                         '_id': id
                     }, function (err, found) {
@@ -325,17 +327,14 @@ exports.viewquestion = function (db) {
                             });
                         }
                     });
-                }
-                else{
+                } else {
                     var correct = found.correct;
                     var incorrect = found.incorrect;
-                    if(JSON.stringify(correct).indexOf(id)>-1){
+                    if (JSON.stringify(correct).indexOf(id) > -1) {
                         res.send("This question has already been answered correctly");
-                    }
-                    else if(JSON.stringify(incorrect).indexOf(id)>-1){
+                    } else if (JSON.stringify(incorrect).indexOf(id) > -1) {
                         res.send("This question has already been answered incorrectly");
-                    }
-                    else{
+                    } else {
                         res.send("This question was previously passed");
                     }
                 }
@@ -495,6 +494,8 @@ exports.user = function (db) {
             if (err) {
                 throw err;
             } else {
+                var email = 'braitsch';
+                var hash = crypto.createHash('md5').update(email).digest('hex');
                 res.render('profile', {
                     found: found,
                     cookie: cookie,
