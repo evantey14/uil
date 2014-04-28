@@ -524,7 +524,7 @@ exports.index = function (req, res) {
         }
         else {
             console.log("clayton");
-            input = "./" + req.files.upload.name;
+            input = "./pdf/" + req.files.upload.name;
             
             var inputDir = path.dirname(input);
             var inputFile = path.basename(input);
