@@ -42,7 +42,7 @@ app.get('/pdf', pdf.upload);
 app.post('/pdf',pdf.index);
 app.get('/newuser', newuser.newuser);
 app.all('/renderquestion', routes.renderquestion);
-
+app.post('/pdfsub', pdf.submit);
 app.post('/adduser', newuser.adduser(db));
 app.all('/signin', routes.signin(db));
 app.all('/home', routes.home(db));

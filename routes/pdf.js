@@ -463,12 +463,18 @@ var parseJSON = function (res) {
     output = questions;
     //console.log(output);
     console.log("bef");
-    for (var r = 0; r < output.length; r++) {
-        collection.insert(output[r]);
-    }
-    console.log("what");
-    res.send(output);
 
+    res.render('pdf', {
+        title: 'Edit PDF',
+        prompt: 'Edit your pdf',
+        text: JSON.stringify(output)
+    });
+    // var editor = ace.edit("editor");
+    // editor.setTheme("ace/theme/monokai");
+    // editor.getSession().setMode("ace/mode/javascript");*/
+//    for(var q =0; q<output.length; q++){
+//        collection.insert(output[q]);  
+//    }
 };
 
 var save = function (file, dirname, filename, callback) {
@@ -512,6 +518,16 @@ exports.upload = function (req, res) {
     //  console.log(req.body.path);
 
 }
+exports.submit = function(req,res){
+    var input = req.body.in;
+    console.log(input);
+    input = JSON.parse(input);
+    for (var r = 0; r < input.length; r++) {
+        collection.insert(input[r]);
+    }
+    res.send(input);
+
+}
 exports.index = function (req, res) {
     console.log(req.files.upload);
     save(req.files.upload, "./pdf", req.files.upload.name, function (err) {
@@ -528,7 +544,7 @@ exports.index = function (req, res) {
             
             var inputDir = path.dirname(input);
             var inputFile = path.basename(input);
-
+            console.log(inputDir + "" + inputFile);
             var p2j = new p2jcmd();
             p2j.inputCount = 1;
             console.log("bef");
