@@ -23,7 +23,7 @@ block content
         $(document).ready(function() { 
             $('#sub').click(function(){
                 var inside = $('#editor').text();
-                inside= inside.substring(1,inside.length-1); //bad bad bad what even am i doing
+                inside= editor.getValue();
                 console.log(inside);
                 $('#divin').val(inside);
                 var inin = $('#divin').val();
