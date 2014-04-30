@@ -15,6 +15,10 @@ code.setReadOnly(true);
 code.getSession().setUseWorker(false);
 code.setFontSize("15px");
 code.renderer.setShowGutter(false);
+editor.container.style.pointerEvents="none";
+code.container.style.pointerEvents="none";
+code.setHighlightActiveLine(false);
+editor.setHighlightActiveLine(false);
 
 
 code.setOptions({
