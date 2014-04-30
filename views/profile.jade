@@ -5,7 +5,7 @@ block content
     div.top-gold
         span.info
             .p-image
-                img(src="/images/default_photo.jpg")
+                img#gravatarimage(src="http://www.gravatar.com/avatar/"+hash+"?s=200&d=%2Fimages%2Fdefault_photo.jpg")
             if(found.score<10000)
                 span.score= found.score
             else
@@ -48,3 +48,5 @@ block content
                                 li=question.id
                 a(href="/"+found.username+"/passed")
                     h4="    See all"
+block footer
+    script(src='/scripts/profile.js')

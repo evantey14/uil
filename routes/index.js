@@ -541,12 +541,12 @@ exports.user = function (db) {
             if (err) {
                 throw err;
             } else {
-                var email = 'braitsch';
-                var hash = crypto.createHash('md5').update(email).digest('hex');
+                var hash = crypto.createHash('md5').update(found.email).digest('hex');
                 res.render('profile', {
                     found: found,
                     cookie: cookie,
-                    session: req.session
+                    session: req.session,
+                    hash:hash
                 });
             }
         });
