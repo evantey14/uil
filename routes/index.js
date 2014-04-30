@@ -294,13 +294,13 @@ exports.viewquestion = function (db) {
                 var incorrect = found.incorrect
                 var passed = found.passed;
                 if(JSON.stringify(correct).indexOf(id)>-1){
-                    res.send("This question has already been answered correctly");
+                    res.redirect('/tryagain/'+ id);
                 }
                 else if(JSON.stringify(incorrect).indexOf(id)>-1){
-                    res.send("This question has already been answered incorrectly");
+                    res.redirect('/tryagain/'+ id);
                 }
                 else if (JSON.stringify(passed).indexOf(id)>-1){
-                    res.send("This question was previously passed");
+                    res.redirect('/tryagain/'+ id);
                 }
                 if(JSON.stringify(questions).indexOf(id)>-1){
                     collection.findOne({
@@ -347,7 +347,47 @@ exports.viewquestion = function (db) {
 
 exports.tryagain = function (db) {
     return function (req, res) {
-        res.send("at try again")
+        var questionid = req.url.substring(10);
+        var users = db.get('users');
+        var questions = db.get('questions');
+        users.findOne({'_id':req.session.id}, function(err,found){
+            if(err){
+                throw err;
+            }
+            else{
+                var incorrect = false;
+                found.incorrect.forEach(function(obj){
+                    if(obj.id===questionid){
+                        incorrect = true;
+                    }
+                });
+                var correct = false;
+                found.correct.forEach(function(obj){
+                    if(obj.id===questionid){
+                        correct = true;
+                    }
+                });
+                var passed = false;
+                found.passed.forEach(function(obj){
+                    if(obj.id===questionid){
+                        passed = true;
+                    }
+                });
+                if(correct){
+                    console.log('CORRECT');
+                    res.send('correct');
+                }
+                else if(incorrect){
+                    console.log('INCORRECT');
+                    res.send('incorrect');
+                }
+                else if (passed){
+                    console.log('PASSED');
+                    res.send("passed");
+                }
+            }
+        })
+
     }
 };
 

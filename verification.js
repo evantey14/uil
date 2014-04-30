@@ -6,7 +6,8 @@ module.exports = function () {
             "/newuser",
             "/adduser",
             "/about",
-            "/pdf"
+            "/pdf",
+            "/pdfsub"
         ];
         if (accessible.indexOf(req.url) > -1) {
             next();
