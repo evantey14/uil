@@ -11,10 +11,15 @@ h1 {
     clear: left;
 }
 .name{
-    height:80px;
-    width:250px;
+    color:rgb(53,53,53);
+    font-weight:bold;
+    display:inline-block;
+    height:100%;
+    width:200px;
     position:relative;
-    font-size:20px;
+    overflow: hidden;
+    font-size: 26px;
+    text-overflow: ellipsis;
 }
 .nums {
     font-size: 80px;
