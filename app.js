@@ -3,7 +3,8 @@ var express = require('express'),
     newuser = require('./routes/newuser'),
     pdf = require('./routes/pdf'),
     http = require('http'),
-    path = require('path');
+    path = require('path'),
+    sass = require('node-sass');
 
 var verification = require('./verification.js');
 
@@ -22,7 +23,11 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(sass.middleware({
+    src: path.join(__dirname, 'sass'),
+    dest: path.join(__dirname, 'public'),
+    debug: true
+}));
 app.use(express.cookieParser('lasacs'));
 app.use(express.cookieSession('lasacs'));
 
