@@ -72,7 +72,7 @@ block content
                 br
                 button.next(type="submit") submit
         else
-            form.submit(name="checkquestion",method="post",action="/checkquestion")
+            form.submit(name="tryagaincheck",method="post",action="/tryagaincheck")
                 label(for='A')
                     input#A(type="radio",name="choice",value="A")
                     |#{A}

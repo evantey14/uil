@@ -471,6 +471,12 @@ exports.tryagain = function (db) {
     }
 };
 
+exports.tryagaincheck = function(db) {
+    return function (req,res){
+        res.send("Haven't yet worked on this part yet");
+    }
+}
+
 exports.index = function (req, res) {
     res.render('index', {
         cookie: cookie,
