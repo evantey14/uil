@@ -7,12 +7,14 @@ h1 {
 .center {
     margin-top: 10%;
     position: relative;
+    /*
     -webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 2px 2px 0px;
     border-bottom-left-radius: 2px;
     border-bottom-right-radius: 2px;
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
     box-shadow: rgba(0, 0, 0, 0.298039) 0px 2px 2px 0px;
+    */
     color: rgb(64, 64, 64);
     direction: ltr;
     display: block;
@@ -24,14 +26,14 @@ h1 {
 .text {
     width: 240px;
     display: block;
-    border: 1x solid black;
+    border: 3px inset #DDD;
     font-size: 15px;
     padding: 15px;
     background: rgba(255, 255, 255, 0.5);
-    margin: 0;
+    margin:5px 0 5px 0;
     -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1), 0 0 16px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1), 0 0 16px rgba(0, 0, 0, 0.1);
-    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1), 0 0 16px rgba(0, 0, 0, 0.1);
+       -moz-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1), 0 0 16px rgba(0, 0, 0, 0.1);
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1), 0 0 16px rgba(0, 0, 0, 0.1);
 }
 .center* {
     display: block;
