@@ -165,7 +165,8 @@ exports.checkquestion = function (db) {
                             });
                             array.push({
                                 id: id,
-                                time: Date.now()
+                                time: Date.now(),
+                                choice: [choice]
                             });
                             users.update({
                                 '_id': req.session.id
@@ -207,7 +208,8 @@ exports.checkquestion = function (db) {
                             var array = found['passed'];
                             array.push({
                                 id: id,
-                                time: Date.now()
+                                time: Date.now(),
+                                choice:[choice]
                             });
                             users.update({
                                 '_id': req.session.id
@@ -254,7 +256,8 @@ exports.checkquestion = function (db) {
                             var array = found['incorrect'];
                             array.push({
                                 id: id,
-                                time: Date.now()
+                                time: Date.now(),
+                                choice: [choice]
                             });
                             users.update({
                                 '_id': req.session.id
@@ -355,41 +358,124 @@ exports.tryagain = function (db) {
                 throw err;
             }
             else{
+                var index = 0;
                 var incorrect = false;
-                found.incorrect.forEach(function(obj){
+                found.incorrect.forEach(function(obj,ind){
                     if(obj.id===questionid){
                         incorrect = true;
+                        index = ind;
                     }
                 });
                 var correct = false;
-                found.correct.forEach(function(obj){
+                found.correct.forEach(function(obj, ind){
                     if(obj.id===questionid){
                         correct = true;
+                        index = ind;
                     }
                 });
                 var passed = false;
-                found.passed.forEach(function(obj){
+                found.passed.forEach(function(obj,ind){
                     if(obj.id===questionid){
                         passed = true;
+                        index = ind;
                     }
                 });
                 if(correct){
-                    console.log('CORRECT');
-                    res.send('correct');
+                    var questions = db.get('questions');
+                    questions.findOne({'_id':questionid}, function(err, question)
+                    {
+                        var answers = question.ans;
+                        var title = "Random Question";
+                        var prompt = 'Test: ' + question['test'] + '\nQuestion: ' + question['ques'];
+                        res.render('tryagainquestion', {
+                            cookie: cookie,
+                            title: title,
+                            prompt: prompt,
+                            qnum: question['ques'],
+                            test: question['test'],
+                            question: question['text'],
+                            side: question['code'],
+                            A: answers[0],
+                            B: answers[1],
+                            C: answers[2],
+                            D: answers[3],
+                            E: answers[4],
+                            id: question["_id"],
+                            url: question["_id"],
+                            session: req.session,
+                            type:"correct"
+                        });
+                    });
                 }
                 else if(incorrect){
-                    console.log('INCORRECT');
-                    res.send('incorrect');
+                    var questions = db.get('questions');
+                    questions.findOne({'_id':questionid}, function(err, question)
+                    {
+                        var choices = found.incorrect[index].choice;
+                        console.log(choices);
+                        var answers = question.ans;
+                        var title = "Random Question";
+                        var prompt = 'Test: ' + question['test'] + '\nQuestion: ' + question['ques'];
+                        res.render('tryagainquestion', {
+                            cookie: cookie,
+                            title: title,
+                            prompt: prompt,
+                            qnum: question['ques'],
+                            test: question['test'],
+                            question: question['text'],
+                            side: question['code'],
+                            A: answers[0],
+                            B: answers[1],
+                            C: answers[2],
+                            D: answers[3],
+                            E: answers[4],
+                            id: question["_id"],
+                            url: question["_id"],
+                            session: req.session,
+                            type:"incorrect",
+                            choices: choices
+                        });
+                    });
                 }
                 else if (passed){
-                    console.log('PASSED');
-                    res.send("passed");
+                    var questions = db.get('questions');
+                    questions.findOne({'_id':questionid}, function(err, question)
+                    {
+                        console.log(index);
+                        var answers = question.ans;
+                        var title = "Random Question";
+                        var prompt = 'Test: ' + question['test'] + '\nQuestion: ' + question['ques'];
+                        res.render('tryagainquestion', {
+                            cookie: cookie,
+                            title: title,
+                            prompt: prompt,
+                            qnum: question['ques'],
+                            test: question['test'],
+                            question: question['text'],
+                            side: question['code'],
+                            A: answers[0],
+                            B: answers[1],
+                            C: answers[2],
+                            D: answers[3],
+                            E: answers[4],
+                            id: question["_id"],
+                            url: question["_id"],
+                            session: req.session,
+                            type:"passed"
+                        });
+                    });
                 }
             }
         })
 
     }
 };
+
+exports.tryagaincheck = function(db) {
+    return function (req,res){
+        res.send("Haven't yet worked on this part yet");
+    }
+}
 
 exports.index = function (req, res) {
     res.render('index', {
