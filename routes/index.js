@@ -466,7 +466,7 @@ exports.tryagaincheck = function (db) {
     }
 }
 
-exports.index = function (req, res) {
+exports.index = function (db) {
     return function (req, res) {
         if (req.session.user) {
             var username = req.session.user;

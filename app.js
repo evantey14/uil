@@ -41,7 +41,7 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
+app.get('/', routes.index(db));
 app.all('/about', routes.about);
 app.get('/pdf', pdf.upload);
 app.post('/pdf',pdf.index);
