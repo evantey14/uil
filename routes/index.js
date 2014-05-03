@@ -17,6 +17,7 @@ exports.settheme = function (db) {
         var users = db.get('users');
         var username = req.session.user;
         console.log(req.body.qchoice);
+        console.log(req.body.cchoice);
         if (req.body.qchoice) {
             users.update({
                 'username': username
@@ -25,7 +26,8 @@ exports.settheme = function (db) {
                     qtheme: req.body.qchoice
                 }
             });
-        } else if (req.body.cchoice) {
+        }
+        if (req.body.cchoice) {
             users.update({
                 'username': username
             }, {
