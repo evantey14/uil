@@ -4,10 +4,13 @@
 .center {
     text-align: center;
 }
-
+h1{
+	margin: .67em 0 .67em 5px;
+}
 form > input{
 	border: 2px solid #ccc;
-	width: 930px;
+	/*width: 930px;*/
+	width:500px;
 	color: #999;
 	margin:5px;
 	display:inline-block;
@@ -23,23 +26,18 @@ form > .right{
 	float:right;
 }
 form > .half{
-	width:445px;
+	/*width:445px;*/
+	width:230px;
 }
 form > #submit{
 	margin:5px;
 	border-radius:0;
 	border: 0px;
 	background-color: rgb(100, 53, 100);
-    background: -webkit-linear-gradient(rgb(100, 53, 100), rgb(80, 33, 80));
-    /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(rgb(100, 53, 100), rgb(100, 53, 100));
-    /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(rgb(100, 53, 100), rgb(80, 33, 80));
-    /* For Firefox 3.6 to 15 */
-    background: linear-gradient(rgb(100, 53, 100), rgb(80, 33, 80));
-    /* Standard syntax */
 	color:white;
-	height:2em;
+	height:2.5em;
 	width:8em;
 	font-size:1em;
+  letter-spacing: .3em;
+  text-transform: uppercase;
 }

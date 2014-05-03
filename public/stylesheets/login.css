@@ -24,36 +24,36 @@ h1 {
     zoom: 1;
 }
 .text {
+    border: 2px solid #ccc;
+    color: #999;
+    padding:.8em;
+    text-indent:.5em;
+    height: 2em;
+    font-size: 1em;
+
     width: 240px;
     display: block;
-    border: 3px inset #DDD;
-    font-size: 15px;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.5);
     margin:5px 0 5px 0;
-    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1), 0 0 16px rgba(0, 0, 0, 0.1);
-       -moz-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1), 0 0 16px rgba(0, 0, 0, 0.1);
-            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1), 0 0 16px rgba(0, 0, 0, 0.1);
 }
 .center* {
     display: block;
 }
 button[type="submit"] {
-    margin-top: 15px;
-    font-size: 20px;
-    color: white;
-    font-style: bold;
-    width: 274px;
-    height: 40px;
-    background-color: rgb(100, 53, 100);
-    border: 1px solid black;
-    border-radius: 5px;
+/*
     background: -webkit-linear-gradient(rgb(100, 53, 100), rgb(80, 33, 80));
-    /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(rgb(100, 53, 100), rgb(100, 53, 100));
-    /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(rgb(100, 53, 100), rgb(80, 33, 80));
-    /* For Firefox 3.6 to 15 */
     background: linear-gradient(rgb(100, 53, 100), rgb(80, 33, 80));
-    /* Standard syntax */
+    */
+        margin:5px;
+    border-radius:0;
+    border: 0px;
+    background-color: rgb(100, 53, 100);
+    color:white;
+    height:2.5em;
+    width:8em;
+    font-size:1em;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+    font-size: 20px;
 }
