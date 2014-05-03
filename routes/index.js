@@ -373,6 +373,8 @@ exports.tryagain = function (db) {
                     questions.findOne({
                         '_id': questionid
                     }, function (err, question) {
+                        var choices = question.key;
+                        console.log(choices);
                         var answers = question.ans;
                         var title = "Random Question";
                         var prompt = 'Test: ' + question['test'] + '\nQuestion: ' + question['ques'];
@@ -392,7 +394,8 @@ exports.tryagain = function (db) {
                             id: question["_id"],
                             url: question["_id"],
                             session: req.session,
-                            type: "correct"
+                            type: "correct",
+                            choices: choices
                         });
                     });
                 } else if (incorrect) {

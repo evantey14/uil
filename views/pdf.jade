@@ -9,7 +9,7 @@ block content
         form(action="/pdf" enctype="multipart/form-data" method="post")
             input(type="file", name="upload")
             br
-            input(type="submit", value="upload")
+            button(type="submit", value="upload")= "SUBMIT"
     if text
         div(id="editor")= text
         form(id="jsonsubmit" action="/pdfsub" enctype="multipart/form-data" method="post")

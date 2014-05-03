@@ -1,9 +1,19 @@
-#editor{
-	height:300px;
+#editor {
+    height: 300px;
 }
-.hide{
-    display:none;
+.hide {
+    display: none;
 }
-button{
-    height:20px;
+
+button {
+    margin: 5px;
+    border-radius: 0;
+    border: 0px;
+    background-color: rgb(100, 53, 100);
+    color: white;
+    height: 2.5em;
+    width: 8em;
+    font-size: 1em;
+    text-transform: uppercase;
+    letter-spacing: .3em;
 }

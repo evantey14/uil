@@ -1,11 +1,7 @@
 extends layout
 block head
     link(rel='stylesheet', href='/stylesheets/question.css')
-    //script(type="text/javascript" src="/plugins/syntaxhighlighter_3.0.83/scripts/shCore.js")
-    //script(type="text/javascript" src="/plugins/syntaxhighlighter_3.0.83/scripts/shBrushJava.js")
     script(src="../ace-builds/src-noconflict/ace.js")
-    //link(href="/plugins/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css")
-    //link(href="/plugins/syntaxhighlighter_3.0.83/styles/shThemeEclipse.css" rel="stylesheet" type="text/css")
 block content
     div.top
         if qnum
@@ -19,7 +15,6 @@ block content
                 label.id= id
     span.leftcol
         pre.question.code(id="qq")= question
-        //div.question.code= question
         form.submit(name="checkquestion",method="post",action="/checkquestion")
             label(for='A')
                 input#A(type="radio",name="choice",value="A")

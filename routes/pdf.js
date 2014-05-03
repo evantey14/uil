@@ -19,7 +19,7 @@ var json = {
 
 
 var PDF2JSONUtil = (function () {
-    
+
     var _continue = function (callback, err) {
         if (err)
             nodeUtil.p2jwarn(err);
@@ -117,6 +117,7 @@ var PDF2JSONUtil = (function () {
 
 
 var error = .5;
+//Approximate Equals function
 var equals = function (one, two) {
     if (Math.abs(two - one) < error) {
         return true;
@@ -126,7 +127,7 @@ var equals = function (one, two) {
 };
 var parseJSON = function (res) {
     console.log("Successfully converted PDF -> JSON");
-    
+
     var testn = "";
     fs.writeFile("State08.json", JSON.stringify(json), function (err) {
         if (err) {
@@ -134,7 +135,7 @@ var parseJSON = function (res) {
         }
     });
     //console.log(JSON.stringify(json));
-    
+
     var newLines = []; //concatenated lines
     var Verts = []; // vertical lines
     var Horiz = []; // horizontal lines
@@ -142,7 +143,7 @@ var parseJSON = function (res) {
     var ybnds = []; // y bounds
     var finalrects = []; // final boxes ()
     var questions = []; //question objects
-    
+
     //find name of test
     var next = false;
     for (var z = 0; z < json.formImage.Pages[0].Texts.length; z++) {
@@ -187,7 +188,7 @@ var parseJSON = function (res) {
         }
         newLines.push(newFills);
     }
-    console.log("Finished making newLines. " + add + " lines were added");
+    //console.log("Finished making newLines. " + add + " lines were added");
 
     //separating horizontal and vertical lines
     for (var i = 0; i < newLines.length; i++) {
@@ -206,12 +207,12 @@ var parseJSON = function (res) {
         Horiz.push(curh);
         Verts.push(curv);
     }
-    
+
     //make x bounds and y bounds
     for (var pg = 0; pg < newLines.length; pg++) {
         var pgx = [];
         var pgy = [];
-        
+
         //x bounds - find smallest dist to another line, call it a "box" bound
         for (var h = 0; h < Verts[pg].length - 1; h++) {
             if (Verts[pg][h + 1].x < Verts[pg][h].x) {
@@ -220,7 +221,7 @@ var parseJSON = function (res) {
             var xdiff = Number.MAX_VALUE;
             for (var k = 0; k < Verts[pg].length; k++) { //not necessarily in order right and down
                 var x;
-                if (Verts[pg][k].x - Verts[pg][h].x < xdiff && Verts[pg][k].x - Verts[pg][h].x > 0) { 
+                if (Verts[pg][k].x - Verts[pg][h].x < xdiff && Verts[pg][k].x - Verts[pg][h].x > 0) {
                     x = {
                         xi: Verts[pg][h].x,
                         xf: Verts[pg][k].x
@@ -230,7 +231,7 @@ var parseJSON = function (res) {
             }
             pgx.push(x);
         }
-        
+
         //y bounds similarly
         for (var h = 0; h < Horiz[pg].length - 1; h++) {
             var ydiff = Number.MAX_VALUE;
@@ -301,7 +302,7 @@ var parseJSON = function (res) {
         finalrects.push(pg);
     }
 
-    
+
     //splitting boxes by Verts
     for (var i = 0; i < finalrects.length; i++) {
         var newlist = [];
@@ -344,7 +345,7 @@ var parseJSON = function (res) {
             for (var j = 0; j < json.formImage.Pages[i].Texts.length; j++) {
                 var last = json.formImage.Pages[i].Texts[0].y;
                 var obj = json.formImage.Pages[i].Texts[j];
-                if (obj.x > box.x && obj.x < box.x + box.w && obj.y + .5 > box.y && obj.y + .3 < box.y + box.h) {
+                if (obj.x > box.x && obj.x < box.x + box.w && obj.y + .5 > box.y && obj.y + .3 < box.y + box.h) { //if it's in the box or close 
                     if (obj.R[0].T || !(obj.R[0].T === "undefined")) {
                         //console.log(unescape(obj.R[0].T)); //does "undefined" === undefined
                         finalrects[i][q].text += obj.R[0].T;
@@ -377,12 +378,14 @@ var parseJSON = function (res) {
         var letter = text.charAt(text.search(regexch));
         answers[num] = letter;
     }
-
+    //changing text inside boxes into json format for database
     for (var z = 0; z < finalrects.length; z++) {
         var min = 1000;
         var secondColumn = 1000;
         var qpage = [];
         if (Verts[z][0]) {
+
+            //Finding the position of the second column to be used to find code on the side
             for (var q = 0; q < Verts[z].length; q++) {
                 if (Verts[z][q].x < min) {
                     min = Verts[z][q].x;
@@ -395,13 +398,13 @@ var parseJSON = function (res) {
                 }
 
             }
-            
+
             var next = "";
             for (var j = 0; j < finalrects[z].length; j++) {
                 if (finalrects[z][j].x >= secondColumn) {
-                    //console.log(z + " " + j + " " + finalrects[z][j].x);
                     continue;
                 }
+                // Pushing Assume boxes (Not questions) to the next question
                 if (finalrects[z][j].text.indexOf("Assume") === 0) {
                     next = finalrects[z][j].text;
                     continue;
@@ -415,6 +418,8 @@ var parseJSON = function (res) {
                     ans: [],
                     key: ""
                 };
+
+                //Going through all boxes not in the first column to find code that could match up to the questions
                 for (var ot = 0; ot < finalrects[z].length; ot++) {
                     if (equals(finalrects[z][ot].y, finalrects[z][j].y) && ot !== j) {
                         question.code += unescape(finalrects[z][ot].text + " ");
@@ -423,32 +428,39 @@ var parseJSON = function (res) {
                     }
                 }
                 var itext = unescape(finalrects[z][j].text);
-                console.log(itext);
+
+                //Finding Question number need to change if we find new lines differently
                 var qloc = itext.indexOf("Q\nUESTION");
-                console.log(qloc);
                 var qno = itext.substring(qloc + 12, qloc + 16);
-                console.log(qno);
                 question.ques = qno.substring(0, qno.indexOf(" "));
-                question.text = unescape(next) + " " + itext.substring(qloc + 14+ question.ques.length, itext.lastIndexOf("A. "));
-                question.ans.push(itext.substring(itext.lastIndexOf("A. ")+4, itext.lastIndexOf("B. ")));
-                question.ans.push(itext.substring(itext.lastIndexOf("B. ")+4, itext.lastIndexOf("C. ")));
-                question.ans.push(itext.substring(itext.lastIndexOf("C. ")+4 , itext.lastIndexOf("D. ")));
+
+                //Finding the actual question text
+                question.text = unescape(next) + " " + itext.substring(qloc + 14 + question.ques.length, itext.lastIndexOf("A. "));
+
+                //finding answers, could be problematic with solutions with "A. " etc. in them
+                question.ans.push(itext.substring(itext.lastIndexOf("A. ") + 4, itext.lastIndexOf("B. ")));
+                question.ans.push(itext.substring(itext.lastIndexOf("B. ") + 4, itext.lastIndexOf("C. ")));
+                question.ans.push(itext.substring(itext.lastIndexOf("C. ") + 4, itext.lastIndexOf("D. ")));
                 if (itext.indexOf('E') === -1)
-                    question.ans.push(itext.substring(itext.lastIndexOf("D. ")+4));
+                    question.ans.push(itext.substring(itext.lastIndexOf("D. ") + 4));
                 else {
                     question.ans.push(itext.substring(itext.lastIndexOf("D. ") + 4, itext.lastIndexOf("E. ")));
                     question.ans.push(itext.substring(itext.lastIndexOf("E. ") + 4));
 
                 }
+
+                //Removing mysterious undefined, probably from the unescape() of text that might be actual code... Computer science tests...
                 var uloc = question.code.indexOf("undefined");
-                if(uloc!==-1){
-                    question.code = question.code.substr(uloc+9);
+                if (uloc !== -1) {
+                    question.code = question.code.substr(uloc + 9);
                 }
-                for(var v = 0; v<question.ans.length; v++){
+
+                //Removing newlines from the answers
+                for (var v = 0; v < question.ans.length; v++) {
                     var temp = question.ans[v];
                     while (temp.indexOf('\n') > 0)
                         temp = temp.replace('\n', '');
-                    question.ans[v]=temp;
+                    question.ans[v] = temp;
                 }
                 question.key = answers[question.ques + '.'];
                 //console.log(JSON.stringify(question));
@@ -460,29 +472,20 @@ var parseJSON = function (res) {
         questions.push(qpage);
     }
 
+    //rendering to be editable
     output = questions;
-    //console.log(output);
-    console.log("bef");
-
     res.render('pdf', {
         title: 'Edit PDF',
         prompt: 'Edit your pdf',
         text: JSON.stringify(output)
     });
-    // var editor = ace.edit("editor");
-    // editor.setTheme("ace/theme/monokai");
-    // editor.getSession().setMode("ace/mode/javascript");*/
-//    for(var q =0; q<output.length; q++){
-//        collection.insert(output[q]);  
-//    }
 };
 
 var save = function (file, dirname, filename, callback) {
     fs.exists(path.join(dirname, filename), function (exists) {
-        if (exists){
+        if (exists) {
             callback("File already exists, rename the file");
-        }
-        else {
+        } else {
             fs.readFile(file.path, function (err, data) {
                 if (err) callback(err)
                 else {
@@ -501,26 +504,10 @@ exports.upload = function (req, res) {
         title: 'Upload A PDF',
         prompt: 'Browse for a PDF'
     });
-    /*fs.exists(path.join(dirname, filename), function(exists){
-     if (exists) callback ("File already exists, rename the file");
-     else{
-       fs.readFile(file.path, function(err, data){
-         if (err) callback(err)
-         else { 
-           fs.writeFile(path.join(dirname, filename), data, function(err){
-             if (err) callback(err);
-             else callback(err, file);
-           });
-         }
-       });
-     }
-   });*/
-    //  console.log(req.body.path);
-
 }
-exports.submit = function(req,res){
+exports.submit = function (req, res) {
+    //taking edited questions and adding to database
     var input = req.body.in;
-    console.log(input);
     input = JSON.parse(input);
     for (var r = 0; r < input.length; r++) {
         collection.insert(input[r]);
@@ -530,31 +517,32 @@ exports.submit = function(req,res){
 }
 exports.index = function (req, res) {
     console.log(req.files.upload);
+    
+    // saving to /pdf directory
     save(req.files.upload, "./pdf", req.files.upload.name, function (err) {
-        if (err){ 
+        if (err) {
             console.log(err);
             res.render('pdf', {
                 title: 'Upload A PDF',
                 prompt: err
             });
-        }
-        else {
-            console.log("clayton");
-            input = "./pdf/" + req.files.upload.name;
+        } else {
             
+            // getting from /pdf directory, then parsing to json
+            input = "./pdf/" + req.files.upload.name;
             var inputDir = path.dirname(input);
             var inputFile = path.basename(input);
-            console.log(inputDir + "" + inputFile);
             var p2j = new p2jcmd();
             p2j.inputCount = 1;
-            console.log("bef");
             p2j.p2j = new PDF2JSONUtil(inputDir, inputFile, p2j);
             //p2j.p2j.processFile(_.bind(p2j.complete, p2j));
-            console.log("aft");
+
+
             p2j.p2j.processFile(function () {
+                //parsing the json to questions
                 parseJSON(res);
             });
-
+            //Might not end...
 
         }
     });

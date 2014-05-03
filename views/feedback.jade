@@ -1,7 +1,8 @@
 extends layout
-
+block head
+    link(rel='stylesheet', href='/stylesheets/feedback.css')
 block content
-    h1= "Please input your feedback below."
+    h1= "Send us Feedback!"
     form#formAddUser(name="feedback",method="post",action="/sendfeedback")
         input#inputName(type="text", placeholder="Name",name = "name")
         br

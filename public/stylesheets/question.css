@@ -29,6 +29,9 @@
 .wrong {
     color : red;
 }
+.cor { 
+    color : green;
+}
 .qnum {
     float: left;
     height: 150px;
