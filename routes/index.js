@@ -57,30 +57,20 @@ exports.signin = function (db) {
 exports.home = function (db) {
     return function (req, res) {
         if (req.session.user) {
-            var id = req.session.id;
+            var username = req.session.user;
             var users = db.get('users');
             users.findOne({
-                "_id": id
+                'username': username
             }, function (err, found) {
                 if (err) {
                     throw err;
                 } else {
-                    var score = found.correct.length * 60 - found.incorrect.length * 20;
-                    req.session.score = score;
-                    res.render('uniquelogin', {
+                    var hash = crypto.createHash('md5').update(found.email).digest('hex');
+                    res.render('profile', {
+                        found: found,
                         cookie: cookie,
-                        loggedin: req.session.loggedin,
-                        correct: JSON.stringify(found.correct),
-                        incorrect: JSON.stringify(found.incorrect),
-                        passed: JSON.stringify(found.passed),
-                        correctlength: found.correct.length,
-                        incorrectlength: found.incorrect.length,
-                        passedlength: found.passed.length,
-                        score: found.score,
                         session: req.session,
-                        streak: found.streak,
-                        longeststreak: found.longeststreak,
-                        found: found
+                        hash: hash
                     });
                 }
             });
@@ -209,7 +199,7 @@ exports.checkquestion = function (db) {
                             array.push({
                                 id: id,
                                 time: Date.now(),
-                                choice:[choice]
+                                choice: [choice]
                             });
                             users.update({
                                 '_id': req.session.id
@@ -296,16 +286,14 @@ exports.viewquestion = function (db) {
                 var correct = found.correct;
                 var incorrect = found.incorrect
                 var passed = found.passed;
-                if(JSON.stringify(correct).indexOf(id)>-1){
-                    res.redirect('/tryagain/'+ id);
+                if (JSON.stringify(correct).indexOf(id) > -1) {
+                    res.redirect('/tryagain/' + id);
+                } else if (JSON.stringify(incorrect).indexOf(id) > -1) {
+                    res.redirect('/tryagain/' + id);
+                } else if (JSON.stringify(passed).indexOf(id) > -1) {
+                    res.redirect('/tryagain/' + id);
                 }
-                else if(JSON.stringify(incorrect).indexOf(id)>-1){
-                    res.redirect('/tryagain/'+ id);
-                }
-                else if (JSON.stringify(passed).indexOf(id)>-1){
-                    res.redirect('/tryagain/'+ id);
-                }
-                if(JSON.stringify(questions).indexOf(id)>-1){
+                if (JSON.stringify(questions).indexOf(id) > -1) {
                     collection.findOne({
                         '_id': id
                     }, function (err, question) {
@@ -318,8 +306,7 @@ exports.viewquestion = function (db) {
                                 prompt: 'We are having issues with the database. Sorry! \nPlease notify the creators and try again later.',
                                 session: req.session
                             });
-                        }
-                        else {
+                        } else {
                             var title = 'Random Question';
                             var prompt = 'Test: ' + question['test'] + '\nQuestion: ' + question['ques'];
                             var answers = question['ans'];
@@ -353,37 +340,39 @@ exports.tryagain = function (db) {
         var questionid = req.url.substring(10);
         var users = db.get('users');
         var questions = db.get('questions');
-        users.findOne({'_id':req.session.id}, function(err,found){
-            if(err){
+        users.findOne({
+            '_id': req.session.id
+        }, function (err, found) {
+            if (err) {
                 throw err;
-            }
-            else{
+            } else {
                 var index = 0;
                 var incorrect = false;
-                found.incorrect.forEach(function(obj,ind){
-                    if(obj.id===questionid){
+                found.incorrect.forEach(function (obj, ind) {
+                    if (obj.id === questionid) {
                         incorrect = true;
                         index = ind;
                     }
                 });
                 var correct = false;
-                found.correct.forEach(function(obj, ind){
-                    if(obj.id===questionid){
+                found.correct.forEach(function (obj, ind) {
+                    if (obj.id === questionid) {
                         correct = true;
                         index = ind;
                     }
                 });
                 var passed = false;
-                found.passed.forEach(function(obj,ind){
-                    if(obj.id===questionid){
+                found.passed.forEach(function (obj, ind) {
+                    if (obj.id === questionid) {
                         passed = true;
                         index = ind;
                     }
                 });
-                if(correct){
+                if (correct) {
                     var questions = db.get('questions');
-                    questions.findOne({'_id':questionid}, function(err, question)
-                    {
+                    questions.findOne({
+                        '_id': questionid
+                    }, function (err, question) {
                         var answers = question.ans;
                         var title = "Random Question";
                         var prompt = 'Test: ' + question['test'] + '\nQuestion: ' + question['ques'];
@@ -403,14 +392,14 @@ exports.tryagain = function (db) {
                             id: question["_id"],
                             url: question["_id"],
                             session: req.session,
-                            type:"correct"
+                            type: "correct"
                         });
                     });
-                }
-                else if(incorrect){
+                } else if (incorrect) {
                     var questions = db.get('questions');
-                    questions.findOne({'_id':questionid}, function(err, question)
-                    {
+                    questions.findOne({
+                        '_id': questionid
+                    }, function (err, question) {
                         var choices = found.incorrect[index].choice;
                         console.log(choices);
                         var answers = question.ans;
@@ -432,15 +421,15 @@ exports.tryagain = function (db) {
                             id: question["_id"],
                             url: question["_id"],
                             session: req.session,
-                            type:"incorrect",
+                            type: "incorrect",
                             choices: choices
                         });
                     });
-                }
-                else if (passed){
+                } else if (passed) {
                     var questions = db.get('questions');
-                    questions.findOne({'_id':questionid}, function(err, question)
-                    {
+                    questions.findOne({
+                        '_id': questionid
+                    }, function (err, question) {
                         console.log(index);
                         var answers = question.ans;
                         var title = "Random Question";
@@ -461,7 +450,7 @@ exports.tryagain = function (db) {
                             id: question["_id"],
                             url: question["_id"],
                             session: req.session,
-                            type:"passed"
+                            type: "passed"
                         });
                     });
                 }
@@ -471,18 +460,40 @@ exports.tryagain = function (db) {
     }
 };
 
-exports.tryagaincheck = function(db) {
-    return function (req,res){
+exports.tryagaincheck = function (db) {
+    return function (req, res) {
         res.send("Haven't yet worked on this part yet");
     }
 }
 
 exports.index = function (req, res) {
-    res.render('index', {
-        cookie: cookie,
-        title: 'LASA UIL Training',
-        session: req.session
-    });
+    return function (req, res) {
+        if (req.session.user) {
+            var username = req.session.user;
+            var users = db.get('users');
+            users.findOne({
+                'username': username
+            }, function (err, found) {
+                if (err) {
+                    throw err;
+                } else {
+                    var hash = crypto.createHash('md5').update(found.email).digest('hex');
+                    res.render('profile', {
+                        found: found,
+                        cookie: cookie,
+                        session: req.session,
+                        hash: hash
+                    });
+                }
+            });
+        } else {
+            res.render('index', {
+                cookie: cookie,
+                title: 'LASA UIL Training',
+                session: req.session
+            });
+        }
+    };
 };
 
 exports.getquestion = function (db) {
@@ -500,10 +511,16 @@ exports.getquestion = function (db) {
                 res.send("You answered all of the questions...all bajillion of them...go read a book or something...or answer some of the questions you missed or passed!");
             } else {
                 var arrayofquestions = found.questions;
-                
+
                 var temporary = arrayofquestions.shift();
                 arrayofquestions.push(temporary);
-                users.update({'_id': req.session.id}, {$set: {'questions': arrayofquestions}});
+                users.update({
+                    '_id': req.session.id
+                }, {
+                    $set: {
+                        'questions': arrayofquestions
+                    }
+                });
                 var id = found['questions'][0];
                 res.redirect('/random/' + id);
             }
@@ -632,7 +649,7 @@ exports.user = function (db) {
                     found: found,
                     cookie: cookie,
                     session: req.session,
-                    hash:hash
+                    hash: hash
                 });
             }
         });
