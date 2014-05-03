@@ -53,7 +53,8 @@ app.all('/signin', routes.signin(db));
 app.all('/home', routes.home(db));
 app.all('/getquestion', routes.getquestion(db));
 app.all('/checkquestion', routes.checkquestion(db));
-
+app.get('/settings', routes.settings(db));
+app.post('/settings', routes.settheme(db));
 app.all('/random', routes.getquestion(db));
 app.all('/random/:id', routes.viewquestion(db));
 

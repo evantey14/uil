@@ -2,6 +2,60 @@ extends layout
 block head
     link(rel='stylesheet', href='/stylesheets/settings.css')
 block content
-    div.title= "Settings"
-    div.details= prompt
-        //div.test= "Test " + test
+    div.title= "Question Theme"
+    form.submit(name="newqth",method="post",action="/settings")
+            label#left(for='A')
+                input#A(type="radio",name="choice",value="terminal")
+                |terminal
+            label#left(for='B')
+                input#B(type="radio",name="choice",value="textMate")
+                |textMate
+            label#left(for='C')
+                input#C(type="radio",name="choice",value="twilight")
+                |twilight
+            label#left(for='D')
+                input#D(type="radio",name="choice",value="monokai")
+                |monokai
+            label#right(for='E')
+                input#E(type="radio",name="choice",value="eclipse")
+                |eclipse
+            label#right(for='F')
+                input#F(type="radio",name="choice",value="textMate")
+                |textMate
+            label#right(for='G')
+                input#G(type="radio",name="choice",value="xcode")
+                |xcode
+            label#right(for='H')
+                input#H(type="radio",name="choice",value="chrome")
+                |chrome
+    br
+    div.title= "Code Theme"
+    form.submit(name="newcth",method="post",action="/settings")
+            label#left(for='A')
+                input#A(type="radio",name="cchoice",value="terminal")
+                |terminal
+            label#left(for='B')
+                input#B(type="radio",name="cchoice",value="textMate")
+                |textMate
+            label#left(for='C')
+                input#C(type="radio",name="cchoice",value="twilight")
+                |twilight
+            label#left(for='D')
+                input#D(type="radio",name="cchoice",value="monokai")
+                |monokai
+            label#right(for='E')
+                input#E(type="radio",name="cchoice",value="eclipse")
+                |eclipse
+            label#right(for='F')
+                input#F(type="radio",name="choice",value="textMate")
+                |textMate
+            label#right(for='G')
+                input#G(type="radio",name="choice",value="xcode")
+                |xcode
+            label#right(for='H')
+                input#H(type="radio",name="choice",value="chrome")
+                |chrome
+            br
+            button.next(type="submit") submit
+    if(prompt)
+         div.title= prompt

@@ -2,8 +2,46 @@ var passwordHash = require('password-hash');
 var cookie = false;
 var crypto = require('crypto'); //To generate a hash for gravatar
 var nodemailer = require('nodemailer');
-var teacher = "jacobstephens"
+var teacher = "jacobstephens";
 
+exports.settings = function (db) {
+    return function (req, res) {
+        res.render('settings', {
+            session: req.session,
+            cookie: cookie
+        });
+    }
+};
+exports.settheme = function (db) {
+    return function (req, res) {
+        var users = db.get('users');
+        var username = req.session.user;
+        console.log(req.body.qchoice);
+        if (req.body.qchoice) {
+            users.update({
+                'username': username
+            }, {
+                $set: {
+                    qtheme: req.body.qchoice
+                }
+            });
+        } else if (req.body.cchoice) {
+            users.update({
+                'username': username
+            }, {
+                $set: {
+                    ctheme: req.body.cchoice
+                }
+            });
+        }
+        res.render('settings', {
+            prompt: "updated",
+            session: req.session,
+            cookie: cookie
+        });
+
+    }
+};
 exports.signin = function (db) {
     return function (req, res) {
         if (req.body.username != null) {
@@ -325,7 +363,9 @@ exports.viewquestion = function (db) {
                                 E: answers[4],
                                 id: question["_id"],
                                 url: question["_id"],
-                                session: req.session
+                                session: req.session,
+                                themeq: found.qtheme,
+                                themec: found.ctheme
                             });
                         }
                     });

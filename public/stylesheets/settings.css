@@ -1,0 +1,34 @@
+.submit > label {
+    display: block;
+    width: 300px;
+    font-size: 15px;
+    border-width: 0;
+    border-top: 1px;
+    border-style: solid;
+    border-color: #EEEEEE;
+    background-color: #EEEEEE;
+    padding: 2px;
+    margin-top: 0px;
+    height:1em;
+}
+.submit > label:hover {
+    background-color: lightgrey;
+}
+.title {
+    display: block;
+    font-size: 40px;
+    color: rgb(53, 53, 53);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+button {
+    margin: 5px;
+    border-radius: 0;
+    border: 0px;
+    background-color: rgb(100, 53, 100);
+    color: white;
+    height: 2.5em;
+    width: 8em;
+    font-size: 1em;
+    text-transform: uppercase;
+    letter-spacing: .3em;
+}

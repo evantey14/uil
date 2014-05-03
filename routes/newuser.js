@@ -31,7 +31,8 @@ exports.adduser = function (db) {
         var firstName = req.body.firstname;
         var lastName = req.body.lastname;
         var password = passwordHash.generate(firstPassword);
-
+        var questiontheme = 'eclipse';
+        var codetheme = 'twilight';
         var ids = [];
         var collections = db.get('questions')
         collections.find({}, function (err, found) {
@@ -104,7 +105,9 @@ exports.adduser = function (db) {
                                 "passed": [],
                                 "score": 0,
                                 "streak": 0,
-                                "longeststreak":0
+                                "longeststreak":0,
+                                "qtheme":questiontheme,
+                                "ctheme":codetheme
                             }, function (err, doc) {
                                 if (err) {
                                     throw err;
