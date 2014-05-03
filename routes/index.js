@@ -437,7 +437,9 @@ exports.tryagain = function (db) {
                             url: question["_id"],
                             session: req.session,
                             type: "correct",
-                            choices: choices
+                            choices: choices,
+                            themeq:found.qtheme,
+                            themec:found.ctheme
                         });
                     });
                 } else if (incorrect) {
@@ -467,7 +469,9 @@ exports.tryagain = function (db) {
                             url: question["_id"],
                             session: req.session,
                             type: "incorrect",
-                            choices: choices
+                            choices: choices,
+                            themeq:found.qtheme,
+                            themec:found.ctheme
                         });
                     });
                 } else if (passed) {
@@ -495,7 +499,9 @@ exports.tryagain = function (db) {
                             id: question["_id"],
                             url: question["_id"],
                             session: req.session,
-                            type: "passed"
+                            type: "passed",
+                            themeq:found.qtheme,
+                            themec:found.ctheme
                         });
                     });
                 }
