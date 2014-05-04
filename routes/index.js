@@ -26,6 +26,11 @@ exports.settheme = function (db) {
                     qtheme: req.body.qchoice
                 }
             });
+            res.render('settings', {
+                prompt: "updated",
+                session: req.session,
+                cookie: cookie
+            });
         }
         if (req.body.cchoice) {
             users.update({
@@ -35,12 +40,63 @@ exports.settheme = function (db) {
                     ctheme: req.body.cchoice
                 }
             });
+            res.render('settings', {
+                prompt: "updated",
+                session: req.session,
+                cookie: cookie
+            });
         }
-        res.render('settings', {
-            prompt: "updated",
-            session: req.session,
-            cookie: cookie
-        });
+        if (req.body.pass) {
+            var newpass = passwordHash.generate(req.body.newpass);
+            if (req.body.newpassc !== req.body.newpass) {
+                res.render('settings', {
+                    cookie: cookie,
+                    session: req.session,
+                    prompt: "New Passwords Don't Match"
+                });
+            } else {
+
+                users.findOne({
+                    "username": username
+                }, function (err, found) {
+                    if (err) {
+                        throw err.$animate
+                    }
+                    if (!found) {
+                        res.render('settings', {
+                            cookie: cookie,
+                            prompt: 'Error',
+                            session: req.session
+                        });
+                    } else {
+                        var hashed = found['password'];
+                        if (passwordHash.verify(req.body.pass, hashed)) {
+                            console.log("true");
+                            users.update({
+                                'username': username
+                            }, {
+                                $set: {
+                                    password: newpass
+                                }
+                            });
+                            res.render('settings', {
+                                prompt: "updated",
+                                session: req.session,
+                                cookie: cookie
+                            });
+                        } else {
+                            console.log("false");
+                            res.render('settings', {
+                                prompt: "Incorrect Password",
+                                cookie: cookie,
+                                session: req.session
+                            });
+                        }
+                    }
+                });
+            }
+        }
+
 
     }
 };
@@ -438,8 +494,8 @@ exports.tryagain = function (db) {
                             session: req.session,
                             type: "correct",
                             choices: choices,
-                            themeq:found.qtheme,
-                            themec:found.ctheme
+                            themeq: found.qtheme,
+                            themec: found.ctheme
                         });
                     });
                 } else if (incorrect) {
@@ -470,8 +526,8 @@ exports.tryagain = function (db) {
                             session: req.session,
                             type: "incorrect",
                             choices: choices,
-                            themeq:found.qtheme,
-                            themec:found.ctheme
+                            themeq: found.qtheme,
+                            themec: found.ctheme
                         });
                     });
                 } else if (passed) {
@@ -500,8 +556,8 @@ exports.tryagain = function (db) {
                             url: question["_id"],
                             session: req.session,
                             type: "passed",
-                            themeq:found.qtheme,
-                            themec:found.ctheme
+                            themeq: found.qtheme,
+                            themec: found.ctheme
                         });
                     });
                 }
