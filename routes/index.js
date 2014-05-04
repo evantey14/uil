@@ -765,8 +765,7 @@ exports.user = function (db) {
 
 exports.listofcorrects = function (db) {
     return function (req, res) {
-        var username = req.url.substring(1, 5);
-        console.log(username);
+        var username = req.url.substring(req.url.indexOf('/')+1,req.url.lastIndexOf('/'));
         var users = db.get('users');
         users.findOne({
             'username': username
@@ -787,8 +786,7 @@ exports.listofcorrects = function (db) {
 
 exports.listofincorrects = function (db) {
     return function (req, res) {
-        var username = req.url.substring(1, 5);
-        console.log(username);
+        var username = req.url.substring(req.url.indexOf('/')+1,req.url.lastIndexOf('/'));
         var users = db.get('users');
         users.findOne({
             'username': username
@@ -809,8 +807,7 @@ exports.listofincorrects = function (db) {
 
 exports.listofpassed = function (db) {
     return function (req, res) {
-        var username = req.url.substring(1, 5);
-        console.log(username);
+        var username = req.url.substring(req.url.indexOf('/')+1,req.url.lastIndexOf('/'));
         var users = db.get('users');
         users.findOne({
             'username': username
