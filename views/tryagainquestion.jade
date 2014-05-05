@@ -90,6 +90,7 @@ block content
                         input#E(type="radio",name="choice",value="E")
                         |#{E}
                 input(type="hidden",name = "id", value= id)
+                input(type= "hidden",name = "typer",value= type)
                 br
                 button.next(type="submit") submit
         else
@@ -110,6 +111,7 @@ block content
                     input#E(type="radio",name="choice",value="E")
                     |#{E}
                 input(type="hidden",name = "id", value= id)
+                input(type="hidden",name = "typer",value = type)
                 br
                 button.next(type="submit") submit
     span.rightcol
