@@ -679,14 +679,11 @@ exports.tryagaincheck = function (db) {
                                 }
                             })
                             var thing = incorrectarray[index];
+                            console.log(thing);
                             incorrectarray.splice(index,1);
                             if(userselection===answer){
                                 correctedarray = user.corrected;
-                                correctedarray.push({
-                                    id:qid,
-                                    time: Date.now(),
-                                    choice: [userselection]
-                                });
+                                correctedarray.push(thing);
                                 var score = user.score;
                                 score+=20;
                                 users.update({
