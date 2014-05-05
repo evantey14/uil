@@ -569,7 +569,96 @@ exports.tryagain = function (db) {
 
 exports.tryagaincheck = function (db) {
     return function (req, res) {
-        res.send("Haven't yet worked on this part yet");
+        var qid = req.body.id;
+        var questions = db.get('questions');
+        var users = db.get('users');
+        questions.findOne({'_id':qid}, function(err, found){
+            if(err){
+                throw err;
+            }
+            else{
+                var answer = found.key;
+                var userselection = req.body.choice;
+                var type = req.body.typer;
+                if(!userselection){
+                    res.render('tryagaincheck', {title:"PASSED"});
+                }
+                else if(type === 'correct'){
+                    if(userselection===answer){
+                        res.render('tryagaincheck',{title:"Correct"});
+                    }
+                    else{
+                        res.render('tryagaincheck',{title:"Incorrect"});
+                    }
+                }
+                else if(type === 'passed'){
+                    users.findOne({'_id':req.session.id},function(err,user){
+                        if(err){
+                            throw err;
+                        }
+                        else{
+                            if(userselection===answer){
+                                var passedarray = user.passed;
+                                var score = user.score;
+                                score+=60;
+                                var index = -1;
+                                passedarray.forEach(function(obj,ind){
+                                    if(obj.id===qid){
+                                        index = ind;
+                                    }
+                                });
+                                passedarray.splice(index,1);
+                                var correctarray = user.correct;
+                                correctarray.push({
+                                    id:qid,
+                                    time: Date.now(),
+                                    choice: [userselection]
+                                });
+                                users.update({
+                                    '_id': req.session.id
+                                }, {
+                                    $set: {
+                                        'passed': passedarray,
+                                        'correct':correctarray,
+                                        'score':score
+                                    }
+                                });
+                                res.render('tryagaincheck', {title:"CORRECT"});
+                            }
+                            else{
+                                var score = user.score;
+                                score-=20;
+                                console.log("score is: "+score);
+                                var passedarray = user.passed;
+                                var index = -1;
+                                passedarray.forEach(function(obj,ind){
+                                    if(obj.id===qid){
+                                        index = ind;
+                                    }
+                                });
+                                passedarray.splice(index,1);
+                                var incorrectarray = user.incorrect;
+                                incorrectarray.push({
+                                    id:qid,
+                                    time:Date.now(),
+                                    choice: [userselection]
+                                });
+                                users.update({
+                                    '_id': req.session.id
+                                }, {
+                                    $set: {
+                                        'passed': passedarray,
+                                        'incorrect':incorrectarray,
+                                        'score':score
+                                    }
+                                });
+                                res.render('tryagaincheck',{title:"INCORRECT"});
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 }
 
