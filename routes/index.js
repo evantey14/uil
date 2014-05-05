@@ -628,7 +628,7 @@ exports.tryagaincheck = function (db) {
                             else{
                                 var score = user.score;
                                 score-=20;
-                                console.log("score is: "+score);
+                                //console.log("score is: "+score);
                                 var passedarray = user.passed;
                                 var index = -1;
                                 passedarray.forEach(function(obj,ind){
@@ -653,6 +653,53 @@ exports.tryagaincheck = function (db) {
                                     }
                                 });
                                 res.render('tryagaincheck',{title:"INCORRECT"});
+                            }
+                        }
+                    });
+                }
+                //incorrectly answered questions
+                else{
+                    users.findOne({'_id':req.session.id}, function(err,user){
+                        if(err){
+                            throw err;
+                        }
+                        else{
+                            var incorrectarray = user.incorrect;
+                            var index = -1;
+                            incorrectarray.forEach(function(obj,ind){
+                                if(obj.id===qid){
+                                    index = ind;
+                                }
+                            })
+                            var thing = incorrectarray[index];
+                            incorrectarray.splice(index,1);
+                            if(userselection===answer){
+                                correctedarray = user.corrected;
+                                correctedarray.push({
+                                    id:qid,
+                                    time: Date.now(),
+                                    choice: [userselection]
+                                });
+                                var score = user.score;
+                                score+=20;
+                                users.update({
+                                    '_id': req.session.id
+                                }, {
+                                    $set: {
+                                        'incorrect': incorrectarray,
+                                        'corrected':correctedarray,
+                                        'score':score
+                                    }
+                                });
+                                res.render('tryagaincheck', {title:'CORRECT'});
+                            }
+                            //question was answered incorrectly again
+                            else{
+                                thing.choice.push(userselection);
+                                incorrectarray.push(thing);
+                                console.log(incorrectarray);
+                                users.update({'_id':req.session.id},{$set:{'incorrect':incorrectarray}});
+                                res.render('tryagaincheck',{title:'INCORRECT'});
                             }
                         }
                     });
