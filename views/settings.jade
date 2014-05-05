@@ -1,65 +1,43 @@
 extends layout
 block head
     link(rel='stylesheet', href='/stylesheets/settings.css')
+    script(src="../ace-builds/src-noconflict/ace.js")
 block content
     if(prompt)
          div.title= prompt
-    div.title= "Question Theme"
-    form.submit(name="newqth",method="post",action="/settings")
-            label(for='A')
-                input#A(type="radio",name="qchoice",value="terminal")
-                |terminal
-            label(for='B')
-                input#B(type="radio",name="qchoice",value="textMate")
-                |textMate
-            label(for='C')
-                input#C(type="radio",name="qchoice",value="twilight")
-                |twilight
-            label(for='D')
-                input#D(type="radio",name="qchoice",value="monokai")
-                |monokai
-            label(for='E')
-                input#E(type="radio",name="qchoice",value="eclipse")
-                |eclipse
-            label(for='F')
-                input#F(type="radio",name="qchoice",value="textMate")
-                |textMate
-            label(for='G')
-                input#G(type="radio",name="qchoice",value="xcode")
-                |xcode
-            label(for='H')
-                input#H(type="radio",name="qchoice",value="chrome")
-                |chrome
-            br
-            button.next(type="submit") submit
-    div.title= "Code Theme"
-    form.submit(name="newcth",method="post",action="/settings")
-            label(for='At')
-                input#At(type="radio",name="cchoice",value="terminal")
-                |terminal
-            label(for='Bt')
-                input#Bt(type="radio",name="cchoice",value="textMate")
-                |textMate
-            label(for='Ct')
-                input#Ct(type="radio",name="cchoice",value="twilight")
-                |twilight
-            label(for='Dt')
-                input#Dt(type="radio",name="cchoice",value="monokai")
-                |monokai
-            label(for='Et')
-                input#Et(type="radio",name="cchoice",value="eclipse")
-                |eclipse
-            label(for='Ft')
-                input#Ft(type="radio",name="cchoice",value="textMate")
-                |textMate
-            label(for='Gt')
-                input#Gt(type="radio",name="cchoice",value="xcode")
-                |xcode
-            label(for='Ht')
-                input#Ht(type="radio",name="cchoice",value="chrome")
-                |chrome
-            br
-            button.next(type="submit") submit
+    div.title= "Theme"
+    form.submit(method='post', action='/settings')
+        div
+            |Question
+            select#qthm(name='qchoice')
+                option(value="Select Theme") Select Theme
+                option(value='terminal') Terminal
+                option(value='textMate') textMate
+                option(value='twilight') twilight
+                option(value='eclipse') eclipse
+                option(value='terminal') monokai
+                option(value='textMate') xcode
+                option(value='twilight') chrome
+        div(id="sample")
+            |int main(){
+            |    int x = 10;
+            |}
+        div
+            |Code
+            select#cthm(name='cchoice')
+                option(value="Select Theme") Select Theme
+                option(value='terminal') Terminal
+                option(value='textMate') textMate
+                option(value='twilight') twilight
+                option(value='eclipse') eclipse
+                option(value='terminal') monokai
+                option(value='textMate') xcode
+                option(value='twilight') chrome
+        div(id="samplecode") 
+            |int main(){
+            |    int x = 10;
+            |}
+        button.next(type="submit") submit
     div.title= "Change Password"
     form.submit(name="newpass",method="post",action="/settings")
             input#oldpass.text(type="password", placeholder="Old Password", name="pass")
@@ -69,3 +47,34 @@ block content
             input#newpassc.text(type="password", placeholder="Confirm New Password", name="newpassc")
             br
             button.next(type="submit") submit
+block footer
+    script.
+        var editor = ace.edit("sample");
+        editor.setTheme("ace/theme/eclipse");
+        editor.getSession().setMode("ace/mode/java");
+        editor.getSession().setUseWorker(false);
+        editor.setFontSize("15px");
+        editor.renderer.setShowGutter(false);
+        editor.setOptions({
+            maxLines: Infinity
+        });
+        var code = ace.edit("samplecode");
+        code.setTheme("ace/theme/eclipse");
+        code.getSession().setMode("ace/mode/java");
+        code.getSession().setUseWorker(false);
+        code.setFontSize("15px");
+        code.renderer.setShowGutter(false);
+        code.setOptions({
+            maxLines: Infinity
+        });
+        $(document).ready(function(){
+            $('#qthm').change(function(){
+                console.log("yes");
+                editor.setTheme("ace/theme/" + $('#qthm').val());
+            });
+            $('#cthm').change(function(){
+                console.log("yes2");
+                code.setTheme("ace/theme/" + $('#qthm').val());
+            });
+        });
+        

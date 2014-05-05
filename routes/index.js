@@ -18,7 +18,7 @@ exports.settheme = function (db) {
         var username = req.session.user;
         console.log(req.body.qchoice);
         console.log(req.body.cchoice);
-        if (req.body.qchoice) {
+        if (req.body.qchoice !== "Select Theme" && req.body.qchoice) {
             users.update({
                 'username': username
             }, {
@@ -32,7 +32,7 @@ exports.settheme = function (db) {
                 cookie: cookie
             });
         }
-        if (req.body.cchoice) {
+        if (req.body.cchoice !== "Select Theme" && req.body.cchoice) {
             users.update({
                 'username': username
             }, {
@@ -96,13 +96,20 @@ exports.settheme = function (db) {
                 });
             }
         }
-
+        if ((req.body.qchoice === "Select Theme") || (req.body.cchoice === "Select Theme")) {
+            res.render('settings', {
+                prompt: "Select a Theme",
+                cookie: cookie,
+                session: req.session
+            });
+        }
+        
 
     }
 };
 exports.signin = function (db) {
     return function (req, res) {
-        if (req.body.username != null) {
+        if (req.body.username !== null) {
             var username = req.body.username;
             var password = req.body.password;
             var collection = db.get("users");
@@ -765,7 +772,7 @@ exports.user = function (db) {
 
 exports.listofcorrects = function (db) {
     return function (req, res) {
-        var username = req.url.substring(req.url.indexOf('/')+1,req.url.lastIndexOf('/'));
+        var username = req.url.substring(req.url.indexOf('/') + 1, req.url.lastIndexOf('/'));
         var users = db.get('users');
         users.findOne({
             'username': username
@@ -786,7 +793,7 @@ exports.listofcorrects = function (db) {
 
 exports.listofincorrects = function (db) {
     return function (req, res) {
-        var username = req.url.substring(req.url.indexOf('/')+1,req.url.lastIndexOf('/'));
+        var username = req.url.substring(req.url.indexOf('/') + 1, req.url.lastIndexOf('/'));
         var users = db.get('users');
         users.findOne({
             'username': username
@@ -807,7 +814,7 @@ exports.listofincorrects = function (db) {
 
 exports.listofpassed = function (db) {
     return function (req, res) {
-        var username = req.url.substring(req.url.indexOf('/')+1,req.url.lastIndexOf('/'));
+        var username = req.url.substring(req.url.indexOf('/') + 1, req.url.lastIndexOf('/'));
         var users = db.get('users');
         users.findOne({
             'username': username
