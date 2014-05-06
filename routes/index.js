@@ -414,6 +414,7 @@ exports.viewquestion = function (db) {
                             var prompt = 'Test: ' + question['test'] + '\nQuestion: ' + question['ques'];
                             var answers = question['ans'];
                             res.render('renderquestion', {
+                                key: question['key'],
                                 cookie: cookie,
                                 title: title,
                                 prompt: prompt,
@@ -430,7 +431,7 @@ exports.viewquestion = function (db) {
                                 url: question["_id"],
                                 session: req.session,
                                 themeq: found.qtheme,
-                                themec: found.ctheme
+                                themec: found.ctheme,
                             });
                         }
                     });
