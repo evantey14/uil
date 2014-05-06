@@ -52,6 +52,7 @@ block footer
                 $('#CL').css('background-color','#EEEEEE');
                 $('#DL').css('background-color','#EEEEEE');
                 $('#EL').css('background-color','#EEEEEE');
+                var first = $("input[name=choice]:checked").val();
                 if(key===$("input[name=choice]:checked").val())
                     $('#'+$("input[name=choice]:checked").val()+'L').css('background-color','green');
                 else

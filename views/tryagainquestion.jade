@@ -22,98 +22,40 @@ block content
     span.leftcol
         pre.question.code(id="qq")= question
         //div.question.code= question
+        
+        
+        
         if(choices)
-            form.submit(name="tryagaincheck",method="post",action="/tryagaincheck")
-                if(choices.indexOf('A')>-1)
-                    if(type==='correct')
-                        label.cor(for='A')
-                            input.cor(type="radio",name="choice",value="A")
-                            |#{A}
+            form.submit(name='tryagaincheck',method="post",action='/tryagaincheck')
+                for letter in [[A,'A'],[B,'B'],[C,'C'],[D,'D'],[E,'E']]
+                    if(choices.indexOf(letter[1])>-1)
+                        if(type==='correct')
+                            label.cor(for=letter[1])
+                                input.cor(id=letter[1],type="radio",name="choice",value=letter[1])
+                                |#{letter[0]}
+                        else
+                            label.wrong(for=letter[1])
+                                input.wrong(id=letter[1],type="radio",name="choice",value=letter[1])
+                                |#{letter[0]}
                     else
-                        label.wrong(for='A')
-                            input.wrong(type="radio",name="choice",value="A")
-                            |#{A}
-                else
-                    label(for='A')
-                        input(type="radio",name="choice",value="A")
-                        |#{A}
-                if(choices.indexOf('B')>-1)
-                    if(type==='correct')
-                        label.cor(for='B')
-                            input.cor(type="radio",name="choice",value="B")
-                            |#{B}
-                    else
-                        label.wrong(for='B')
-                            input.wrong(type="radio",name="choice",value="B")
-                            |#{B}
-                else
-                    label(for='B')
-                        input#B(type="radio",name="choice",value="B")
-                        |#{B}
-                if(choices.indexOf('C')>-1)
-                    if(type==='correct')
-                        label.cor(for='C')
-                            input.cor(type="radio",name="choice",value="C")
-                            |#{C}
-                    else
-                        label.wrong(for='C')
-                            input.wrong(type="radio",name="choice",value="C")
-                            |#{C}
-                else
-                    label(for='C')
-                        input#C(type="radio",name="choice",value="C")
-                        |#{C}
-                if(choices.indexOf('D')>-1)
-                    if(type==='correct')
-                        label.cor(for='D')
-                            input.cor(type="radio",name="choice",value="D")
-                            |#{D}
-                    else
-                        label.wrong(for='D')
-                            input.wrong(type="radio",name="choice",value="D")
-                            |#{D}
-                else
-                    label(for='D')
-                        input#D(type="radio",name="choice",value="D")
-                        |#{D}
-                if(choices.indexOf('E')>-1)
-                    if(type==='correct')
-                        label.cor(for='E')
-                            input.cor(type="radio",name="choice",value="E")
-                            |#{E}
-                    else
-                        label.wrong(for='E')
-                            input.wrong(type="radio",name="choice",value="E")
-                            |#{E}
-                else
-                    label(for='E')
-                        input#E(type="radio",name="choice",value="E")
-                        |#{E}
-                input(type="hidden",name = "id", value= id)
-                input(type= "hidden",name = "typer",value= type)
-                br
-                button.next(type="submit") submit
-        else
-            form.submit(name="tryagaincheck",method="post",action="/tryagaincheck")
-                label(for='A')
-                    input#A(type="radio",name="choice",value="A")
-                    |#{A}
-                label(for='B')
-                    input#B(type="radio",name="choice",value="B")
-                    |#{B}
-                label(for='C')
-                    input#C(type="radio",name="choice",value="C")
-                    |#{C}
-                label(for='D')
-                    input#D(type="radio",name="choice",value="D")
-                    |#{D}
-                label(for='E')
-                    input#E(type="radio",name="choice",value="E")
-                    |#{E}
+                        label(for=letter[1])
+                            input(id=letter[1],type='radio',name='choice',value=letter[1])
+                            |#{letter[0]}
                 input(type="hidden",name = "id", value= id)
                 input(type="hidden",name = "typer",value = type)
                 br
                 button.next(type="submit") submit
+        else
+            form.submit(name="tryagaincheck",method="post",action="/tryagaincheck")
+                for letter in [[A,'A'],[B,'B'],[C,'C'],[D,'D'],[E,'E']]
+                    label(for=letter[1])
+                        input(id=letter[1],type='radio',name='choice',value=letter[1])
+                        |#{letter[0]}
+                input(type="hidden",name = "id", value= id)
+                input(type="hidden",name = "typer",value = type)
+                br
+                button.next(type="submit") submit
+        
     span.rightcol
         if side
             pre.question.side(id="cc")= side
