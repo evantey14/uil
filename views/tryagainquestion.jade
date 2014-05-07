@@ -44,7 +44,8 @@ block content
                 input(type="hidden",name = "id", value= id)
                 input(type="hidden",name = "typer",value = type)
                 br
-                button.next(type="submit") submit
+                button.next home
+            button#sub submit
         else
             form.submit(name="tryagaincheck",method="post",action="/tryagaincheck")
                 for letter in [[A,'A'],[B,'B'],[C,'C'],[D,'D'],[E,'E']]
@@ -54,7 +55,8 @@ block content
                 input(type="hidden",name = "id", value= id)
                 input(type="hidden",name = "typer",value = type)
                 br
-                button.next(type="submit") submit
+                button.next home
+            button#sub submit
         
     span.rightcol
         if side
@@ -63,5 +65,21 @@ block footer
     script.                                                 
         var themeq ="#{themeq}";
         var themec ="#{themec}";
+        var key ="#{key}";
     script(src="/scripts/questiondisp.js")
     script(src="/scripts/keys.js")
+    script.  
+        $(document).ready(function(){
+            $('#sub').click(function(){
+                var first = $("input[name=choice]:checked").val();
+                if(key===first)
+                    $('label[for=' + first + ']').css('background-color','green');
+                else
+                    $('label[for=' + first + ']').css('background-color','red');
+                $('#sub').remove();
+                $('label').click(false);
+                $('.next').css('display','initial');
+                $('.next').attr('id','sub');
+                
+            });
+        });

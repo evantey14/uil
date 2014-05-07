@@ -16,24 +16,25 @@ block content
     span.leftcol
         pre.question.code(id="qq")= question
         form.submit(name="checkquestion",method="post",action="/checkquestion")
-            label#AL(for='A')
+            label(for='A')
                 input#A(type="radio",name="choice",value="A")
                 |#{A}
-            label#BL(for='B')
+            label(for='B')
                 input#B(type="radio",name="choice",value="B")
                 |#{B}
-            label#CL(for='C')
+            label(for='C')
                 input#C(type="radio",name="choice",value="C")
                 |#{C}
-            label#DL(for='D')
+            label(for='D')
                 input#D(type="radio",name="choice",value="D")
                 |#{D}
-            label#EL(for='E')
+            label(for='E')
                 input#E(type="radio",name="choice",value="E")
                 |#{E}
             input(type="hidden",name = "id", value= id)
             br
-            button.next#sub submit
+            button.next next
+        button#sub submit
     span.rightcol
         if side
             pre.question.side(id="cc")= side
@@ -47,15 +48,14 @@ block footer
     script.  
         $(document).ready(function(){
             $('#sub').click(function(){
-                $('#AL').css('background-color','#EEEEEE');
-                $('#BL').css('background-color','#EEEEEE');
-                $('#CL').css('background-color','#EEEEEE');
-                $('#DL').css('background-color','#EEEEEE');
-                $('#EL').css('background-color','#EEEEEE');
                 var first = $("input[name=choice]:checked").val();
-                if(key===$("input[name=choice]:checked").val())
-                    $('#'+$("input[name=choice]:checked").val()+'L').css('background-color','green');
+                if(key===first)
+                    $('label[for=' + first + ']').css('background-color','green');
                 else
-                    $('#'+$("input[name=choice]:checked").val()+'L').css('background-color','red');
+                    $('label[for=' + first + ']').css('background-color','red');
+                $('#sub').remove();
+                $('label').click(false);
+                $('.next').css('display','initial');
+                $('.next').attr('id','sub');
             });
         });
