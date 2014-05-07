@@ -7,9 +7,13 @@ block content
         tr#top
             td= "Username"
             td= "Score"
+            td= "Current Streak"
+            td= "Longest Streak"
         each person in ranking
             tr
                 td
                     a(href= "/user/"+person.username)
                         div.name= person.username
                 td= person.score
+                td= person.streak
+                td= person.longeststreak

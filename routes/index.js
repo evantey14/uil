@@ -817,12 +817,7 @@ exports.scoreboard = function (db) {
                 throw err;
             } else {
                 for (var i = 0; i < found.length; i++) {
-                    var username = found[i]['username'];
-                    var score = found[i]['score'];
-                    ranking.push({
-                        username: username,
-                        score: score
-                    });
+                    ranking.push(found[i]);
                 }
                 //SORTING ALGORITHM BY SCORE
                 if (ranking.length > 1) {

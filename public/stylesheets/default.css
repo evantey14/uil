@@ -46,7 +46,7 @@ select{
     background-repeat:no-repeat;
     background-position: 489px 17px;  /*Position of the background-image*/
 }
-form > button[type="submit"], form > input[type="submit"]{
+form > button[type="submit"], form > input[type="submit"], button{
     margin:5px;
     border-radius:0;
     border: 0px;
