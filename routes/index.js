@@ -920,4 +920,20 @@ exports.listofpassed = function (db) {
             }
         });
     }
-}
+};
+
+exports.stylepage = function (req, res) {
+    res.render('stylepage', {
+        cookie: cookie,
+        session: req.session,
+        title: 'Style'
+    });
+};
+
+exports.loadpage = function(req, res){
+    res.render('load',{
+        cookie: cookie,
+        session: req.session,
+        title: 'Loading'
+    });
+};

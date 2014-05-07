@@ -13,12 +13,13 @@ block content
         else
             div.qnum= "Random"
                 label.id= id
-    if type==='correct'
-        h3.correct="You have already answered this problem correctly."
-    if type==='incorrect'
-        h3.incorrect="You have previously answered this question incorrectly."
-    if type==='passed'
-        h3.passed="You have previously passed this question."
+    div.middle
+        if type==='correct'
+            h3.correct="You have already answered this problem correctly."
+        if type==='incorrect'
+            h3.incorrect="You have previously answered this question incorrectly."
+        if type==='passed'
+            h3.passed="You have previously passed this question."
     span.leftcol
         pre.question.code(id="qq")= question
         //div.question.code= question

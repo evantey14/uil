@@ -43,6 +43,8 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index(db));
 app.all('/about', routes.about);
+app.get('/loading', routes.loadpage);
+app.all('/stylepage', routes.stylepage);
 app.get('/pdf', pdf.upload);
 app.post('/pdf', pdf.index);
 app.get('/newuser', newuser.newuser);

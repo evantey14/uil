@@ -40,7 +40,7 @@ h1 {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     height:200px;
     width:1000px;
-    margin:25px 0 25px 0;
+    padding:25px 0 25px 0;
 }
 .stats{
     float:right;
@@ -104,9 +104,6 @@ h1 {
     font-size: 11px;
     color: rgb(78, 87, 91);
     font-family: Monaco, 'Liberation Mono', Courier, monospace;
-}
-.qid:hover {
-    color: rgb(78, 87, 200);
 }
 .streak {
     width: 618.03px;

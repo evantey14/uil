@@ -1,0 +1,56 @@
+extends layout
+block head
+	link(rel='stylesheet', href='/stylesheets/default.css')
+block content
+	h1= "h1 head"
+	h2= "This is an h2 header"
+	h3= "This is an h3 header"
+	h4= "This is an h4 header"
+	h5= "This is an h5 header"
+	h6= "This is an h6 header"
+	div= "Lorem Ipsum this is some normal text. The quick brown fox jumped over the lazy dogg. How now brown cow?"
+	form
+		input(type="text")
+		br
+		input(type="password")
+		br
+	form
+		input(type="radio")
+		|This is some text
+		br
+		input(type="radio")
+		|This is some more text
+		br
+		input(type="radio")
+		|This is even more text
+		br
+	form
+		input(type="number")
+		br
+		select
+			option="Default"
+			option="Hello"
+			option="Bonjour"
+			option="Ciao"
+		br
+		- for(var i=0; i<5; i++)
+			input(type="checkbox")
+			|Check it
+			br
+		input(type="submit")
+
+	h1="color scheme"
+		div(style="background-color:rgb(53, 53, 53);color:white;")
+			|rgb(53, 53, 53)
+		div(style="background-color:rgb(78, 87, 91);color:white;")
+			|rgb(78, 87, 91)
+		div(style="background-color:#E6E6E6;")
+			|#E6E6E6
+		div(style="background-color:#39c639;")
+			|#39c639
+		div(style="background-color:#c6393c;")
+			|#c6393c
+		div(style="background-color:#7f33cc;")
+			|#7f33cc
+		div(style="background-color:rgb(100, 53, 100)")
+			|rgb(100, 53, 100)

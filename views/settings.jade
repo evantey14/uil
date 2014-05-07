@@ -4,11 +4,11 @@ block head
     script(src="../ace-builds/src-noconflict/ace.js")
 block content
     if(prompt)
-         div.title= prompt
-    div.title= "Theme"
+         .notification= prompt
+    h1= "Theme"
     form.submit(method='post', action='/settings')
         div
-            |Question
+            h2= "Question"
             select#qthm(name='qchoice')
                 option(value="Select Theme") Select Theme
                 option(value='terminal') Terminal
@@ -23,7 +23,7 @@ block content
             |    int x = 10;
             |}
         div
-            |Code
+            h2= "Code"
             select#cthm(name='cchoice')
                 option(value="Select Theme") Select Theme
                 option(value='terminal') Terminal
@@ -38,7 +38,7 @@ block content
             |    int x = 10;
             |}
         button.next(type="submit") submit
-    div.title= "Change Password"
+    h1= "Change Password"
     form.submit(name="newpass",method="post",action="/settings")
             input#oldpass.text(type="password", placeholder="Old Password", name="pass")
             br
