@@ -1,8 +1,0 @@
-extends layout
-
-block content
-    h1= title
-    form#next(name="grading",method="post",action="/getquestion")
-        button.next(type="next") Next Question
-block footer
-    script(src="/scripts/keys.js")

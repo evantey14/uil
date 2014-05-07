@@ -33,7 +33,8 @@ block content
                 |#{E}
             input(type="hidden",name = "id", value= id)
             br
-            button.next(type="submit") submit
+            button.next next
+        button#sub submit
     span.rightcol
         if side
             pre.question.side(id="cc")= side
@@ -41,5 +42,20 @@ block footer
     script.                                                 
         var themeq ="#{themeq}";
         var themec ="#{themec}";
+        var key ="#{key}";
     script(src="/scripts/questiondisp.js")
     script(src="/scripts/keys.js")
+    script.  
+        $(document).ready(function(){
+            $('#sub').click(function(){
+                var first = $("input[name=choice]:checked").val();
+                if(key===first)
+                    $('label[for=' + first + ']').css('background-color','green');
+                else
+                    $('label[for=' + first + ']').css('background-color','red');
+                $('#sub').remove();
+                $('label').click(false);
+                $('.next').css('display','initial');
+                $('.next').attr('id','sub');
+            });
+        });
