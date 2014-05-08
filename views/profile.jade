@@ -17,8 +17,9 @@ block content
             div.s= found.longeststreak
     span.name= found.username
     span.stats
-        - var total = found.correct.length+found.incorrect.length+found.passed.length
+        - var total = found.correct.length+found.incorrect.length+found.passed.length+found.corrected.length
         span.correct(style="width:"+750*found.correct.length/total+"px")
+        span.corrected(style="width:"+750*found.corrected.length/total+"px")
         span.incorrect(style="width:"+750*found.incorrect.length/total+"px")
         span.passed(style="width:"+750*found.passed.length/total+"px")
     div.bottom
@@ -32,22 +33,6 @@ block content
                 a(href="/"+found.username+"/correct")
                     h4="    See all"
             span.middle-third
-                h3="Incorrect " + found.incorrect.length
-                for question, i in found.incorrect
-                    if(i<10)
-                        a(href="/random/"+question.id)
-                            li.qid=question.id
-                a(href="/"+found.username+"/incorrect")
-                    h4="    See all"
-            span.right-third
-                h3="Passed " + found.passed.length
-                for question, i in found.passed
-                    if(i<10)
-                        a.qid(href="/random/"+question.id)
-                            span.question-preview
-                                li=question.id
-                a(href="/"+found.username+"/passed")
-                    h4="    See all"
                 h3="Corrected " + found.corrected.length
                 for question, i in found.corrected
                     if(i<10)
@@ -55,6 +40,22 @@ block content
                             span.question-preview
                                 li=question.id
                 a(href="/" + found.username+"/corrected")
+                    h4="    See all"
+            span.right-third
+                h3="Incorrect " + found.incorrect.length
+                for question, i in found.incorrect
+                    if(i<10)
+                        a(href="/random/"+question.id)
+                            li.qid=question.id
+                a(href="/"+found.username+"/incorrect")
+                    h4="    See all"
+                h3="Passed " + found.passed.length
+                for question, i in found.passed
+                    if(i<10)
+                        a.qid(href="/random/"+question.id)
+                            span.question-preview
+                                li=question.id
+                a(href="/"+found.username+"/passed")
                     h4="    See all"
 block footer
     script(src='/scripts/profile.js')

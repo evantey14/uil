@@ -60,6 +60,9 @@ h1 {
 .stats > .passed{
     background-color:grey;
 }
+.stats > .corrected{
+  background-color: gold;
+}
 .p-image{
     width:200px;
     height:200px;
