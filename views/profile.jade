@@ -48,5 +48,13 @@ block content
                                 li=question.id
                 a(href="/"+found.username+"/passed")
                     h4="    See all"
+                h3="Corrected " + found.corrected.length
+                for question, i in found.corrected
+                    if(i<10)
+                        a.qid(href="/random/"+question.id)
+                            span.question-preview
+                                li=question.id
+                a(href="/" + found.username+"/corrected")
+                    h4="    See all"
 block footer
     script(src='/scripts/profile.js')

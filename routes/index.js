@@ -109,7 +109,7 @@ exports.settheme = function (db) {
 };
 exports.signin = function (db) {
     return function (req, res) {
-        if (req.body.username !== null) {
+        if (req.body.username) {
             var username = req.body.username;
             var password = req.body.password;
             var collection = db.get("users");
@@ -374,12 +374,15 @@ exports.viewquestion = function (db) {
                 var correct = found.correct;
                 var incorrect = found.incorrect
                 var passed = found.passed;
+                var corrected = found.corrected;
                 if (JSON.stringify(correct).indexOf(id) > -1) {
                     res.redirect('/tryagain/' + id);
                 } else if (JSON.stringify(incorrect).indexOf(id) > -1) {
                     res.redirect('/tryagain/' + id);
                 } else if (JSON.stringify(passed).indexOf(id) > -1) {
                     res.redirect('/tryagain/' + id);
+                } else if(JSON.stringify(corrected).indexOf(id) > -1){
+                    res.redirect('/tryagain/'+id);
                 }
                 if (JSON.stringify(questions).indexOf(id) > -1) {
                     collection.findOne({
@@ -558,6 +561,38 @@ exports.tryagain = function (db) {
 
                         });
                     });
+                } else{
+                    var questions = db.get('questions');
+                    questions.findOne({ '_id':questionid}, function(err, question){
+                    var answers = question.ans;
+                        var title = "Random Question";
+                        var prompt = 'Test: ' + question['test'] + "\nQuestion: " + question['ques'];
+                        var choices = found.corrected[index].choice;
+                        console.log('CHOICES ARE: '+ choices);
+                        res.render('tryagainquestion', {
+                            cookie: cookie,
+                            title: title,
+                            prompt: prompt,
+                            qnum: question['ques'],
+                            test: question['test'],
+                            question: question['text'],
+                            side: question['code'],
+                            A: answers[0],
+                            B: answers[1],
+                            C: answers[2],
+                            D: answers[3],
+                            E: answers[4],
+                            id: question["_id"],
+                            url: question["_id"],
+                            session: req.session,
+                            type: "corrected",
+                            choices: choices,
+                            themeq: found.qtheme,
+                            themec: found.ctheme,
+                            key: question['key']
+
+                        });
+                    });
                 }
             }
         })
@@ -582,7 +617,7 @@ exports.tryagaincheck = function (db) {
                 if (!userselection) {
                     res.redirect('/');
 
-                } else if (type === 'correct') {
+                } else if (type === 'correct'||type ==='corrected') {
                     if (userselection === answer) {
                         res.redirect('/');
 
@@ -955,6 +990,27 @@ exports.listofpassed = function (db) {
             } else {
                 console.log(found);
                 res.render('listofpassed', {
+                    found: found,
+                    session: req.session,
+                    cookie: cookie
+                });
+            }
+        });
+    }
+};
+
+exports.listofcorrected = function (db) {
+    return function (req, res) {
+        var username = req.url.substring(req.url.indexOf('/') + 1, req.url.lastIndexOf('/'));
+        var users = db.get('users');
+        users.findOne({
+            'username': username
+        }, function (err, found) {
+            if (err) {
+                throw err;
+            } else {
+                console.log(found);
+                res.render('listofcorrected', {
                     found: found,
                     session: req.session,
                     cookie: cookie

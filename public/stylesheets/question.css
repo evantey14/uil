@@ -23,6 +23,9 @@
 .passed {
     color:grey;
 }
+.corrected{
+    color:gold;
+}
 .test {
     font-size: 10px;
 }
@@ -31,6 +34,9 @@
 }
 .cor { 
     color : green;
+}
+.chng {
+    color:gold;
 }
 .qnum {
     float: left;
