@@ -169,11 +169,43 @@ exports.home = function (db) {
                     throw err;
                 } else {
                     var hash = crypto.createHash('md5').update(found.email).digest('hex');
+                    var correct = found.correct;
+                    var incorrect = found.incorrect;
+                    var passed = found.passed;
+                    var corrected = found.corrected;
+                    console.log(corrected);
+                    var score = 0;
+                    score+=100*correct.length;
+                    score-=(20*incorrect.length);
+                    for( var i = 0;i<corrected.length;i++){
+                        var long = corrected[i].choice.length;
+                        if(long===1){
+                            score+=70;
+                        }
+                        else if(long===2){
+                            score+=50;
+                        }
+                        else if(long===3){
+                            score+=40;
+                        }
+                        else{
+                            score+=30;
+                        }
+                    }
+                    console.log(score);
+                    users.update({
+                        '_id': req.session.id
+                    }, {
+                        $set: {
+                            'score':score
+                        }
+                    });
                     res.render('profile', {
                         found: found,
                         cookie: cookie,
                         session: req.session,
-                        hash: hash
+                        hash: hash,
+                        score:score
                     });
                 }
             });
@@ -224,12 +256,38 @@ exports.checkquestion = function (db) {
                         if (err) {
                             throw err;
                         } else {
+                            var correcty = found.correct;
+                            var incorrecty = found.incorrect;
+                            var correctedy = found.corrected;
+                            var scorey = 0;
+                            scorey+=100*correcty.length;
+                            scorey-=(20*incorrecty.length);
+                            for( var i = 0;i<correctedy.length;i++){
+                                var longy = correctedy[i].choice.length;
+                                if(longy===1){
+                                    scorey+=70;
+                                }
+                                else if(longy===2){
+                                    scorey+=50;
+                                }
+                                else if(longy===3){
+                                    scorey+=40;
+                                }
+                                else{
+                                    scorey+=30;
+                                }
+                            }
+                            users.update({
+                                '_id': req.session.id
+                            }, {
+                                $set: {
+                                    'score':scorey
+                                }
+                            });
                             var array = found['correct'];
                             var otherarray = found['questions'];
-                            var score = found.score;
                             var streak = found.streak;
                             var longeststreak = found.longeststreak;
-                            score += 60;
                             streak++;
                             if (streak > longeststreak) {
                                 users.update({
@@ -252,7 +310,6 @@ exports.checkquestion = function (db) {
                             }, {
                                 $set: {
                                     'questions': otherarray,
-                                    'score': score,
                                     'streak': streak
                                 }
                             });
@@ -323,8 +380,6 @@ exports.checkquestion = function (db) {
                                 }
                             }).filter(isFinite)
                             otherarray.splice(index, 1);
-                            var score = found.score;
-                            score -= 20;
                             var streak = found.streak;
                             streak = 0;
                             users.update({
@@ -332,7 +387,6 @@ exports.checkquestion = function (db) {
                             }, {
                                 $set: {
                                     'questions': otherarray,
-                                    'score': score,
                                     'streak': streak
                                 }
                             });
@@ -640,8 +694,6 @@ exports.tryagaincheck = function (db) {
                         } else {
                             if (userselection === answer) {
                                 var passedarray = user.passed;
-                                var score = user.score;
-                                score += 60;
                                 var index = -1;
                                 passedarray.forEach(function (obj, ind) {
                                     if (obj.id === qid) {
@@ -661,15 +713,11 @@ exports.tryagaincheck = function (db) {
                                     $set: {
                                         'passed': passedarray,
                                         'correct': correctarray,
-                                        'score': score
                                     }
                                 });
                                 res.redirect('/');
 
                             } else {
-                                var score = user.score;
-                                score -= 20;
-                                //console.log("score is: "+score);
                                 var passedarray = user.passed;
                                 var index = -1;
                                 passedarray.forEach(function (obj, ind) {
@@ -690,7 +738,6 @@ exports.tryagaincheck = function (db) {
                                     $set: {
                                         'passed': passedarray,
                                         'incorrect': incorrectarray,
-                                        'score': score
                                     }
                                 });
                                 res.redirect('/');
@@ -720,15 +767,12 @@ exports.tryagaincheck = function (db) {
                             if (userselection === answer) {
                                 correctedarray = user.corrected;
                                 correctedarray.push(thing);
-                                var score = user.score;
-                                score += 20;
                                 users.update({
                                     '_id': req.session.id
                                 }, {
                                     $set: {
                                         'incorrect': incorrectarray,
                                         'corrected': correctedarray,
-                                        'score': score
                                     }
                                 });
                                 res.redirect('/');

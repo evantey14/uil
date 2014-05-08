@@ -6,10 +6,10 @@ block content
         span.info
             .p-image
                 img#gravatarimage(src="http://www.gravatar.com/avatar/"+hash+"?s=200&d=%2Fimages%2Fdefault_photo.jpg")
-            if(found.score<10000)
-                span.score= found.score
+            if(score<10000)
+                span.score= score
             else
-                span.score= found.score/1000 + "k"
+                span.score= score/1000 + "k"
         span.streak
             div.t= "Current Streak "
             div.s= found.streak
