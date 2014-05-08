@@ -440,7 +440,7 @@ exports.tryagain = function (db) {
             if (err) {
                 throw err;
             } else {
-                var index = 0;
+                var index = -1;
                 var incorrect = false;
                 found.incorrect.forEach(function (obj, ind) {
                     if (obj.id === questionid) {
@@ -462,6 +462,11 @@ exports.tryagain = function (db) {
                         index = ind;
                     }
                 });
+                found.corrected.forEach(function(obj,ind){
+                    if(obj.id === questionid){
+                        index = ind;
+                    }
+                })
                 if (correct) {
                     var questions = db.get('questions');
                     questions.findOne({
@@ -568,6 +573,7 @@ exports.tryagain = function (db) {
                         var title = "Random Question";
                         var prompt = 'Test: ' + question['test'] + "\nQuestion: " + question['ques'];
                         var choices = found.corrected[index].choice;
+                        console.log(found.corrected[index]);
                         console.log('CHOICES ARE: '+ choices);
                         res.render('tryagainquestion', {
                             cookie: cookie,
@@ -585,7 +591,7 @@ exports.tryagain = function (db) {
                             id: question["_id"],
                             url: question["_id"],
                             session: req.session,
-                            type: "corrected",
+                            type: 'corrected',
                             choices: choices,
                             themeq: found.qtheme,
                             themec: found.ctheme,

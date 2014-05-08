@@ -30,29 +30,26 @@ block content
         if(choices)
             form.submit(name='tryagaincheck',method="post",action='/tryagaincheck')
                 for letter in [[A,'A'],[B,'B'],[C,'C'],[D,'D'],[E,'E']]
+                    if(type==='correct')
+                        if(letter[1]===key)
+                            label.cor(for=letter[1])
+                                input.cor(id=letter[1],type='radio',name='choice',value=letter[1])
+                                |#{letter[0]}
                     if(type==='corrected')
                         if(letter[1]===key)
                             label.cor(for=letter[1])
                                 input.cor(id=letter[1],type='radio',name='choice',value=letter[1])
                                 |#{letter[0]}
                         else if(choices.indexOf(letter[1])>-1)
-                            label.chng(for=letter[1])
-                                    input.chng(id=letter[1],type='radio',name='choice',value=letter[1])
-                                    |#{letter[0]}
-                        else
-                            label(for=letter[1])
-                                input(id=letter[1],type='radio',name='choice',value=letter[1])
-                                |#{letter[0]}
-                    else if(choices.indexOf(letter[1])>-1)
-                        if(type==='correct')
-                            label.cor(for=letter[1])
-                                input.cor(id=letter[1],type="radio",name="choice",value=letter[1])
-                                |#{letter[0]}
-                        else if(type==='incorrect')
                             label.wrong(for=letter[1])
-                                input.wrong(id=letter[1],type="radio",name="choice",value=letter[1])
+                                input.wrong(id=letter[1],type='radio',name='choice',value=letter[1])
                                 |#{letter[0]}
-                    else
+                    if(type==='incorrect')
+                        if(choices.indexOf(letter[1])>-1)
+                            label.wrong(for=letter[1])
+                                input.wrong(id=letter[1],type='radio',name='choice',value=letter[1])
+                                |#{letter[0]}
+                    if(choices.indexOf(letter[1])===-1&&(type==='incorrect'||letter[1]!==key))
                         label(for=letter[1])
                             input(id=letter[1],type='radio',name='choice',value=letter[1])
                             |#{letter[0]}
@@ -61,8 +58,8 @@ block content
                 br
                 button.next home
             button#sub submit
-        else
-            form.submit(name="tryagaincheck",method="post",action="/tryagaincheck")
+        if(!choices)
+            form.submit(name='tryagaincheck',method='post',action='/tryagaincheck')
                 for letter in [[A,'A'],[B,'B'],[C,'C'],[D,'D'],[E,'E']]
                     label(for=letter[1])
                         input(id=letter[1],type='radio',name='choice',value=letter[1])
