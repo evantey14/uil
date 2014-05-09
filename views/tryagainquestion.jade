@@ -15,30 +15,41 @@ block content
                 label.id= id
     div.middle
         if type==='correct'
-            h3.correct="You have already answered this problem correctly."
+            h3.correct="You have answered this problem correctly."
         if type==='incorrect'
             h3.incorrect="You have previously answered this question incorrectly."
         if type==='passed'
             h3.passed="You have previously passed this question."
+        if type=== 'corrected'
+            h3.corrected= "You have corrected this question."
     span.leftcol
         pre.question.code(id="qq")= question
         //div.question.code= question
         
         
-        
         if(choices)
             form.submit(name='tryagaincheck',method="post",action='/tryagaincheck')
                 for letter in [[A,'A'],[B,'B'],[C,'C'],[D,'D'],[E,'E']]
-                    if(choices.indexOf(letter[1])>-1)
-                        if(type==='correct')
+                    if(type==='correct')
+                        if(letter[1]===key)
                             label.correct(for=letter[1])
-                                input.correct(id=letter[1],type="radio",name="choice",value=letter[1])
+                                input.correct(id=letter[1],type='radio',name='choice',value=letter[1])
                                 |#{letter[0]}
-                        else
+                    if(type==='corrected')
+                        if(letter[1]===key)
+                            label.correct(for=letter[1])
+                                input.correct(id=letter[1],type='radio',name='choice',value=letter[1])
+                                |#{letter[0]}
+                        else if(choices.indexOf(letter[1])>-1)
                             label.incorrect(for=letter[1])
-                                input.incorrect(id=letter[1],type="radio",name="choice",value=letter[1])
+                                input.incorrect(id=letter[1],type='radio',name='choice',value=letter[1])
                                 |#{letter[0]}
-                    else
+                    if(type==='incorrect')
+                        if(choices.indexOf(letter[1])>-1)
+                            label.wrong(for=letter[1])
+                                input.wrong(id=letter[1],type='radio',name='choice',value=letter[1])
+                                |#{letter[0]}
+                    if(choices.indexOf(letter[1])===-1&&(type==='incorrect'||letter[1]!==key))
                         label(for=letter[1])
                             input(id=letter[1],type='radio',name='choice',value=letter[1])
                             |#{letter[0]}
@@ -47,8 +58,8 @@ block content
                 br
                 button.next home
             button#sub submit
-        else
-            form.submit(name="tryagaincheck",method="post",action="/tryagaincheck")
+        if(!choices)
+            form.submit(name='tryagaincheck',method='post',action='/tryagaincheck')
                 for letter in [[A,'A'],[B,'B'],[C,'C'],[D,'D'],[E,'E']]
                     label(for=letter[1])
                         input(id=letter[1],type='radio',name='choice',value=letter[1])

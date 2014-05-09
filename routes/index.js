@@ -109,7 +109,7 @@ exports.settheme = function (db) {
 };
 exports.signin = function (db) {
     return function (req, res) {
-        if (req.body.username !== null) {
+        if (req.body.username) {
             var username = req.body.username;
             var password = req.body.password;
             var collection = db.get("users");
@@ -169,11 +169,43 @@ exports.home = function (db) {
                     throw err;
                 } else {
                     var hash = crypto.createHash('md5').update(found.email).digest('hex');
+                    var correct = found.correct;
+                    var incorrect = found.incorrect;
+                    var passed = found.passed;
+                    var corrected = found.corrected;
+                    console.log(corrected);
+                    var score = 0;
+                    score+=100*correct.length;
+                    score-=(20*incorrect.length);
+                    for( var i = 0;i<corrected.length;i++){
+                        var long = corrected[i].choice.length;
+                        if(long===1){
+                            score+=70;
+                        }
+                        else if(long===2){
+                            score+=50;
+                        }
+                        else if(long===3){
+                            score+=40;
+                        }
+                        else{
+                            score+=30;
+                        }
+                    }
+                    console.log(score);
+                    users.update({
+                        '_id': req.session.id
+                    }, {
+                        $set: {
+                            'score':score
+                        }
+                    });
                     res.render('profile', {
                         found: found,
                         cookie: cookie,
                         session: req.session,
-                        hash: hash
+                        hash: hash,
+                        score:score
                     });
                 }
             });
@@ -224,12 +256,38 @@ exports.checkquestion = function (db) {
                         if (err) {
                             throw err;
                         } else {
+                            var correcty = found.correct;
+                            var incorrecty = found.incorrect;
+                            var correctedy = found.corrected;
+                            var scorey = 0;
+                            scorey+=100*correcty.length;
+                            scorey-=(20*incorrecty.length);
+                            for( var i = 0;i<correctedy.length;i++){
+                                var longy = correctedy[i].choice.length;
+                                if(longy===1){
+                                    scorey+=70;
+                                }
+                                else if(longy===2){
+                                    scorey+=50;
+                                }
+                                else if(longy===3){
+                                    scorey+=40;
+                                }
+                                else{
+                                    scorey+=30;
+                                }
+                            }
+                            users.update({
+                                '_id': req.session.id
+                            }, {
+                                $set: {
+                                    'score':scorey
+                                }
+                            });
                             var array = found['correct'];
                             var otherarray = found['questions'];
-                            var score = found.score;
                             var streak = found.streak;
                             var longeststreak = found.longeststreak;
-                            score += 60;
                             streak++;
                             if (streak > longeststreak) {
                                 users.update({
@@ -252,7 +310,6 @@ exports.checkquestion = function (db) {
                             }, {
                                 $set: {
                                     'questions': otherarray,
-                                    'score': score,
                                     'streak': streak
                                 }
                             });
@@ -323,8 +380,6 @@ exports.checkquestion = function (db) {
                                 }
                             }).filter(isFinite)
                             otherarray.splice(index, 1);
-                            var score = found.score;
-                            score -= 20;
                             var streak = found.streak;
                             streak = 0;
                             users.update({
@@ -332,7 +387,6 @@ exports.checkquestion = function (db) {
                             }, {
                                 $set: {
                                     'questions': otherarray,
-                                    'score': score,
                                     'streak': streak
                                 }
                             });
@@ -374,12 +428,15 @@ exports.viewquestion = function (db) {
                 var correct = found.correct;
                 var incorrect = found.incorrect
                 var passed = found.passed;
+                var corrected = found.corrected;
                 if (JSON.stringify(correct).indexOf(id) > -1) {
                     res.redirect('/tryagain/' + id);
                 } else if (JSON.stringify(incorrect).indexOf(id) > -1) {
                     res.redirect('/tryagain/' + id);
                 } else if (JSON.stringify(passed).indexOf(id) > -1) {
                     res.redirect('/tryagain/' + id);
+                } else if(JSON.stringify(corrected).indexOf(id) > -1){
+                    res.redirect('/tryagain/'+id);
                 }
                 if (JSON.stringify(questions).indexOf(id) > -1) {
                     collection.findOne({
@@ -437,7 +494,7 @@ exports.tryagain = function (db) {
             if (err) {
                 throw err;
             } else {
-                var index = 0;
+                var index = -1;
                 var incorrect = false;
                 found.incorrect.forEach(function (obj, ind) {
                     if (obj.id === questionid) {
@@ -459,6 +516,11 @@ exports.tryagain = function (db) {
                         index = ind;
                     }
                 });
+                found.corrected.forEach(function(obj,ind){
+                    if(obj.id === questionid){
+                        index = ind;
+                    }
+                })
                 if (correct) {
                     var questions = db.get('questions');
                     questions.findOne({
@@ -558,6 +620,39 @@ exports.tryagain = function (db) {
 
                         });
                     });
+                } else{
+                    var questions = db.get('questions');
+                    questions.findOne({ '_id':questionid}, function(err, question){
+                    var answers = question.ans;
+                        var title = "Random Question";
+                        var prompt = 'Test: ' + question['test'] + "\nQuestion: " + question['ques'];
+                        var choices = found.corrected[index].choice;
+                        console.log(found.corrected[index]);
+                        console.log('CHOICES ARE: '+ choices);
+                        res.render('tryagainquestion', {
+                            cookie: cookie,
+                            title: title,
+                            prompt: prompt,
+                            qnum: question['ques'],
+                            test: question['test'],
+                            question: question['text'],
+                            side: question['code'],
+                            A: answers[0],
+                            B: answers[1],
+                            C: answers[2],
+                            D: answers[3],
+                            E: answers[4],
+                            id: question["_id"],
+                            url: question["_id"],
+                            session: req.session,
+                            type: 'corrected',
+                            choices: choices,
+                            themeq: found.qtheme,
+                            themec: found.ctheme,
+                            key: question['key']
+
+                        });
+                    });
                 }
             }
         })
@@ -582,7 +677,7 @@ exports.tryagaincheck = function (db) {
                 if (!userselection) {
                     res.redirect('/');
 
-                } else if (type === 'correct') {
+                } else if (type === 'correct'||type ==='corrected') {
                     if (userselection === answer) {
                         res.redirect('/');
 
@@ -599,8 +694,6 @@ exports.tryagaincheck = function (db) {
                         } else {
                             if (userselection === answer) {
                                 var passedarray = user.passed;
-                                var score = user.score;
-                                score += 60;
                                 var index = -1;
                                 passedarray.forEach(function (obj, ind) {
                                     if (obj.id === qid) {
@@ -620,15 +713,11 @@ exports.tryagaincheck = function (db) {
                                     $set: {
                                         'passed': passedarray,
                                         'correct': correctarray,
-                                        'score': score
                                     }
                                 });
                                 res.redirect('/');
 
                             } else {
-                                var score = user.score;
-                                score -= 20;
-                                //console.log("score is: "+score);
                                 var passedarray = user.passed;
                                 var index = -1;
                                 passedarray.forEach(function (obj, ind) {
@@ -649,7 +738,6 @@ exports.tryagaincheck = function (db) {
                                     $set: {
                                         'passed': passedarray,
                                         'incorrect': incorrectarray,
-                                        'score': score
                                     }
                                 });
                                 res.redirect('/');
@@ -679,15 +767,12 @@ exports.tryagaincheck = function (db) {
                             if (userselection === answer) {
                                 correctedarray = user.corrected;
                                 correctedarray.push(thing);
-                                var score = user.score;
-                                score += 20;
                                 users.update({
                                     '_id': req.session.id
                                 }, {
                                     $set: {
                                         'incorrect': incorrectarray,
                                         'corrected': correctedarray,
-                                        'score': score
                                     }
                                 });
                                 res.redirect('/');
@@ -955,6 +1040,27 @@ exports.listofpassed = function (db) {
             } else {
                 console.log(found);
                 res.render('listofpassed', {
+                    found: found,
+                    session: req.session,
+                    cookie: cookie
+                });
+            }
+        });
+    }
+};
+
+exports.listofcorrected = function (db) {
+    return function (req, res) {
+        var username = req.url.substring(req.url.indexOf('/') + 1, req.url.lastIndexOf('/'));
+        var users = db.get('users');
+        users.findOne({
+            'username': username
+        }, function (err, found) {
+            if (err) {
+                throw err;
+            } else {
+                console.log(found);
+                res.render('listofcorrected', {
                     found: found,
                     session: req.session,
                     cookie: cookie

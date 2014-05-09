@@ -35,6 +35,7 @@ block content
             br
             button.next next
         button#sub submit
+        button.try= "retry"
     span.rightcol
         if side
             pre.question.side(id="cc")= side
@@ -56,6 +57,7 @@ block footer
                 $('#sub').remove();
                 $('label').click(false);
                 $('.next').css('display','initial');
+                $('.try').css('display','initial');
                 $('.next').attr('id','sub');
             });
         });
