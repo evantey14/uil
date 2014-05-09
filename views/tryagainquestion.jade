@@ -31,12 +31,12 @@ block content
                 for letter in [[A,'A'],[B,'B'],[C,'C'],[D,'D'],[E,'E']]
                     if(choices.indexOf(letter[1])>-1)
                         if(type==='correct')
-                            label.cor(for=letter[1])
-                                input.cor(id=letter[1],type="radio",name="choice",value=letter[1])
+                            label.correct(for=letter[1])
+                                input.correct(id=letter[1],type="radio",name="choice",value=letter[1])
                                 |#{letter[0]}
                         else
-                            label.wrong(for=letter[1])
-                                input.wrong(id=letter[1],type="radio",name="choice",value=letter[1])
+                            label.incorrect(for=letter[1])
+                                input.incorrect(id=letter[1],type="radio",name="choice",value=letter[1])
                                 |#{letter[0]}
                     else
                         label(for=letter[1])
@@ -74,9 +74,9 @@ block footer
             $('#sub').click(function(){
                 var first = $("input[name=choice]:checked").val();
                 if(key===first)
-                    $('label[for=' + first + ']').css('background-color','green');
+                    $('label[for=' + first + ']').addClass('correct');
                 else
-                    $('label[for=' + first + ']').css('background-color','red');
+                    $('label[for=' + first + ']').addClass('incorrect');
                 $('#sub').remove();
                 $('label').click(false);
                 $('.next').css('display','initial');

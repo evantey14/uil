@@ -14,23 +14,17 @@
 .title {
     font-size: 40px;
 }
-.correct {
-    color: green;
+.correct  {
+    color: #39c639;
 }
 .incorrect {
-    color:red;
+    color:#c6393c;
 }
 .passed {
     color:grey;
 }
 .test {
     font-size: 10px;
-}
-.wrong {
-    color : red;
-}
-.cor { 
-    color : green;
 }
 .qnum {
     float: left;

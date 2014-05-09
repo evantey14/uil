@@ -97,3 +97,18 @@ a >:hover {
 .notification{
 
 }
+.text-green{
+    color:#39c639;
+}
+.text-red{
+    color: #c6393c;
+}
+.correct{
+    background-color:#39c639;
+}
+.incorrect{
+    background-color: #c6393c;
+}
+.passed{
+    background-color:grey;
+}

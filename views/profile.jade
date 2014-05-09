@@ -24,6 +24,7 @@ block content
     div.bottom
         div.answered
             span.left-third
+                h3.circle.correct
                 h3= "Correct " + found.correct.length
                 for question, i in found.correct
                     if(i<10)
@@ -32,6 +33,7 @@ block content
                 a(href="/"+found.username+"/correct")
                     h4="    See all"
             span.middle-third
+                h3.circle.incorrect 
                 h3="Incorrect " + found.incorrect.length
                 for question, i in found.incorrect
                     if(i<10)
@@ -40,7 +42,8 @@ block content
                 a(href="/"+found.username+"/incorrect")
                     h4="    See all"
             span.right-third
-                h3="Passed " + found.passed.length
+                h3.circle.passed
+                h3="Passed "+ found.passed.length
                 for question, i in found.passed
                     if(i<10)
                         a.qid(href="/random/"+question.id)
