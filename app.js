@@ -34,15 +34,18 @@ app.use(express.cookieSession('lasacs'));
 app.use(verification());
 
 
-
 app.use(app.router);
 // development only
 if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
+
+
 app.get('/', routes.index(db));
 app.all('/about', routes.about);
+app.get('/loading', routes.loadpage);
+app.all('/stylepage', routes.stylepage);
 app.get('/pdf', pdf.upload);
 app.post('/pdf', pdf.index);
 app.get('/newuser', newuser.newuser);
@@ -65,6 +68,7 @@ app.all('/user/:username', routes.user(db));
 app.all('/:username/correct', routes.listofcorrects(db));
 app.all('/:username/incorrect', routes.listofincorrects(db));
 app.all('/:username/passed', routes.listofpassed(db));
+app.all('/:username/corrected',routes.listofcorrected(db));
 
 
 app.all('/checkquestion', routes.checkquestion(db));

@@ -14,14 +14,17 @@
 .title {
     font-size: 40px;
 }
-.correct {
-    color: green;
+.correct  {
+    color: #39c639;
 }
 .incorrect {
-    color:red;
+    color:#c6393c;
 }
 .passed {
     color:grey;
+}
+.corrected{
+    color:gold;
 }
 .test {
     font-size: 10px;
@@ -31,6 +34,9 @@
 }
 .cor { 
     color : green;
+}
+.chng {
+    color:gold;
 }
 .qnum {
     float: left;
@@ -59,6 +65,12 @@ input[type="radio"] {
 }
 input[type="radio"]:checked+label {
     /**/
+}
+.next{
+    display: none;
+}
+.try{
+    display:none;
 }
 .submit > label {
     clear: left;

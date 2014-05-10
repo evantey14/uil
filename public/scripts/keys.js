@@ -4,26 +4,26 @@ $('body').keydown(function (e) {
     switch (e.which) {
     case A:
     case ONE:
-        $('#A').prop('checked', true);
+        $('#A').click();
         break;
     case B:
     case TWO:
-        $('#B').prop('checked', true);
+        $('#B').click();
         break;
     case C:
     case THREE:
-        $('#C').prop('checked', true);
+        $('#C').click();
         break;
     case D:
     case FOUR:
-        $('#D').prop('checked', true);
+        $('#D').click();
         break;
     case E:
     case FIVE:
-        $('#E').prop('checked', true);
+        $('#E').click();
         break;
     case ENTER:
-        $('.next').click();
+        $('#sub ').click();
         break;
     }
 });

@@ -40,7 +40,7 @@ h1 {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     height:200px;
     width:1000px;
-    margin:25px 0 25px 0;
+    padding:25px 0 25px 0;
 }
 .stats{
     float:right;
@@ -51,15 +51,38 @@ h1 {
     float: left;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
-.stats > .correct{
+.correct{
     background-color:#39c639;
 }
-.stats > .incorrect{
+.incorrect{
     background-color: #c6393c;
 }
-.stats > .passed{
+.passed{
     background-color:grey;
 }
+.corrected{
+  background-color: gold;
+}
+
+.answered {
+    position: absolute;
+    top: 70px;
+    width: 618.03px;
+}
+.answered h3{
+  display:inline-block;
+  margin-right:10px;
+}
+
+.circle{
+  width:10px;
+  height:10px;
+  vertical-align: middle;
+  text-align: center;
+  border-radius:100%;
+  display:inline-block;
+}
+
 .p-image{
     width:200px;
     height:200px;
@@ -100,22 +123,45 @@ h1 {
     left:750px;
     width:250px;
 }
+.answered{
+  position: relative;
+  top:75px;
+  width:750px;
+  left:250px;
+}
+.quarter-1{
+  position: absolute;
+  top:0;
+  left:0px;
+  width:187px;
+}
+.quarter-2{
+  position: absolute;
+  left:187px;
+  top:0;
+  width: 187px; 
+}
+
+.quarter-3{
+  position: absolute;
+  top:0;
+  left:374px;
+  width:187px;
+}
+.quarter-4{
+  position: absolute;
+  left:561px;
+  top:0;
+  width:187px; 
+}
 .qid {
     font-size: 11px;
     color: rgb(78, 87, 91);
     font-family: Monaco, 'Liberation Mono', Courier, monospace;
 }
-.qid:hover {
-    color: rgb(78, 87, 200);
-}
 .streak {
     width: 618.03px;
     height: 70px;
-}
-.answered {
-    position: absolute;
-    top: 70px;
-    width: 618.03px;
 }
 /*fancy score board*/
 /*

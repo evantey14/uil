@@ -103,13 +103,13 @@ exports.settheme = function (db) {
                 session: req.session
             });
         }
-        
+
 
     }
 };
 exports.signin = function (db) {
     return function (req, res) {
-        if (req.body.username !== null) {
+        if (req.body.username) {
             var username = req.body.username;
             var password = req.body.password;
             var collection = db.get("users");
@@ -169,11 +169,43 @@ exports.home = function (db) {
                     throw err;
                 } else {
                     var hash = crypto.createHash('md5').update(found.email).digest('hex');
+                    var correct = found.correct;
+                    var incorrect = found.incorrect;
+                    var passed = found.passed;
+                    var corrected = found.corrected;
+                    console.log(corrected);
+                    var score = 0;
+                    score+=100*correct.length;
+                    score-=(20*incorrect.length);
+                    for( var i = 0;i<corrected.length;i++){
+                        var long = corrected[i].choice.length;
+                        if(long===1){
+                            score+=70;
+                        }
+                        else if(long===2){
+                            score+=50;
+                        }
+                        else if(long===3){
+                            score+=40;
+                        }
+                        else{
+                            score+=30;
+                        }
+                    }
+                    console.log(score);
+                    users.update({
+                        '_id': req.session.id
+                    }, {
+                        $set: {
+                            'score':score
+                        }
+                    });
                     res.render('profile', {
                         found: found,
                         cookie: cookie,
                         session: req.session,
-                        hash: hash
+                        hash: hash,
+                        score:score
                     });
                 }
             });
@@ -224,12 +256,38 @@ exports.checkquestion = function (db) {
                         if (err) {
                             throw err;
                         } else {
+                            var correcty = found.correct;
+                            var incorrecty = found.incorrect;
+                            var correctedy = found.corrected;
+                            var scorey = 0;
+                            scorey+=100*correcty.length;
+                            scorey-=(20*incorrecty.length);
+                            for( var i = 0;i<correctedy.length;i++){
+                                var longy = correctedy[i].choice.length;
+                                if(longy===1){
+                                    scorey+=70;
+                                }
+                                else if(longy===2){
+                                    scorey+=50;
+                                }
+                                else if(longy===3){
+                                    scorey+=40;
+                                }
+                                else{
+                                    scorey+=30;
+                                }
+                            }
+                            users.update({
+                                '_id': req.session.id
+                            }, {
+                                $set: {
+                                    'score':scorey
+                                }
+                            });
                             var array = found['correct'];
                             var otherarray = found['questions'];
-                            var score = found.score;
                             var streak = found.streak;
                             var longeststreak = found.longeststreak;
-                            score += 60;
                             streak++;
                             if (streak > longeststreak) {
                                 users.update({
@@ -252,7 +310,6 @@ exports.checkquestion = function (db) {
                             }, {
                                 $set: {
                                     'questions': otherarray,
-                                    'score': score,
                                     'streak': streak
                                 }
                             });
@@ -270,12 +327,7 @@ exports.checkquestion = function (db) {
                             });
                         }
                     });
-                    res.render('grading', {
-                        cookie: cookie,
-                        title: "CORRECT!",
-                        value: "correct",
-                        session: req.session
-                    });
+                    res.redirect('/random');
                 } else if (!choice) {
                     users.findOne({
                         '_id': req.session.id
@@ -313,12 +365,7 @@ exports.checkquestion = function (db) {
                             });
                         }
                     });
-                    res.render('grading', {
-                        cookie: cookie,
-                        title: "Question Passed",
-                        value: "passed",
-                        session: req.session
-                    });
+                    res.redirect('/random');
                 } else {
                     users.findOne({
                         '_id': req.session.id
@@ -333,8 +380,6 @@ exports.checkquestion = function (db) {
                                 }
                             }).filter(isFinite)
                             otherarray.splice(index, 1);
-                            var score = found.score;
-                            score -= 20;
                             var streak = found.streak;
                             streak = 0;
                             users.update({
@@ -342,7 +387,6 @@ exports.checkquestion = function (db) {
                             }, {
                                 $set: {
                                     'questions': otherarray,
-                                    'score': score,
                                     'streak': streak
                                 }
                             });
@@ -361,12 +405,7 @@ exports.checkquestion = function (db) {
                             });
                         }
                     });
-                    res.render('grading', {
-                        cookie: cookie,
-                        title: "Incorrect...",
-                        value: "incorrect",
-                        session: req.session
-                    });
+                    res.redirect('/random');
                 }
             }
         });
@@ -389,12 +428,15 @@ exports.viewquestion = function (db) {
                 var correct = found.correct;
                 var incorrect = found.incorrect
                 var passed = found.passed;
+                var corrected = found.corrected;
                 if (JSON.stringify(correct).indexOf(id) > -1) {
                     res.redirect('/tryagain/' + id);
                 } else if (JSON.stringify(incorrect).indexOf(id) > -1) {
                     res.redirect('/tryagain/' + id);
                 } else if (JSON.stringify(passed).indexOf(id) > -1) {
                     res.redirect('/tryagain/' + id);
+                } else if(JSON.stringify(corrected).indexOf(id) > -1){
+                    res.redirect('/tryagain/'+id);
                 }
                 if (JSON.stringify(questions).indexOf(id) > -1) {
                     collection.findOne({
@@ -452,7 +494,7 @@ exports.tryagain = function (db) {
             if (err) {
                 throw err;
             } else {
-                var index = 0;
+                var index = -1;
                 var incorrect = false;
                 found.incorrect.forEach(function (obj, ind) {
                     if (obj.id === questionid) {
@@ -474,6 +516,11 @@ exports.tryagain = function (db) {
                         index = ind;
                     }
                 });
+                found.corrected.forEach(function(obj,ind){
+                    if(obj.id === questionid){
+                        index = ind;
+                    }
+                })
                 if (correct) {
                     var questions = db.get('questions');
                     questions.findOne({
@@ -503,7 +550,8 @@ exports.tryagain = function (db) {
                             type: "correct",
                             choices: choices,
                             themeq: found.qtheme,
-                            themec: found.ctheme
+                            themec: found.ctheme,
+                            key: question['key']
                         });
                     });
                 } else if (incorrect) {
@@ -535,7 +583,9 @@ exports.tryagain = function (db) {
                             type: "incorrect",
                             choices: choices,
                             themeq: found.qtheme,
-                            themec: found.ctheme
+                            themec: found.ctheme,
+                            key: question['key']
+
                         });
                     });
                 } else if (passed) {
@@ -565,7 +615,42 @@ exports.tryagain = function (db) {
                             session: req.session,
                             type: "passed",
                             themeq: found.qtheme,
-                            themec: found.ctheme
+                            themec: found.ctheme,
+                            key: question['key']
+
+                        });
+                    });
+                } else{
+                    var questions = db.get('questions');
+                    questions.findOne({ '_id':questionid}, function(err, question){
+                    var answers = question.ans;
+                        var title = "Random Question";
+                        var prompt = 'Test: ' + question['test'] + "\nQuestion: " + question['ques'];
+                        var choices = found.corrected[index].choice;
+                        console.log(found.corrected[index]);
+                        console.log('CHOICES ARE: '+ choices);
+                        res.render('tryagainquestion', {
+                            cookie: cookie,
+                            title: title,
+                            prompt: prompt,
+                            qnum: question['ques'],
+                            test: question['test'],
+                            question: question['text'],
+                            side: question['code'],
+                            A: answers[0],
+                            B: answers[1],
+                            C: answers[2],
+                            D: answers[3],
+                            E: answers[4],
+                            id: question["_id"],
+                            url: question["_id"],
+                            session: req.session,
+                            type: 'corrected',
+                            choices: choices,
+                            themeq: found.qtheme,
+                            themec: found.ctheme,
+                            key: question['key']
+
                         });
                     });
                 }
@@ -580,45 +665,45 @@ exports.tryagaincheck = function (db) {
         var qid = req.body.id;
         var questions = db.get('questions');
         var users = db.get('users');
-        questions.findOne({'_id':qid}, function(err, found){
-            if(err){
+        questions.findOne({
+            '_id': qid
+        }, function (err, found) {
+            if (err) {
                 throw err;
-            }
-            else{
+            } else {
                 var answer = found.key;
                 var userselection = req.body.choice;
                 var type = req.body.typer;
-                if(!userselection){
-                    res.render('tryagaincheck', {title:"PASSED"});
-                }
-                else if(type === 'correct'){
-                    if(userselection===answer){
-                        res.render('tryagaincheck',{title:"Correct"});
+                if (!userselection) {
+                    res.redirect('/');
+
+                } else if (type === 'correct'||type ==='corrected') {
+                    if (userselection === answer) {
+                        res.redirect('/');
+
+                    } else {
+                        res.redirect('/');
+
                     }
-                    else{
-                        res.render('tryagaincheck',{title:"Incorrect"});
-                    }
-                }
-                else if(type === 'passed'){
-                    users.findOne({'_id':req.session.id},function(err,user){
-                        if(err){
+                } else if (type === 'passed') {
+                    users.findOne({
+                        '_id': req.session.id
+                    }, function (err, user) {
+                        if (err) {
                             throw err;
-                        }
-                        else{
-                            if(userselection===answer){
+                        } else {
+                            if (userselection === answer) {
                                 var passedarray = user.passed;
-                                var score = user.score;
-                                score+=60;
                                 var index = -1;
-                                passedarray.forEach(function(obj,ind){
-                                    if(obj.id===qid){
+                                passedarray.forEach(function (obj, ind) {
+                                    if (obj.id === qid) {
                                         index = ind;
                                     }
                                 });
-                                passedarray.splice(index,1);
+                                passedarray.splice(index, 1);
                                 var correctarray = user.correct;
                                 correctarray.push({
-                                    id:qid,
+                                    id: qid,
                                     time: Date.now(),
                                     choice: [userselection]
                                 });
@@ -627,28 +712,24 @@ exports.tryagaincheck = function (db) {
                                 }, {
                                     $set: {
                                         'passed': passedarray,
-                                        'correct':correctarray,
-                                        'score':score
+                                        'correct': correctarray,
                                     }
                                 });
-                                res.render('tryagaincheck', {title:"CORRECT"});
-                            }
-                            else{
-                                var score = user.score;
-                                score-=20;
-                                //console.log("score is: "+score);
+                                res.redirect('/');
+
+                            } else {
                                 var passedarray = user.passed;
                                 var index = -1;
-                                passedarray.forEach(function(obj,ind){
-                                    if(obj.id===qid){
+                                passedarray.forEach(function (obj, ind) {
+                                    if (obj.id === qid) {
                                         index = ind;
                                     }
                                 });
-                                passedarray.splice(index,1);
+                                passedarray.splice(index, 1);
                                 var incorrectarray = user.incorrect;
                                 incorrectarray.push({
-                                    id:qid,
-                                    time:Date.now(),
+                                    id: qid,
+                                    time: Date.now(),
                                     choice: [userselection]
                                 });
                                 users.update({
@@ -656,55 +737,61 @@ exports.tryagaincheck = function (db) {
                                 }, {
                                     $set: {
                                         'passed': passedarray,
-                                        'incorrect':incorrectarray,
-                                        'score':score
+                                        'incorrect': incorrectarray,
                                     }
                                 });
-                                res.render('tryagaincheck',{title:"INCORRECT"});
+                                res.redirect('/');
+
                             }
                         }
                     });
                 }
                 //incorrectly answered questions
-                else{
-                    users.findOne({'_id':req.session.id}, function(err,user){
-                        if(err){
+                else {
+                    users.findOne({
+                        '_id': req.session.id
+                    }, function (err, user) {
+                        if (err) {
                             throw err;
-                        }
-                        else{
+                        } else {
                             var incorrectarray = user.incorrect;
                             var index = -1;
-                            incorrectarray.forEach(function(obj,ind){
-                                if(obj.id===qid){
+                            incorrectarray.forEach(function (obj, ind) {
+                                if (obj.id === qid) {
                                     index = ind;
                                 }
                             })
                             var thing = incorrectarray[index];
                             console.log(thing);
-                            incorrectarray.splice(index,1);
-                            if(userselection===answer){
+                            incorrectarray.splice(index, 1);
+                            if (userselection === answer) {
                                 correctedarray = user.corrected;
                                 correctedarray.push(thing);
-                                var score = user.score;
-                                score+=20;
                                 users.update({
                                     '_id': req.session.id
                                 }, {
                                     $set: {
                                         'incorrect': incorrectarray,
-                                        'corrected':correctedarray,
-                                        'score':score
+                                        'corrected': correctedarray,
                                     }
                                 });
-                                res.render('tryagaincheck', {title:'CORRECT'});
+                                res.redirect('/');
+
                             }
                             //question was answered incorrectly again
-                            else{
+                            else {
                                 thing.choice.push(userselection);
                                 incorrectarray.push(thing);
                                 console.log(incorrectarray);
-                                users.update({'_id':req.session.id},{$set:{'incorrect':incorrectarray}});
-                                res.render('tryagaincheck',{title:'INCORRECT'});
+                                users.update({
+                                    '_id': req.session.id
+                                }, {
+                                    $set: {
+                                        'incorrect': incorrectarray
+                                    }
+                                });
+                                res.redirect('/');
+                                
                             }
                         }
                     });
@@ -815,12 +902,7 @@ exports.scoreboard = function (db) {
                 throw err;
             } else {
                 for (var i = 0; i < found.length; i++) {
-                    var username = found[i]['username'];
-                    var score = found[i]['score'];
-                    ranking.push({
-                        username: username,
-                        score: score
-                    });
+                    ranking.push(found[i]);
                 }
                 //SORTING ALGORITHM BY SCORE
                 if (ranking.length > 1) {
@@ -965,4 +1047,41 @@ exports.listofpassed = function (db) {
             }
         });
     }
-}
+};
+
+exports.listofcorrected = function (db) {
+    return function (req, res) {
+        var username = req.url.substring(req.url.indexOf('/') + 1, req.url.lastIndexOf('/'));
+        var users = db.get('users');
+        users.findOne({
+            'username': username
+        }, function (err, found) {
+            if (err) {
+                throw err;
+            } else {
+                console.log(found);
+                res.render('listofcorrected', {
+                    found: found,
+                    session: req.session,
+                    cookie: cookie
+                });
+            }
+        });
+    }
+};
+
+exports.stylepage = function (req, res) {
+    res.render('stylepage', {
+        cookie: cookie,
+        session: req.session,
+        title: 'Style'
+    });
+};
+
+exports.loadpage = function(req, res){
+    res.render('load',{
+        cookie: cookie,
+        session: req.session,
+        title: 'Loading'
+    });
+};

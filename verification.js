@@ -7,7 +7,9 @@ module.exports = function () {
             "/adduser",
             "/about",
             "/pdf",
-            "/pdfsub"
+            "/pdfsub",
+            "/sendfeedback",
+            "/getfeedback"
         ];
         if (accessible.indexOf(req.url) > -1) {
             next();
