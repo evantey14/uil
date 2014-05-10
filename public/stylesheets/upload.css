@@ -4,7 +4,13 @@
 .hide {
     display: none;
 }
+.question{
+    padding:20px 50px 20px 50px;
 
+}
+.question:hover{
+    background-color:rgba(224,224,224,0.8);
+}
 button {
     margin: 5px;
     border-radius: 0;

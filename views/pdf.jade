@@ -11,22 +11,95 @@ block content
             br
             button(type="submit", value="upload")= "SUBMIT"
     if text
-        div(id="editor")= text
+        //div(id="editor")= text
+        //form(id="jsonsubmit" action="/pdfsub" enctype="multipart/form-data" method="post")
+        //    input.hide(id="divin" type="text" name="in")
+        //button(id="sub" type="button")= "Submit"
+        div= text
+
+        each page in json
+            each question in page
+                .question(id= question.ques)
+                    h2(id='test')= question.test
+                    h1(id='ques')= question.ques
+                    pre(id='code')= question.code
+                    pre(id='text')= question.text
+                    pre(id='A')= question.ans[0]
+                    pre(id='B')= question.ans[1]
+                    pre(id='C')= question.ans[2]
+                    pre(id='D')= question.ans[3]
+                    pre(id='E')= question.ans[4]
+                    pre= question.key
+                    p(hidden id="obj")=JSON.stringify(question, null, '\t')
+
         form(id="jsonsubmit" action="/pdfsub" enctype="multipart/form-data" method="post")
             input.hide(id="divin" type="text" name="in")
-            input.hide(type="submit" value = "in")
-        button(id="sub" type="button")= "Submit"
+        button(id="finalsub" type="button")= "Submit"
+
     script.
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/monokai");
-        editor.getSession().setMode("ace/mode/javascript");
-        $(document).ready(function() { 
-            $('#sub').click(function(){
-                var inside = $('#editor').text();
-                inside= editor.getValue();
+        var editors={};
+        function bindSub(){
+            $('.sub').click(function(e){            
+                var num = $(this).attr('id');
+                var inside= editors[num].getValue();
                 console.log(inside);
-                $('#divin').val(inside);
-                var inin = $('#divin').val();
+                var obj = JSON.parse(inside);
+                $('.question#'+num).find('#test').text(obj.test);
+                $('.question#'+num).find('#code').text(obj.code);
+                $('.question#'+num).find('#text').text(obj.text);
+                $('.question#'+num).find('#A').text(obj.ans[0]);
+                $('.question#'+num).find('#B').text(obj.ans[1]);
+                $('.question#'+num).find('#C').text(obj.ans[2]);
+                $('.question#'+num).find('#D').text(obj.ans[3]);
+                $('.question#'+num).find('#E').text(obj.ans[4]);
+                $('.question#'+num).find('#key').text(obj.key);
+                $('.question#'+num).find('#obj').text(JSON.stringify(obj,null,'\t'));
+                $('.question#'+num).show();
+
+                $('#editor'+num).remove();
+                $('#'+num+'.sub').remove();
+
+                //inside= editors[num].getValue();
+                //$('#divin').val(inside);
+                //$('#jsonsubmit'+num).submit();
+            });
+        }
+        $(document).ready(function() {
+            $('#finalsub').click(function(){
+                //console.log('here');
+                var qlist = $('.question #obj');
+                var strlist = [];
+                for(var i = 0; i<qlist.length; i++){
+                    //console.log($(qlist[i]).text());
+                    strlist.push($(qlist[i]).text());
+                }
+                $('#divin').val(JSON.stringify({list:strlist}));
                 $('#jsonsubmit').submit();
+                
+                
+            });
+            $('.question').click(function(){
+                $(this).hide();
+                var num = $(this).attr('id')
+                var id = "editor"+num;
+                var text = "";
+                text = ""+$('#'+num+' #obj').text();
+                //console.log(text);
+
+                var div = $("<pre id="+id+">"+text+"</pre><button class='sub' id="+num+" >Save</button>");
+                div.insertAfter(this);
+                
+                editors[num] = ace.edit(id);
+                editors[num].setTheme("ace/theme/monokai");
+                editors[num].getSession().setMode("ace/mode/javascript");
+                editors[num].getSession().setUseWrapMode(true);
+                editors[num].setOptions({
+                    maxLines: Infinity
+                });
+                editors[num].setFontSize('16px');
+                editors[num].renderer.setShowGutter(false);
+                editors[num].setShowPrintMargin(false);
+                
+                bindSub();
             });
         });

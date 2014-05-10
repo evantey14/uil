@@ -129,11 +129,11 @@ var parseJSON = function (res) {
     console.log("Successfully converted PDF -> JSON");
 
     var testn = "";
-    fs.writeFile("State08.json", JSON.stringify(json), function (err) {
+    /*fs.writeFile("State08.json", JSON.stringify(json), function (err) {
         if (err) {
             console.log(err);
         }
-    });
+    });*/
     //console.log(JSON.stringify(json));
 
     var newLines = []; //concatenated lines
@@ -472,20 +472,23 @@ var parseJSON = function (res) {
         questions.push(qpage);
     }
 
+
+
     //rendering to be editable
     output = questions;
     res.render('pdf', {
         title: 'Edit PDF',
         prompt: 'Edit your pdf',
-        text: JSON.stringify(output)
+        text: JSON.stringify(output),
+        json: output
     });
 };
 
 var save = function (file, dirname, filename, callback) {
     fs.exists(path.join(dirname, filename), function (exists) {
-        if (exists) {
-            callback("File already exists, rename the file");
-        } else {
+        //if (exists) {
+        //    callback("File already exists, rename the file");
+        //} else {
             fs.readFile(file.path, function (err, data) {
                 if (err) callback(err)
                 else {
@@ -495,7 +498,7 @@ var save = function (file, dirname, filename, callback) {
                     });
                 }
             });
-        }
+        //}
     });
 }
 
@@ -508,11 +511,19 @@ exports.upload = function (req, res) {
 exports.submit = function (req, res) {
     //taking edited questions and adding to database
     var input = req.body.in;
-    input = JSON.parse(input);
+    //console.log(input);    
+    var obj = JSON.parse(input);
+    //collection.insert(obj.list);
+    //console.log(obj.list);
+    res.send(JSON.stringify(obj));
+    for(var i = 0; i<obj.list.length; i++){
+        collection.insert(JSON.parse(obj.list[i]));
+    }
+    /*input = JSON.parse(input);
     for (var r = 0; r < input.length; r++) {
         collection.insert(input[r]);
     }
-    res.send(input);
+    res.send(input);*/
 
 }
 exports.index = function (req, res) {
