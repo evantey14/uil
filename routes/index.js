@@ -325,6 +325,35 @@ exports.checkquestion = function (db) {
                         if (err) {
                             throw err;
                         } else {
+                            var correcty = found.correct;
+                            var incorrecty = found.incorrect;
+                            var correctedy = found.corrected;
+                            var scorey = 0;
+                            scorey+=100*correcty.length;
+                            scorey-=(20*incorrecty.length);
+                            for( var i = 0;i<correctedy.length;i++){
+                                var longy = correctedy[i].choice.length;
+                                if(longy===1){
+                                    scorey+=70;
+                                }
+                                else if(longy===2){
+                                    scorey+=50;
+                                }
+                                else if(longy===3){
+                                    scorey+=40;
+                                }
+                                else{
+                                    scorey+=30;
+                                }
+                            }
+                            users.update({
+                                '_id': req.session.id
+                            }, {
+                                $set: {
+                                    'score':scorey
+                                }
+                            });
+                            console.log('score is updated');
                             var otherarray = found['questions'];
                             var index = otherarray.map(function (obj, index) {
                                 if (obj.id == id) {
@@ -363,6 +392,35 @@ exports.checkquestion = function (db) {
                         if (err) {
                             throw err;
                         } else {
+                            var correcty = found.correct;
+                            var incorrecty = found.incorrect;
+                            var correctedy = found.corrected;
+                            var scorey = 0;
+                            scorey+=100*correcty.length;
+                            scorey-=(20*incorrecty.length);
+                            for( var i = 0;i<correctedy.length;i++){
+                                var longy = correctedy[i].choice.length;
+                                if(longy===1){
+                                    scorey+=70;
+                                }
+                                else if(longy===2){
+                                    scorey+=50;
+                                }
+                                else if(longy===3){
+                                    scorey+=40;
+                                }
+                                else{
+                                    scorey+=30;
+                                }
+                            }
+                            users.update({
+                                '_id': req.session.id
+                            }, {
+                                $set: {
+                                    'score':scorey
+                                }
+                            });
+                            console.log('score is updated');
                             var otherarray = found['questions'];
                             var index = otherarray.map(function (obj, index) {
                                 if (obj.id == id) {
