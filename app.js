@@ -4,6 +4,7 @@ var express = require('express'),
     pdf = require('./routes/pdf'),
     http = require('http'),
     path = require('path'),
+    bible= require('./routes/bible'),
     sass = require('node-sass');
 
 var verification = require('./verification.js');
@@ -76,6 +77,9 @@ app.all('/logout', routes.logout);
 app.all('/scoreboard', routes.scoreboard(db));
 app.all('/getfeedback', routes.getfeedback());
 app.all('/sendfeedback', routes.sendfeedback());
+
+app.all('/bible', bible.bible());
+app.all('/bible/:section', bible.section());
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));

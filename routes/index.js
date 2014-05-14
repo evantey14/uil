@@ -217,6 +217,7 @@ exports.logout = function (req, res) {
     } else {
         cookie = false;
         req.session.destroy;
+        req.session.loggedin = null;
         req.session = null;
         res.redirect("/");
     }
@@ -1031,8 +1032,8 @@ exports.sendfeedback = function () {
 
 exports.user = function (db) {
     return function (req, res) {
-        username = req.url;
-        username = username.substring(6);
+        var username = req.url;
+        username = username.substring(username.lastIndexOf('/')+1);
         var users = db.get('users');
         users.findOne({
             'username': username
@@ -1041,6 +1042,7 @@ exports.user = function (db) {
                 throw err;
             } else {
                 var hash = crypto.createHash('md5').update(found.email).digest('hex');
+                console.log(found)
                 res.render('profile', {
                     found: found,
                     cookie: cookie,
