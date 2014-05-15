@@ -30,22 +30,22 @@
   @include rotate($degree);
 }
 @include keyframe(leftbounce){
-  0%{
-    @include rotate-bottom-center(45deg);
+  10%{
+    @include rotate-bottom-center(25deg);
   }
-  25%{
+  40%{
     @include rotate-bottom-center(0deg);
   }
-  75%{
+  60%{
     @include rotate-bottom-center(0deg);
   }
-  100%{
-    @include rotate-bottom-center(45deg);
+  90%{
+    @include rotate-bottom-center(25deg);
   }
 }
 @include keyframe(rightbounce){
-  0%{
-    @include rotate-bottom-center(-45deg);
+  10%{
+    @include rotate-bottom-center(-25deg);
   }
   25%{
     @include rotate-bottom-center(0deg);
@@ -53,8 +53,8 @@
   75%{
     @include rotate-bottom-center(0deg);
   }
-  100%{
-    @include rotate-bottom-center(-45deg);
+  90%{
+    @include rotate-bottom-center(-25deg);
   }
 }
 @include keyframe(swing){

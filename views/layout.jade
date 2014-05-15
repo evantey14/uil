@@ -9,6 +9,7 @@ html
     link(rel='stylesheet', href='/stylesheets/default.css')
     link(rel='stylesheet', href='/plugins/font-awesome-4.0.3/css/font-awesome.min.css')
     script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js")
+    script(src="/plugins/tablesorter/jquery.tablesorter.min.js")
     block head
   body
     .navbar-content
@@ -64,3 +65,8 @@ html
         block content
     div.footer
         block footer
+        script.
+            $(document).ready(function(){
+                $("table").tablesorter(); 
+            }); 
+        

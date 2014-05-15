@@ -31,30 +31,30 @@
 }
 @include keyframe(leftbounce){
   0%{
-    @include rotate-bottom-center(45deg);
+    @include rotate-bottom-center(25deg);
   }
-  25%{
+  30%{
     @include rotate-bottom-center(0deg);
   }
-  75%{
+  70%{
     @include rotate-bottom-center(0deg);
   }
   100%{
-    @include rotate-bottom-center(45deg);
+    @include rotate-bottom-center(25deg);
   }
 }
 @include keyframe(rightbounce){
   0%{
-    @include rotate-bottom-center(-45deg);
+    @include rotate-bottom-center(-25deg);
   }
-  25%{
+  30%{
     @include rotate-bottom-center(0deg);
   }
-  75%{
+  70%{
     @include rotate-bottom-center(0deg);
   }
   100%{
-    @include rotate-bottom-center(-45deg);
+    @include rotate-bottom-center(-25deg);
   }
 }
 @include keyframe(swing){
@@ -122,8 +122,7 @@ $string-length:300px;
       display:block;
       left:0;
       bottom:0;
-      border-radius:100%;
-    
+      border-radius:100%; 
     }
     &:nth-child(1){
       left:0;

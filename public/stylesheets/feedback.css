@@ -1,27 +1,11 @@
-form > input {
-    border: 2px solid #ccc;
-    /*width: 930px;*/
+form{
     width: 500px;
-    color: #999;
-    margin: 5px;
-    display: inline-block;
-    padding: .8em;
-    text-indent: .5em;
-    height: 1.5em;
-    font-size: 10px;
 }
-form > textarea {
+textarea{
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    ;
-    border: 2px solid #ccc;
-    /*width: 930px;*/
-    width: 500px;
-    color: #999;
-    margin: 5px;
-    display: inline-block;
-    padding: .8em;
-    text-indent: .5em;
-    font-size: 10px;
+}
+form *{
+    width:500px;
 }
 form > .left {
     float: left;
@@ -32,16 +16,4 @@ form > .right {
 form > .half {
     /*width:445px;*/
     width: 230px;
-}
-form > #submit {
-    margin: 5px;
-    border-radius: 0;
-    border: 0px;
-    background-color: rgb(100, 53, 100);
-    color: white;
-    height: 2.5em;
-    text-transform: uppercase;
-    width: 8em;
-    font-size: 1em;
-    letter-spacing: .3em;
 }
