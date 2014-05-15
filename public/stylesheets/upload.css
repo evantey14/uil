@@ -4,11 +4,18 @@
 .hide {
     display: none;
 }
-.question{
-    padding:20px 50px 20px 50px;
-
+.question > *.edit{
+    padding:10px 20px 10px 20px;
+    margin:0;
 }
-.question:hover{
+.question > :not(.edit){
+    margin: 10px;
+    padding-left:10px;
+}
+.question > h1 {
+    padding:10px;
+}
+.question > *.edit:hover{
     background-color:rgba(224,224,224,0.8);
 }
 button {
